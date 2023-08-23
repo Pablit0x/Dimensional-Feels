@@ -93,7 +93,7 @@ dependencies {
     implementation ("androidx.core:core-splashscreen:1.0.1")
 
     // Mongo DB Realm
-    implementation ("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.7.0")
+    implementation ("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.7.1")
     implementation ("io.realm.kotlin:library-sync:1.10.0")
 
     // Dagger Hilt
@@ -123,5 +123,5 @@ dependencies {
     implementation ("com.github.stevdza-san:OneTapCompose:1.0.3")
 
     // Desugar JDK
-    coreLibraryDesugaring ("com.android.tools:desugar_jdk_libs:1.2.0")
+    coreLibraryDesugaring ("com.android.tools:desugar_jdk_libs:2.0.3")
 }

@@ -11,6 +11,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
+import androidx.navigation.compose.rememberNavController
+import com.ps.happydays.navigation.Screen
+import com.ps.happydays.navigation.SetupNavGraph
 import com.ps.happydays.ui.theme.HappyDaysTheme
 
 class MainActivity : ComponentActivity() {
@@ -19,7 +22,12 @@ class MainActivity : ComponentActivity() {
         installSplashScreen()
         setContent {
             HappyDaysTheme {
+                val navController = rememberNavController()
 
+                SetupNavGraph(
+                    startDestinationRoute = Screen.Authentication.route,
+                    navController = navController
+                )
             }
         }
     }

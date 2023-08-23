@@ -1,4 +1,4 @@
-package com.ps.happydays.ui.theme
+package com.ps.happydays.presentation.theme
 
 import android.app.Activity
 import android.os.Build

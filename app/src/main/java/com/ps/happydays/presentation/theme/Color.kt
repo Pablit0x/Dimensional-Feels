@@ -1,4 +1,4 @@
-package com.ps.happydays.ui.theme
+package com.ps.happydays.presentation.theme
 import androidx.compose.ui.graphics.Color
 
 val md_theme_light_primary = Color(0xFF00696B)

@@ -53,7 +53,7 @@ fun AuthenticationContent(
                     fontSize = MaterialTheme.typography.titleLarge.fontSize
                 )
                 Text(
-                    text = stringResource(id = R.string.pleasE_sign_in_to_continue),
+                    text = stringResource(id = R.string.please_sign_in_to_continue),
                     fontSize = MaterialTheme.typography.bodyMedium.fontSize,
                     color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.40f)
                 )

@@ -3,5 +3,11 @@
     <string name="sign_in_with_google">Sign in with Google</string>
     <string name="please_wait">Please wait…</string>
     <string name="welcome_back">Welcome back</string>
-    <string name="pleasE_sign_in_to_continue">Please sign in to continue.</string>
+    <string name="please_sign_in_to_continue">Please sign in to continue.</string>
+    <string name="home_top_bar_title">Diary</string>
+    <string name="google_sign_out">Sign Out</string>
+    <string name="sign_out_message">Are you sure you want to sign out of your Google account?</string>
+    <string name="confirm">Confirm</string>
+    <string name="cancel">Cancel</string>
+
 </resources>

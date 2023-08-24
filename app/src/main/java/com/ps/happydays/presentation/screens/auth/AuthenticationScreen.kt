@@ -1,9 +1,14 @@
 package com.ps.happydays.presentation.screens.auth
 
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import com.ps.happydays.util.Constants.CLIENT_ID
 import com.stevdzasan.messagebar.ContentWithMessageBar
@@ -17,19 +22,33 @@ fun AuthenticationScreen(
     oneTapSignInState: OneTapSignInState,
     messageBarState: MessageBarState,
     isLoading: Boolean,
+    authenticated: Boolean,
     onSignInButtonClicked: () -> Unit,
     onTokenIdReceived: (String) -> Unit,
-    onDialogDismissed: (String) -> Unit
+    onDialogDismissed: (String) -> Unit,
+    navigateHome: () -> Unit
 ) {
-    Scaffold(content = { padding ->
-        ContentWithMessageBar(messageBarState = messageBarState) {
-            AuthenticationContent(
-                isLoading = isLoading,
-                onSignInButtonClicked = { onSignInButtonClicked() },
-                modifier = Modifier.padding(padding)
-            )
+
+    LaunchedEffect(key1 = authenticated) {
+        if (authenticated) {
+            navigateHome()
         }
-    })
+    }
+
+    Scaffold(
+        content = { padding ->
+            ContentWithMessageBar(messageBarState = messageBarState) {
+                AuthenticationContent(
+                    isLoading = isLoading,
+                    onSignInButtonClicked = { onSignInButtonClicked() },
+                    modifier = Modifier.padding(padding)
+                )
+            }
+        }, modifier = Modifier
+            .background(MaterialTheme.colorScheme.surface)
+            .statusBarsPadding()
+            .navigationBarsPadding()
+    )
 
     OneTapSignInWithGoogle(state = oneTapSignInState,
         clientId = CLIENT_ID,

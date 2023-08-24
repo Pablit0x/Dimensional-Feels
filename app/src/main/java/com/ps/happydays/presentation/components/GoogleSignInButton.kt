@@ -31,7 +31,6 @@ import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.ps.happydays.R
@@ -57,7 +56,9 @@ fun SignInGoogleButton(
     }
 
     Surface(
-        modifier = modifier.clickable(enabled = !isLoading) { onClick },
+        modifier = modifier.clickable(enabled = !isLoading) {
+            onClick()
+        },
         shape = shape,
         border = BorderStroke(width = borderStrokeWidth, color = borderColor),
         color = backgroundColor
@@ -97,10 +98,4 @@ fun SignInGoogleButton(
             }
         }
     }
-}
-
-@Composable
-@Preview
-fun SignInButtonPreview() {
-    SignInGoogleButton(isLoading = true) {}
 }

@@ -61,9 +61,7 @@ fun AuthenticationContent(
             Column(
                 modifier = Modifier.weight(2f), verticalArrangement = Arrangement.Bottom
             ) {
-                SignInGoogleButton(isLoading = isLoading) {
-                    onSignInButtonClicked()
-                }
+                SignInGoogleButton(isLoading = isLoading, onClick = { onSignInButtonClicked() })
             }
         }
     }

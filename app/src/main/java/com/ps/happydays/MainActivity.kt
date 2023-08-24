@@ -16,7 +16,6 @@ class MainActivity : ComponentActivity() {
         setContent {
             HappyDaysTheme {
                 val navController = rememberNavController()
-
                 SetupNavGraph(
                     startDestinationRoute = Screen.Authentication.route,
                     navController = navController

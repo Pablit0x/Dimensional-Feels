@@ -6,4 +6,5 @@
     <string name="add_new_diary_icon">Add New Diary</string>
     <string name="app_logo">Happy Days App Logo</string>
     <string name="mood_icon">Mood</string>
+    <string name="gallery_image">Gallery Image</string>
 </resources>

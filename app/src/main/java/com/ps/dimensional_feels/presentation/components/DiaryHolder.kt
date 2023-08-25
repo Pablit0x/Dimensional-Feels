@@ -1,5 +1,6 @@
 package com.ps.dimensional_feels.presentation.components
 
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -17,6 +18,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Shapes
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -41,6 +43,7 @@ import com.ps.dimensional_feels.model.getMoodByName
 import com.ps.dimensional_feels.model.toRickAndMortyCharacter
 import com.ps.dimensional_feels.presentation.theme.Elevation
 import com.ps.dimensional_feels.util.toInstant
+import io.realm.kotlin.ext.realmListOf
 import java.time.Instant
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
@@ -50,8 +53,9 @@ import java.util.Locale
 fun DiaryHolder(
     diary: Diary, onClick: (String) -> Unit
 ) {
-    var localDensity = LocalDensity.current
+    val localDensity = LocalDensity.current
     var componentHeight by remember { mutableStateOf(0.dp) }
+    var showGallery by remember { mutableStateOf(false) }
     Row(modifier = Modifier.clickable(indication = null, interactionSource = remember {
         MutableInteractionSource()
     }) { onClick(diary.diaryId.toString()) }) {
@@ -84,6 +88,20 @@ fun DiaryHolder(
                     maxLines = 4,
                     overflow = TextOverflow.Ellipsis
                 )
+                if (diary.images.isNotEmpty()) {
+                    TextButton(onClick = { showGallery = !showGallery }) {
+                        Text(
+                            text = if (showGallery) stringResource(id = R.string.hide_gallery) else stringResource(
+                                id = R.string.show_gallery
+                            )
+                        )
+                    }
+                }
+                AnimatedVisibility(visible = showGallery) {
+                    Column(modifier = Modifier.padding(all = 14.dp)) {
+                        Gallery(images = diary.images)
+                    }
+                }
             }
         }
     }
@@ -93,8 +111,7 @@ fun DiaryHolder(
 fun DiaryHeader(character: RickAndMortyCharacters, moodName: String, time: Instant) {
     val mood by remember { mutableStateOf(getMoodByName(name = moodName, character = character)) }
     val formatter = remember {
-        DateTimeFormatter.ofPattern("hh:mm a", Locale.getDefault())
-            .withZone(ZoneId.systemDefault())
+        DateTimeFormatter.ofPattern("hh:mm a", Locale.getDefault()).withZone(ZoneId.systemDefault())
     }
     Row(
         modifier = Modifier
@@ -134,5 +151,6 @@ fun holderPreview() {
         description = "Some random Text"
         mood = Mood.Happy.name
         character = RickAndMortyCharacters.Rick.name
+        images = realmListOf("", "")
     }, onClick = {})
 }

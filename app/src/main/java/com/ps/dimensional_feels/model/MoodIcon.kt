@@ -11,8 +11,3 @@ sealed class MoodIcon(val icon: Int) {
     object ConfusedRick : MoodIcon(icon = R.drawable.confused_rick)
     object AmorousRick : MoodIcon(icon = R.drawable.amorous_rick)
 }
-
-
-enum class Character {
-    RICK, MORTY, SUMMER, BETH, JERRY
-}

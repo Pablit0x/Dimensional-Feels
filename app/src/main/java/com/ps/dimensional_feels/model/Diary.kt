@@ -16,5 +16,5 @@ class Diary : RealmObject {
     var images: RealmList<String> = realmListOf()
     var date: RealmInstant = RealmInstant.from(System.currentTimeMillis(), 0)
     var mood: String = Mood.Happy(character = RickAndMortyCharacters.Rick).name
-    var character : String = RickAndMortyCharacters.Rick.name
+    var character: String = RickAndMortyCharacters.Rick.name
 }

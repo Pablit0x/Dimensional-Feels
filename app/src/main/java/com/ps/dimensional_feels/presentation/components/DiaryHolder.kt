@@ -41,11 +41,9 @@ import com.ps.dimensional_feels.model.getMoodByName
 import com.ps.dimensional_feels.model.toRickAndMortyCharacter
 import com.ps.dimensional_feels.presentation.theme.Elevation
 import com.ps.dimensional_feels.util.toInstant
-import java.text.SimpleDateFormat
 import java.time.Instant
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
-import java.util.Date
 import java.util.Locale
 
 @Composable

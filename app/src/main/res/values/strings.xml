@@ -11,5 +11,7 @@
     <string name="cancel">Cancel</string>
     <string name="show_gallery">Show Gallery</string>
     <string name="hide_gallery">Hide Gallery</string>
+    <string name="empty_diary_title">Empty Diary</string>
+    <string name="empty_diary_description">Write something…</string>
 
 </resources>

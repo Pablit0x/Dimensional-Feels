@@ -1,6 +1,5 @@
 package com.ps.dimensional_feels.presentation.screens.home
 
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Edit
@@ -22,11 +21,7 @@ fun HomeScreen(
 ) {
 
     NavigationDrawer(drawerState = drawerState, onSignOutClicked = onSignOutClicked) {
-        Scaffold(content = { padding ->
-            Column(modifier = Modifier.padding(padding)) {
-
-            }
-        }, topBar = {
+        Scaffold(topBar = {
             HomeTopBar(onMenuClicked = onMenuClicked)
         }, floatingActionButton = {
             FloatingActionButton(onClick = onNavigateToWrite) {
@@ -35,6 +30,8 @@ fun HomeScreen(
                     contentDescription = stringResource(id = R.string.add_new_diary_icon)
                 )
             }
+        }, content = { padding ->
+            HomeContent(modifier = Modifier.padding(padding), diariesNotes = mapOf(), onClick = {})
         })
     }
 }

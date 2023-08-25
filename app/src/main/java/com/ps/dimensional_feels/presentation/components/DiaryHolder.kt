@@ -58,7 +58,7 @@ fun DiaryHolder(
     var showGallery by remember { mutableStateOf(false) }
     Row(modifier = Modifier.clickable(indication = null, interactionSource = remember {
         MutableInteractionSource()
-    }) { onClick(diary.diaryId.toString()) }) {
+    }) { onClick(diary._id.toString()) }) {
         Spacer(modifier = Modifier.width(14.dp))
         Surface(modifier = Modifier
             .width(2.dp)

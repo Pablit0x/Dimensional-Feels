@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <style name="Theme.HappyDays.Splash" parent="Theme.SplashScreen">
+    <style name="Theme.DimensionalFeels.Splash" parent="Theme.SplashScreen">
         <item name="windowSplashScreenBackground">#FAFDFC</item>
         <item name="windowSplashScreenAnimatedIcon">@drawable/happy_days_logo</item>
-        <item name="postSplashScreenTheme">@style/Theme.HappyDays</item>
+        <item name="postSplashScreenTheme">@style/DimensionalFeels</item>
     </style>
 </resources>

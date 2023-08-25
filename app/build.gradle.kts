@@ -8,11 +8,11 @@ plugins {
 }
 
 android {
-    namespace = "com.ps.happydays"
+    namespace = "com.ps.dimensional_feels"
     compileSdk = 34
 
     defaultConfig {
-        applicationId = "com.ps.happydays"
+        applicationId = "com.ps.dimensional_feels"
         minSdk = 30
         targetSdk = 34
         versionCode = 1
@@ -36,6 +36,7 @@ android {
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_17
         targetCompatibility = JavaVersion.VERSION_17
+        isCoreLibraryDesugaringEnabled = true
     }
     kotlinOptions {
         jvmTarget = "17"

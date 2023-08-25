@@ -14,6 +14,6 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "HappyDays"
+rootProject.name = "DimensionalFeels"
 include(":app")
  

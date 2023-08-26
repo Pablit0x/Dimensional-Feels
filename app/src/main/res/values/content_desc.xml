@@ -3,8 +3,12 @@
     <string name="google_logo">Google Logo</string>
     <string name="hamburger_menu_icon">Hamburger Menu</string>
     <string name="select_date_icon">Select Date</string>
+    <string name="more_options_icon">Show more</string>
     <string name="add_new_diary_icon">Add New Diary</string>
     <string name="app_logo">Happy Days App Logo</string>
     <string name="mood_icon">Mood</string>
     <string name="gallery_image">Gallery Image</string>
+    <string name="navigate_back">Navigate Back</string>
+    <string name="overflow_menu_icon">Overflow Menu</string>
+    <string name="delete_diary">Delete Diary</string>
 </resources>

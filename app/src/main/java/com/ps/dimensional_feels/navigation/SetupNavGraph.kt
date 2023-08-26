@@ -23,6 +23,7 @@ import com.ps.dimensional_feels.presentation.screens.auth.AuthenticationScreen
 import com.ps.dimensional_feels.presentation.screens.auth.AuthenticationViewModel
 import com.ps.dimensional_feels.presentation.screens.home.HomeScreen
 import com.ps.dimensional_feels.presentation.screens.home.HomeViewModel
+import com.ps.dimensional_feels.presentation.screens.write.WriteScreen
 import com.ps.dimensional_feels.util.Constants.APP_ID
 import com.ps.dimensional_feels.util.RequestState
 import com.stevdzasan.messagebar.rememberMessageBarState
@@ -48,7 +49,9 @@ fun SetupNavGraph(
             navController.navigate(Screen.Authentication.route)
         }, onDataLoaded = onDataLoaded
         )
-        writeRoute()
+        writeRoute(onBackPressed = {
+            navController.popBackStack()
+        })
     }
 
 }
@@ -111,7 +114,6 @@ fun NavGraphBuilder.homeRoute(
         HomeScreen(diaries = diaries,
             drawerState = drawerState,
             onSignOutClicked = { isSignOutDialogOpen = true },
-            onClick = { viewModel.insert(userId ?: "") },
             onMenuClicked = { scope.launch { drawerState.open() } },
             onNavigateToWrite = { onNavigateToWrite() })
 
@@ -134,7 +136,7 @@ fun NavGraphBuilder.homeRoute(
     }
 }
 
-fun NavGraphBuilder.writeRoute() {
+fun NavGraphBuilder.writeRoute(onBackPressed: () -> Unit) {
     composable(
         route = Screen.Write.route,
         arguments = listOf(navArgument(name = NavigationArguments.WRITE_SCREEN_ARGUMENT_KEY) {
@@ -143,6 +145,6 @@ fun NavGraphBuilder.writeRoute() {
             defaultValue = null
         })
     ) {
-
+        WriteScreen(selectedDiary = null, onBackPressed = onBackPressed, onDeleteConfirmed = {})
     }
 }

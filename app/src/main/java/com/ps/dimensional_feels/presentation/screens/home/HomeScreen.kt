@@ -27,7 +27,6 @@ fun HomeScreen(
     diaries: Diaries,
     drawerState: DrawerState,
     onSignOutClicked: () -> Unit,
-    onClick: () -> Unit,
     onMenuClicked: () -> Unit,
     onNavigateToWrite: () -> Unit
 ) {
@@ -37,7 +36,7 @@ fun HomeScreen(
         Scaffold(modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection), topBar = {
             HomeTopBar(scrollBehavior = scrollBehavior, onMenuClicked = onMenuClicked)
         }, floatingActionButton = {
-            FloatingActionButton(onClick = onClick) {
+            FloatingActionButton(onClick = onNavigateToWrite) {
                 Icon(
                     imageVector = Icons.Default.Edit,
                     contentDescription = stringResource(id = R.string.add_new_diary_icon)

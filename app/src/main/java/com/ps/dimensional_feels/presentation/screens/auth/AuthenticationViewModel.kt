@@ -6,6 +6,7 @@ import androidx.lifecycle.viewModelScope
 import com.ps.dimensional_feels.util.Constants.APP_ID
 import io.realm.kotlin.mongodb.App
 import io.realm.kotlin.mongodb.Credentials
+import io.realm.kotlin.mongodb.GoogleAuthType
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -29,7 +30,9 @@ class AuthenticationViewModel : ViewModel() {
             try {
                 val result = withContext(Dispatchers.IO) {
                     App.create(APP_ID).login(
-                        credentials = Credentials.jwt(jwtToken = tokenId)
+                        credentials = Credentials.google(
+                            token = tokenId, type = GoogleAuthType.ID_TOKEN
+                        )
                     ).loggedIn
                 }
                 withContext(Dispatchers.Main) {

@@ -13,5 +13,6 @@
     <string name="hide_gallery">Hide Gallery</string>
     <string name="empty_diary_title">Empty Diary</string>
     <string name="empty_diary_description">Write something…</string>
+    <string name="error_diary_title">Error</string>
 
 </resources>

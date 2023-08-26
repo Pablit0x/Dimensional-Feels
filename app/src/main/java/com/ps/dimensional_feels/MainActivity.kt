@@ -13,16 +13,17 @@ import com.ps.dimensional_feels.util.Constants.APP_ID
 import io.realm.kotlin.mongodb.App
 
 class MainActivity : ComponentActivity() {
+    var keepSplashOpened = true
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        installSplashScreen()
+        installSplashScreen().setKeepOnScreenCondition { keepSplashOpened }
         WindowCompat.setDecorFitsSystemWindows(window, false)
         setContent {
             DimensionalFeelsTheme {
                 val navController = rememberNavController()
-                SetupNavGraph(
-                    startDestinationRoute = getStartDestination(), navController = navController
-                )
+                SetupNavGraph(startDestinationRoute = getStartDestination(),
+                    navController = navController,
+                    onDataLoaded = { keepSplashOpened = false })
             }
         }
     }

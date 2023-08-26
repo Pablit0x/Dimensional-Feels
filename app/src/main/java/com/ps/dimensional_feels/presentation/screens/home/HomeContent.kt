@@ -1,12 +1,17 @@
 package com.ps.dimensional_feels.presentation.screens.home
 
 
+import android.util.Log
 import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
@@ -28,17 +33,26 @@ import java.time.LocalDate
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun HomeContent(
-    modifier: Modifier = Modifier,
-    diariesNotes: Map<LocalDate, List<Diary>>, onClick: (String) -> Unit
+    paddingValues: PaddingValues,
+    diariesNotes: Map<LocalDate, List<Diary>>,
+    onClick: (String) -> Unit
 ) {
     if (diariesNotes.isNotEmpty()) {
-        LazyColumn(modifier = modifier) {
+        LazyColumn(
+            modifier = Modifier
+                .padding(all = 24.dp)
+                .padding(
+                    top = paddingValues.calculateTopPadding(),
+                    bottom = paddingValues.calculateBottomPadding()
+                )
+        ) {
             diariesNotes.forEach { (localDate, diaries) ->
                 stickyHeader(localDate) {
                     DateHeader(localDate = localDate)
                 }
 
-                items(diaries, key = { it._id }) { diary ->
+
+                items(diaries, key = { it._id.toString() }) { diary ->
                     DiaryHolder(diary = diary, onClick = onClick)
                 }
             }
@@ -50,7 +64,13 @@ fun HomeContent(
 
 @Composable
 fun DateHeader(localDate: LocalDate) {
-    Row(verticalAlignment = Alignment.CenterVertically) {
+    Row(
+        verticalAlignment = Alignment.CenterVertically,
+        modifier = Modifier
+            .fillMaxWidth()
+            .background(color = MaterialTheme.colorScheme.surface)
+            .padding(vertical = 8.dp)
+    ) {
         Column(horizontalAlignment = Alignment.End) {
             Text(
                 text = String.format("%02d", localDate.dayOfMonth), style = TextStyle.Default.copy(
@@ -90,13 +110,12 @@ fun DateHeader(localDate: LocalDate) {
 
 @Composable
 fun EmptyDiaryPage(
+    modifier: Modifier = Modifier,
     title: String = stringResource(id = R.string.empty_diary_title),
     description: String = stringResource(id = R.string.empty_diary_description)
 ) {
     Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(all = 24.dp),
+        modifier = modifier.fillMaxSize(),
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {

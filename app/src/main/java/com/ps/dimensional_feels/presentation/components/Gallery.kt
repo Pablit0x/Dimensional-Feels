@@ -35,7 +35,7 @@ fun Gallery(
     BoxWithConstraints(modifier = modifier) {
         val numberOfVisibleImages by remember {
             derivedStateOf {
-                max(a = 0, b = maxWidth.div(spaceBetween + imageSize).toInt().minus(1))
+                max(a = 0, b = maxWidth.div(spaceBetween + imageSize).toInt())
             }
         }
         val remainingImages by remember {

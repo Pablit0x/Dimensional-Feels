@@ -1,6 +1,5 @@
 package com.ps.dimensional_feels.data.repository
 
-import android.util.Log
 import com.ps.dimensional_feels.model.Diary
 import com.ps.dimensional_feels.util.Constants.APP_ID
 import com.ps.dimensional_feels.util.RequestState

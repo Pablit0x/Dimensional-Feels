@@ -1,6 +1,10 @@
 package com.ps.dimensional_feels.presentation.components
 
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.core.Spring
+import androidx.compose.animation.core.spring
+import androidx.compose.animation.expandVertically
+import androidx.compose.animation.fadeIn
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -32,6 +36,7 @@ import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -93,11 +98,21 @@ fun DiaryHolder(
                         Text(
                             text = if (showGallery) stringResource(id = R.string.hide_gallery) else stringResource(
                                 id = R.string.show_gallery
+                            ),
+                            style = TextStyle.Default.copy(
+                                fontFamily = FontFamily.Monospace
                             )
                         )
                     }
                 }
-                AnimatedVisibility(visible = showGallery) {
+                AnimatedVisibility(
+                    visible = showGallery, enter = fadeIn() + expandVertically(
+                        animationSpec = spring(
+                            dampingRatio = Spring.DampingRatioMediumBouncy,
+                            stiffness = Spring.StiffnessLow
+                        )
+                    )
+                ) {
                     Column(modifier = Modifier.padding(all = 14.dp)) {
                         Gallery(images = diary.images)
                     }

@@ -29,17 +29,17 @@ class HomeViewModel : ViewModel() {
     }
 
 
-    fun insert(userId: String){
+    fun insert(userId: String) {
         Log.d("lolipop", "insert attempt")
         viewModelScope.launch {
             MongoDb.insertDiary(
                 Diary().apply {
-                title = "Test"
-                owner_id = userId
-                description = "Test"
-                character = RickAndMortyCharacters.Rick.name
-                mood = Mood.Happy.name
-            })
+                    title = "Test"
+                    owner_id = userId
+                    description = "Test"
+                    character = RickAndMortyCharacters.Rick.name
+                    mood = Mood.Happy.name
+                })
         }
     }
 }

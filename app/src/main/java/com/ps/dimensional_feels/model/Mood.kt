@@ -22,6 +22,7 @@ open class Mood(
     ) {
         companion object {
             const val name: String = "Happy"
+            const val position = 0
         }
     }
 
@@ -36,6 +37,7 @@ open class Mood(
     ) {
         companion object {
             const val name: String = "Angry"
+            const val position = 1
         }
     }
 
@@ -50,6 +52,7 @@ open class Mood(
     ) {
         companion object {
             const val name: String = "Confused"
+            const val position = 2
         }
     }
 
@@ -65,6 +68,7 @@ open class Mood(
         ) {
         companion object {
             const val name: String = "Depressed"
+            const val position = 3
         }
     }
 
@@ -79,6 +83,7 @@ open class Mood(
     ) {
         companion object {
             const val name: String = "Amorous"
+            const val position = 4
         }
     }
 
@@ -93,6 +98,7 @@ open class Mood(
     ) {
         companion object {
             const val name: String = "Drunk"
+            const val position = 5
         }
     }
 }
@@ -101,12 +107,24 @@ fun getMoodByName(
     name: String, character: RickAndMortyCharacters = RickAndMortyCharacters.Rick
 ): Mood {
     return when (name) {
-        "Happy" -> Mood.Happy(character = character)
-        "Angry" -> Mood.Angry(character = character)
-        "Confused" -> Mood.Angry(character = character)
-        "Depressed" -> Mood.Depressed(character = character)
-        "Amorous" -> Mood.Amorous(character = character)
-        "Drunk" -> Mood.Drunk(character = character)
+        Mood.Happy.name -> Mood.Happy(character = character)
+        Mood.Angry.name -> Mood.Angry(character = character)
+        Mood.Confused.name -> Mood.Confused(character = character)
+        Mood.Depressed.name -> Mood.Depressed(character = character)
+        Mood.Amorous.name -> Mood.Amorous(character = character)
+        Mood.Drunk.name -> Mood.Drunk(character = character)
+        else -> Mood.Happy(character = character)
+    }
+}
+
+fun getMoodByPosition(character: RickAndMortyCharacters, position: Int): Mood {
+    return when (position) {
+        Mood.Happy.position -> Mood.Happy(character = character)
+        Mood.Angry.position -> Mood.Angry(character = character)
+        Mood.Confused.position -> Mood.Confused(character = character)
+        Mood.Amorous.position -> Mood.Amorous(character = character)
+        Mood.Drunk.position -> Mood.Drunk(character = character)
+        Mood.Depressed.position -> Mood.Depressed(character = character)
         else -> Mood.Happy(character = character)
     }
 }

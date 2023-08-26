@@ -16,5 +16,8 @@
     <string name="error_diary_title">Error</string>
     <string name="delete">Delete</string>
     <string name="delete_diary_message">Are you sure you want to delete this diary note</string>
+    <string name="title_placeholder">Enter title…</string>
+    <string name="description_placeholder">Tell me about it…</string>
+    <string name="save">Save</string>
 
 </resources>

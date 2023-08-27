@@ -169,7 +169,7 @@ fun NavGraphBuilder.writeRoute(onBackPressed: () -> Unit) {
         val context = LocalContext.current
         val pagerState = rememberPagerState()
         val viewModel: WriteViewModel = viewModel()
-        val galleryState = rememberGalleryState()
+        val galleryState = viewModel.galleryState
         val uiState = viewModel.uiState
         val pageNumber by remember {
             derivedStateOf {
@@ -208,7 +208,10 @@ fun NavGraphBuilder.writeRoute(onBackPressed: () -> Unit) {
                 viewModel.updateDateTime(zonedDateTime = it)
             },
             onImageSelected = {
-                galleryState.addImage(GalleryImage(image = it))
+                val type = context.contentResolver.getType(it)?.split("/")?.last() ?: "jpg"
+                viewModel.addImage(
+                    image = it, imageType = type
+                )
             })
     }
 }

@@ -1,15 +1,20 @@
 package com.ps.dimensional_feels.presentation.screens.write
 
+import android.net.Uri
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.google.firebase.auth.FirebaseAuth
 import com.ps.dimensional_feels.data.repository.MongoDb
 import com.ps.dimensional_feels.model.Diary
+import com.ps.dimensional_feels.model.GalleryImage
+import com.ps.dimensional_feels.model.GalleryState
 import com.ps.dimensional_feels.model.Mood
 import com.ps.dimensional_feels.model.getMoodByName
+import com.ps.dimensional_feels.model.rememberGalleryState
 import com.ps.dimensional_feels.model.toRickAndMortyCharacter
 import com.ps.dimensional_feels.navigation.NavigationArguments.WRITE_SCREEN_ARGUMENT_KEY
 import com.ps.dimensional_feels.util.RequestState
@@ -26,6 +31,8 @@ class WriteViewModel(private val savedStateHandle: SavedStateHandle) : ViewModel
 
     var uiState by mutableStateOf(WriteUiState())
         private set
+
+    val galleryState = GalleryState()
 
     init {
         getDiaryIdArgument()
@@ -127,6 +134,14 @@ class WriteViewModel(private val savedStateHandle: SavedStateHandle) : ViewModel
                 }
             }
         }
+    }
+
+    fun addImage(image: Uri, imageType: String) {
+        val remoteImagePath =
+            "images/${FirebaseAuth.getInstance().currentUser?.uid}/${image.lastPathSegment}-${System.currentTimeMillis()}.$imageType"
+        galleryState.addImage(
+            GalleryImage(image = image, remoteImagePath = remoteImagePath)
+        )
     }
 
     fun setTitle(title: String) {

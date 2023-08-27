@@ -8,6 +8,8 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.imePadding
+import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
@@ -21,12 +23,15 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.FocusDirection
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
@@ -55,21 +60,19 @@ fun WriteContent(
 ) {
     val scrollState = rememberScrollState()
     val context = LocalContext.current
+    val focusManager = LocalFocusManager.current
 
-    val currentDate by remember { mutableStateOf(LocalDate.now()) }
-    val currentTime by remember { mutableStateOf(LocalTime.now()) }
-    val formattedDate = remember(currentDate) {
-        DateTimeFormatter.ofPattern(Constants.DATE_PATTERN).format(currentDate).uppercase()
+    LaunchedEffect(key1 = uiState.description) {
+        scrollState.scrollTo(scrollState.maxValue)
     }
 
     Column(
         modifier = Modifier
             .fillMaxSize()
             .padding(
-                top = paddingValues.calculateTopPadding(),
-                bottom = paddingValues.calculateBottomPadding()
+                top = paddingValues.calculateTopPadding()
             )
-            .padding(vertical = 24.dp)
+            .padding(horizontal = 24.dp)
             .padding(bottom = 24.dp),
         verticalArrangement = Arrangement.SpaceBetween
     ) {
@@ -112,7 +115,9 @@ fun WriteContent(
                     focusedPlaceholderColor = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.38f),
                     unfocusedPlaceholderColor = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.38f)
                 ),
-                keyboardActions = KeyboardActions(onNext = {}),
+                keyboardActions = KeyboardActions(onNext = {
+                    focusManager.moveFocus(FocusDirection.Down)
+                }),
                 maxLines = 1,
                 singleLine = true
             )
@@ -136,7 +141,9 @@ fun WriteContent(
                 keyboardOptions = KeyboardOptions.Default.copy(
                     imeAction = ImeAction.Next
                 ),
-                keyboardActions = KeyboardActions(onNext = {})
+                keyboardActions = KeyboardActions(onNext = {
+                    focusManager.clearFocus()
+                })
             )
         }
         Column(verticalArrangement = Arrangement.Bottom) {

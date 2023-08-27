@@ -17,7 +17,6 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         installSplashScreen().setKeepOnScreenCondition { keepSplashOpened }
-        WindowCompat.setDecorFitsSystemWindows(window, false)
         setContent {
             DimensionalFeelsTheme {
                 val navController = rememberNavController()

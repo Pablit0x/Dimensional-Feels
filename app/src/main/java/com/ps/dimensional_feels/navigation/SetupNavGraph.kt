@@ -23,7 +23,9 @@ import androidx.navigation.navArgument
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.rememberPagerState
 import com.ps.dimensional_feels.R
+import com.ps.dimensional_feels.model.GalleryImage
 import com.ps.dimensional_feels.model.getMoodByPosition
+import com.ps.dimensional_feels.model.rememberGalleryState
 import com.ps.dimensional_feels.model.toRickAndMortyCharacter
 import com.ps.dimensional_feels.presentation.components.CustomAlertDialog
 import com.ps.dimensional_feels.presentation.screens.auth.AuthenticationScreen
@@ -162,6 +164,7 @@ fun NavGraphBuilder.writeRoute(onBackPressed: () -> Unit) {
         val context = LocalContext.current
         val pagerState = rememberPagerState()
         val viewModel: WriteViewModel = viewModel()
+        val galleryState = rememberGalleryState()
         val uiState = viewModel.uiState
         val pageNumber by remember {
             derivedStateOf {
@@ -169,8 +172,8 @@ fun NavGraphBuilder.writeRoute(onBackPressed: () -> Unit) {
             }
         }
 
-        WriteScreen(
-            uiState = uiState,
+        WriteScreen(uiState = uiState,
+            galleryState = galleryState,
             pagerState = pagerState,
             onBackPressed = onBackPressed,
             onDeleteConfirmed = {
@@ -198,6 +201,9 @@ fun NavGraphBuilder.writeRoute(onBackPressed: () -> Unit) {
             },
             onDateTimeUpdated = {
                 viewModel.updateDateTime(zonedDateTime = it)
+            },
+            onImageSelected = {
+                galleryState.addImage(GalleryImage(image = it))
             })
     }
 }

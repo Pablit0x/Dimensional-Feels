@@ -1,12 +1,14 @@
 package com.ps.dimensional_feels.presentation.screens.write
 
 import android.annotation.SuppressLint
+import android.net.Uri
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.PagerState
 import com.ps.dimensional_feels.model.Diary
+import com.ps.dimensional_feels.model.GalleryState
 import com.ps.dimensional_feels.model.getMoodByName
 import com.ps.dimensional_feels.model.getPositionByMood
 import com.ps.dimensional_feels.model.toRickAndMortyCharacter
@@ -17,6 +19,7 @@ import java.time.ZonedDateTime
 @Composable
 fun WriteScreen(
     uiState: WriteUiState,
+    galleryState: GalleryState,
     pagerState: PagerState,
     onBackPressed: () -> Unit,
     moodName: () -> String,
@@ -24,7 +27,8 @@ fun WriteScreen(
     onTitleChanged: (String) -> Unit,
     onDescriptionChanged: (String) -> Unit,
     onSavedClicked: (Diary) -> Unit,
-    onDateTimeUpdated: (ZonedDateTime?) -> Unit
+    onDateTimeUpdated: (ZonedDateTime?) -> Unit,
+    onImageSelected: (Uri) -> Unit
 ) {
     LaunchedEffect(key1 = uiState.mood) {
         val mood = getMoodByName(
@@ -44,11 +48,13 @@ fun WriteScreen(
     }, content = { padding ->
         WriteContent(
             uiState = uiState,
+            galleryState = galleryState,
             paddingValues = padding,
             pagerState = pagerState,
             onTitleChanged = onTitleChanged,
             onDescriptionChanged = onDescriptionChanged,
             onSavedClicked = onSavedClicked,
+            onImageSelected = onImageSelected
         )
     })
 }

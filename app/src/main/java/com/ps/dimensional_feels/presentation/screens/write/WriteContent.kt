@@ -42,6 +42,7 @@ import com.ps.dimensional_feels.model.Diary
 import com.ps.dimensional_feels.model.GalleryState
 import com.ps.dimensional_feels.model.getMoodByPosition
 import com.ps.dimensional_feels.presentation.components.GalleryUploader
+import io.realm.kotlin.ext.toRealmList
 
 @OptIn(ExperimentalPagerApi::class)
 @Composable
@@ -146,12 +147,10 @@ fun WriteContent(
         }
         Column(verticalArrangement = Arrangement.Bottom) {
             Spacer(modifier = Modifier.height(12.dp))
-            GalleryUploader(
-                galleryState = galleryState,
+            GalleryUploader(galleryState = galleryState,
                 onAddClicked = { focusManager.clearFocus() },
                 onImageSelected = onImageSelected,
-                onImageClicked = {}
-            )
+                onImageClicked = {})
             Spacer(modifier = Modifier.height(12.dp))
 
             Button(
@@ -162,6 +161,8 @@ fun WriteContent(
                         onSavedClicked(Diary().apply {
                             this.title = uiState.title
                             this.description = uiState.description
+                            this.images =
+                                galleryState.images.map { it.remoteImagePath }.toRealmList()
                         })
                     } else {
                         Toast.makeText(

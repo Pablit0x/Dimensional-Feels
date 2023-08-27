@@ -8,6 +8,7 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.storage.FirebaseStorage
 import com.ps.dimensional_feels.data.repository.MongoDb
 import com.ps.dimensional_feels.model.Diary
 import com.ps.dimensional_feels.model.GalleryImage
@@ -91,6 +92,7 @@ class WriteViewModel(private val savedStateHandle: SavedStateHandle) : ViewModel
             }
         })
         if (result is RequestState.Success) {
+            uploadImagesToFirebase()
             withContext(Dispatchers.Main) {
                 onSuccess()
             }
@@ -108,6 +110,7 @@ class WriteViewModel(private val savedStateHandle: SavedStateHandle) : ViewModel
                 if (uiState.updatedDateTime != null) uiState.updatedDateTime!! else uiState.selectedDiary!!.date
         })
         if (result is RequestState.Success) {
+            uploadImagesToFirebase()
             withContext(Dispatchers.Main) {
                 onSuccess()
             }
@@ -133,6 +136,14 @@ class WriteViewModel(private val savedStateHandle: SavedStateHandle) : ViewModel
                     }
                 }
             }
+        }
+    }
+
+    private fun uploadImagesToFirebase(){
+        val storage = FirebaseStorage.getInstance().reference
+        galleryState.images.forEach { galleryImage ->
+            val imagePath = storage.child(galleryImage.remoteImagePath)
+            imagePath.putFile(galleryImage.image)
         }
     }
 

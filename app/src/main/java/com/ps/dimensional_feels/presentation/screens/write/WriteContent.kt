@@ -1,5 +1,6 @@
 package com.ps.dimensional_feels.presentation.screens.write
 
+import android.widget.Toast
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -14,7 +15,6 @@ import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Shapes
 import androidx.compose.material3.Text
@@ -33,19 +33,18 @@ import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.HorizontalPager
 import com.google.accompanist.pager.PagerState
 import com.ps.dimensional_feels.R
-import com.ps.dimensional_feels.model.RickAndMortyCharacters
+import com.ps.dimensional_feels.model.Diary
 import com.ps.dimensional_feels.model.getMoodByPosition
 
-@OptIn(ExperimentalPagerApi::class, ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalPagerApi::class)
 @Composable
 fun WriteContent(
+    uiState: WriteUiState,
     paddingValues: PaddingValues,
     pagerState: PagerState,
-    title: String,
-    description: String,
     onTitleChanged: (String) -> Unit,
     onDescriptionChanged: (String) -> Unit,
-    character: RickAndMortyCharacters = RickAndMortyCharacters.Rick
+    onSavedClicked: (Diary) -> Unit,
 ) {
     val scrollState = rememberScrollState()
     val context = LocalContext.current
@@ -73,7 +72,7 @@ fun WriteContent(
                     modifier = Modifier.size(120.dp),
                     model = ImageRequest.Builder(context).data(
                         getMoodByPosition(
-                            character = character, position = page
+                            character = uiState.characters, position = page
                         ).icon
                     ).crossfade(true).build(),
                     contentDescription = stringResource(id = R.string.mood_icon)
@@ -82,7 +81,7 @@ fun WriteContent(
             Spacer(modifier = Modifier.height(30.dp))
             TextField(
                 modifier = Modifier.fillMaxWidth(),
-                value = title,
+                value = uiState.title,
                 onValueChange = onTitleChanged,
                 placeholder = {
                     Text(text = stringResource(id = R.string.title_placeholder))
@@ -106,7 +105,7 @@ fun WriteContent(
 
             TextField(
                 modifier = Modifier.fillMaxWidth(),
-                value = description,
+                value = uiState.description,
                 onValueChange = onDescriptionChanged,
                 placeholder = {
                     Text(text = stringResource(id = R.string.description_placeholder))
@@ -131,9 +130,22 @@ fun WriteContent(
             Button(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(54.dp),
-                onClick = { /*TODO*/ },
-                shape = Shapes().small
+                    .height(54.dp), onClick = {
+                    if (uiState.title.isNotEmpty() && uiState.description.isNotEmpty()) {
+                        onSavedClicked(
+                            Diary().apply {
+                                this.title = uiState.title
+                                this.description = uiState.description
+                            }
+                        )
+                    } else {
+                        Toast.makeText(
+                            context,
+                            context.getString(R.string.fields_cannot_be_empty),
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    }
+                }, shape = Shapes().small
             ) {
                 Text(text = stringResource(id = R.string.save))
             }

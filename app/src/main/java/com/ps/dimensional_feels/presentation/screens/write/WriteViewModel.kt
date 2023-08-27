@@ -14,8 +14,10 @@ import com.ps.dimensional_feels.model.toRickAndMortyCharacter
 import com.ps.dimensional_feels.navigation.NavigationArguments.WRITE_SCREEN_ARGUMENT_KEY
 import com.ps.dimensional_feels.util.RequestState
 import com.ps.dimensional_feels.util.exceptions.DiaryAlreadyDeletedException
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import org.mongodb.kbson.ObjectId
 
 class WriteViewModel(private val savedStateHandle: SavedStateHandle) : ViewModel() {
@@ -55,6 +57,21 @@ class WriteViewModel(private val savedStateHandle: SavedStateHandle) : ViewModel
 
                     }
                 }
+            }
+        }
+    }
+
+    fun insertDiary(
+        diary: Diary, onSuccess: () -> Unit, onError: (String) -> Unit
+    ) {
+        viewModelScope.launch(Dispatchers.IO) {
+            val result = MongoDb.insertDiary(diary = diary)
+            if (result is RequestState.Success) {
+                withContext(Dispatchers.Main) {
+                    onSuccess()
+                }
+            } else if (result is RequestState.Error) {
+                onError(result.error.message ?: "Unknown error...")
             }
         }
     }

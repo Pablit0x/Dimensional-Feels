@@ -6,6 +6,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.PagerState
+import com.ps.dimensional_feels.model.Diary
 import com.ps.dimensional_feels.model.getMoodByName
 import com.ps.dimensional_feels.model.getPositionByMood
 import com.ps.dimensional_feels.model.toRickAndMortyCharacter
@@ -20,9 +21,10 @@ fun WriteScreen(
     moodName: () -> String,
     onDeleteConfirmed: () -> Unit,
     onTitleChanged: (String) -> Unit,
-    onDescriptionChanged: (String) -> Unit
+    onDescriptionChanged: (String) -> Unit,
+    onSavedClicked: (Diary) -> Unit,
 
-) {
+    ) {
     LaunchedEffect(key1 = uiState.mood) {
         val mood = getMoodByName(
             name = uiState.mood.name, character = uiState.characters.name.toRickAndMortyCharacter()
@@ -39,12 +41,12 @@ fun WriteScreen(
         )
     }, content = { padding ->
         WriteContent(
+            uiState = uiState,
             paddingValues = padding,
             pagerState = pagerState,
-            title = uiState.title,
-            description = uiState.description,
             onTitleChanged = onTitleChanged,
-            onDescriptionChanged = onDescriptionChanged
+            onDescriptionChanged = onDescriptionChanged,
+            onSavedClicked = onSavedClicked
         )
     })
 }

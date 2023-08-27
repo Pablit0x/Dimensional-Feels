@@ -131,7 +131,9 @@ fun WriteTopBar(
             }
         }
         if (selectedDiary != null) {
-            DeleteDiaryAction(selectedDiary = selectedDiary, onDeleteConfirmed = onDeleteConfirmed)
+            DeleteDiaryAction(
+                selectedDiary = selectedDiary,
+                onDeleteConfirmed = { onDeleteConfirmed() })
         }
     })
 
@@ -173,13 +175,11 @@ fun DeleteDiaryAction(
             expanded = false
         })
     }
-    CustomAlertDialog(
-        title = stringResource(id = R.string.delete),
+    CustomAlertDialog(title = stringResource(id = R.string.delete),
         message = "${stringResource(id = R.string.delete_diary_message)}: ${selectedDiary?.title}?",
         isOpen = openDialog,
         onCloseDialog = { openDialog = false },
-        onConfirmClicked = onDeleteConfirmed
-    )
+        onConfirmClicked = { onDeleteConfirmed() })
     IconButton(onClick = { expanded = !expanded }) {
         Icon(
             imageVector = Icons.Default.MoreVert,

@@ -1,6 +1,6 @@
 package com.ps.dimensional_feels.navigation
 
-import android.util.Log
+import android.widget.Toast
 import androidx.compose.material3.DrawerValue
 import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
@@ -11,6 +11,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavGraphBuilder
@@ -158,6 +159,7 @@ fun NavGraphBuilder.writeRoute(onBackPressed: () -> Unit) {
             defaultValue = null
         })
     ) {
+        val context = LocalContext.current
         val pagerState = rememberPagerState()
         val viewModel: WriteViewModel = viewModel()
         val uiState = viewModel.uiState
@@ -167,14 +169,17 @@ fun NavGraphBuilder.writeRoute(onBackPressed: () -> Unit) {
             }
         }
 
-        LaunchedEffect(uiState) {
-            Log.d("lolipop", "State $uiState")
-        }
-
-        WriteScreen(uiState = uiState,
+        WriteScreen(
+            uiState = uiState,
             pagerState = pagerState,
             onBackPressed = onBackPressed,
-            onDeleteConfirmed = {},
+            onDeleteConfirmed = {
+                viewModel.deleteDiary(onSuccess = {
+                    onBackPressed()
+                }, onError = {
+                    Toast.makeText(context, it, Toast.LENGTH_SHORT).show()
+                })
+            },
             moodName = {
                 getMoodByPosition(
                     position = pageNumber,

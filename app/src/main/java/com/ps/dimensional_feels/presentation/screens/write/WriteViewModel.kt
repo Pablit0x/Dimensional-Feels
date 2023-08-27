@@ -109,6 +109,26 @@ class WriteViewModel(private val savedStateHandle: SavedStateHandle) : ViewModel
         }
     }
 
+    fun deleteDiary(
+        onSuccess: () -> Unit, onError: (String) -> Unit
+    ) {
+        viewModelScope.launch(Dispatchers.IO) {
+            if (uiState.selectedDiaryId != null) {
+                val result =
+                    MongoDb.deleteDiary(diaryId = ObjectId.invoke(hexString = uiState.selectedDiaryId!!))
+                if (result is RequestState.Success) {
+                    withContext(Dispatchers.Main) {
+                        onSuccess()
+                    }
+                } else if (result is RequestState.Error) {
+                    withContext(Dispatchers.Main) {
+                        onError(result.error.message ?: "Unknown error...")
+                    }
+                }
+            }
+        }
+    }
+
     fun setTitle(title: String) {
         uiState = uiState.copy(title = title)
     }

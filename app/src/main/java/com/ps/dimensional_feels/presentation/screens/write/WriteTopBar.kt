@@ -4,6 +4,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.DateRange
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.MoreVert
@@ -25,6 +26,12 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import com.maxkeppeker.sheets.core.models.base.rememberUseCaseState
+import com.maxkeppeler.sheets.calendar.CalendarDialog
+import com.maxkeppeler.sheets.calendar.models.CalendarConfig
+import com.maxkeppeler.sheets.calendar.models.CalendarSelection
+import com.maxkeppeler.sheets.clock.ClockDialog
+import com.maxkeppeler.sheets.clock.models.ClockSelection
 import com.ps.dimensional_feels.R
 import com.ps.dimensional_feels.model.Diary
 import com.ps.dimensional_feels.presentation.components.CustomAlertDialog
@@ -35,6 +42,8 @@ import com.ps.dimensional_feels.util.toInstant
 import java.text.SimpleDateFormat
 import java.time.LocalDate
 import java.time.LocalTime
+import java.time.ZoneId
+import java.time.ZonedDateTime
 import java.time.format.DateTimeFormatter
 import java.util.Date
 import java.util.Locale
@@ -45,23 +54,28 @@ fun WriteTopBar(
     selectedDiary: Diary?,
     moodName: () -> String,
     onBackPressed: () -> Unit,
+    onDateTimeUpdated: (ZonedDateTime?) -> Unit,
     onDeleteConfirmed: () -> Unit
 ) {
-    val currentDate by remember { mutableStateOf(LocalDate.now()) }
-    val currentTime by remember { mutableStateOf(LocalTime.now()) }
+    val dateDialog = rememberUseCaseState()
+    val timeDialog = rememberUseCaseState()
+    var isDateTimeUpdated by remember { mutableStateOf(false) }
+    var currentDate by remember { mutableStateOf(LocalDate.now()) }
+    var currentTime by remember { mutableStateOf(LocalTime.now()) }
     val formattedDate = remember(currentDate) {
         DateTimeFormatter.ofPattern(DATE_PATTERN).format(currentDate).uppercase()
     }
     val formattedTime = remember(currentTime) {
         DateTimeFormatter.ofPattern(TIME_PATTERN).format(currentTime).uppercase()
     }
+
     val selectedDiaryDateTime = remember(selectedDiary) {
         if (selectedDiary != null) {
             SimpleDateFormat(
                 DATE_TIME_PATTERN, Locale.getDefault()
             ).format(Date.from(selectedDiary.date.toInstant())).uppercase()
         } else {
-            "$formattedDate, $formattedTime"
+            "Unknown"
         }
     }
     CenterAlignedTopAppBar(navigationIcon = {
@@ -84,7 +98,9 @@ fun WriteTopBar(
             )
             Text(
                 modifier = Modifier.fillMaxWidth(),
-                text = selectedDiaryDateTime,
+                text = if (selectedDiary != null && isDateTimeUpdated) "$formattedDate, $formattedTime"
+                else if (selectedDiary != null) selectedDiaryDateTime
+                else "$formattedDate, $formattedTime",
                 style = TextStyle.Default.copy(
                     fontSize = MaterialTheme.typography.bodySmall.fontSize
                 ),
@@ -92,16 +108,47 @@ fun WriteTopBar(
             )
         }
     }, actions = {
-        IconButton(onClick = { /*TODO*/ }) {
-            Icon(
-                imageVector = Icons.Default.DateRange,
-                contentDescription = stringResource(id = R.string.select_date_icon)
-            )
+        if (isDateTimeUpdated) {
+            IconButton(onClick = {
+                currentDate = LocalDate.now()
+                currentTime = LocalTime.now()
+                isDateTimeUpdated = false
+                onDateTimeUpdated(null)
+            }) {
+                Icon(
+                    imageVector = Icons.Default.Close,
+                    contentDescription = stringResource(id = R.string.reset_date_icon)
+                )
+            }
+        } else {
+            IconButton(onClick = {
+                dateDialog.show()
+            }) {
+                Icon(
+                    imageVector = Icons.Default.DateRange,
+                    contentDescription = stringResource(id = R.string.select_date_icon)
+                )
+            }
         }
         if (selectedDiary != null) {
             DeleteDiaryAction(selectedDiary = selectedDiary, onDeleteConfirmed = onDeleteConfirmed)
         }
     })
+
+    CalendarDialog(
+        state = dateDialog, selection = CalendarSelection.Date { localDate ->
+            currentDate = localDate
+            timeDialog.show()
+        }, config = CalendarConfig(monthSelection = true, yearSelection = false)
+    )
+
+    ClockDialog(state = timeDialog, selection = ClockSelection.HoursMinutes { hours, minutes ->
+        currentTime = LocalTime.of(hours, minutes)
+        isDateTimeUpdated = true
+        onDateTimeUpdated(ZonedDateTime.of(currentDate, currentTime, ZoneId.systemDefault()))
+    })
+
+
 }
 
 

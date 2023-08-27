@@ -3,6 +3,7 @@
     <string name="google_logo">Google Logo</string>
     <string name="hamburger_menu_icon">Hamburger Menu</string>
     <string name="select_date_icon">Select Date</string>
+    <string name="reset_date_icon">Reset Date</string>
     <string name="more_options_icon">Show more</string>
     <string name="add_new_diary_icon">Add New Diary</string>
     <string name="app_logo">Happy Days App Logo</string>

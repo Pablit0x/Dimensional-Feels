@@ -10,6 +10,7 @@ import com.ps.dimensional_feels.model.Diary
 import com.ps.dimensional_feels.model.getMoodByName
 import com.ps.dimensional_feels.model.getPositionByMood
 import com.ps.dimensional_feels.model.toRickAndMortyCharacter
+import java.time.ZonedDateTime
 
 @OptIn(ExperimentalPagerApi::class)
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
@@ -22,8 +23,9 @@ fun WriteScreen(
     onDeleteConfirmed: () -> Unit,
     onTitleChanged: (String) -> Unit,
     onDescriptionChanged: (String) -> Unit,
-    onSavedClicked: (Diary) -> Unit
-    ) {
+    onSavedClicked: (Diary) -> Unit,
+    onDateTimeUpdated: (ZonedDateTime?) -> Unit
+) {
     LaunchedEffect(key1 = uiState.mood) {
         val mood = getMoodByName(
             name = uiState.mood.name, character = uiState.characters.name.toRickAndMortyCharacter()
@@ -36,7 +38,8 @@ fun WriteScreen(
             selectedDiary = uiState.selectedDiary,
             onBackPressed = onBackPressed,
             onDeleteConfirmed = onDeleteConfirmed,
-            moodName = moodName
+            moodName = moodName,
+            onDateTimeUpdated = onDateTimeUpdated
         )
     }, content = { padding ->
         WriteContent(

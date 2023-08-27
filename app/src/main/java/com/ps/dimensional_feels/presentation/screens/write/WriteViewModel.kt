@@ -14,11 +14,13 @@ import com.ps.dimensional_feels.model.toRickAndMortyCharacter
 import com.ps.dimensional_feels.navigation.NavigationArguments.WRITE_SCREEN_ARGUMENT_KEY
 import com.ps.dimensional_feels.util.RequestState
 import com.ps.dimensional_feels.util.exceptions.DiaryAlreadyDeletedException
+import com.ps.dimensional_feels.util.toRealmInstant
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.mongodb.kbson.ObjectId
+import java.time.ZonedDateTime
 
 class WriteViewModel(private val savedStateHandle: SavedStateHandle) : ViewModel() {
 
@@ -76,7 +78,11 @@ class WriteViewModel(private val savedStateHandle: SavedStateHandle) : ViewModel
     private suspend fun insertDiary(
         diary: Diary, onSuccess: () -> Unit, onError: (String) -> Unit
     ) {
-        val result = MongoDb.insertDiary(diary = diary)
+        val result = MongoDb.insertDiary(diary = diary.apply {
+            if (uiState.updatedDateTime != null) {
+                date = uiState.updatedDateTime!!
+            }
+        })
         if (result is RequestState.Success) {
             withContext(Dispatchers.Main) {
                 onSuccess()
@@ -91,7 +97,8 @@ class WriteViewModel(private val savedStateHandle: SavedStateHandle) : ViewModel
     ) {
         val result = MongoDb.updateDiary(diary = diary.apply {
             _id = ObjectId.invoke(hexString = uiState.selectedDiaryId!!)
-            date = uiState.selectedDiary!!.date
+            date =
+                if (uiState.updatedDateTime != null) uiState.updatedDateTime!! else uiState.selectedDiary!!.date
         })
         if (result is RequestState.Success) {
             withContext(Dispatchers.Main) {
@@ -120,5 +127,17 @@ class WriteViewModel(private val savedStateHandle: SavedStateHandle) : ViewModel
         uiState = uiState.copy(
             selectedDiary = diary
         )
+    }
+
+    fun updateDateTime(zonedDateTime: ZonedDateTime?) {
+        uiState = if (zonedDateTime != null) {
+            uiState.copy(
+                updatedDateTime = zonedDateTime.toInstant().toRealmInstant()
+            )
+        } else {
+            uiState.copy(
+                updatedDateTime = null
+            )
+        }
     }
 }

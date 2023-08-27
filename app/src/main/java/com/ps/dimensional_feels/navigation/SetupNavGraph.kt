@@ -190,6 +190,9 @@ fun NavGraphBuilder.writeRoute(onBackPressed: () -> Unit) {
                         character = uiState.characters.name.toRickAndMortyCharacter()
                     ).name
                 }, onSuccess = { onBackPressed() }, {})
+            },
+            onDateTimeUpdated = {
+                viewModel.updateDateTime(zonedDateTime = it)
             })
     }
 }

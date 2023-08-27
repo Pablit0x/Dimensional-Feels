@@ -128,3 +128,15 @@ fun getMoodByPosition(character: RickAndMortyCharacters, position: Int): Mood {
         else -> Mood.Happy(character = character)
     }
 }
+
+fun getPositionByMood(mood: Mood): Int {
+    return when (mood) {
+        is Mood.Happy -> Mood.Happy.position
+        is Mood.Angry -> Mood.Angry.position
+        is Mood.Confused -> Mood.Confused.position
+        is Mood.Amorous -> Mood.Amorous.position
+        is Mood.Drunk -> Mood.Drunk.position
+        is Mood.Depressed -> Mood.Depressed.position
+        else -> Mood.Happy.position
+    }
+}

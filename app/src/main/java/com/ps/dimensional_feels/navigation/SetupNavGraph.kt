@@ -1,9 +1,11 @@
 package com.ps.dimensional_feels.navigation
 
+import android.util.Log
 import androidx.compose.material3.DrawerValue
 import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -20,12 +22,15 @@ import androidx.navigation.navArgument
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.rememberPagerState
 import com.ps.dimensional_feels.R
+import com.ps.dimensional_feels.model.getMoodByPosition
+import com.ps.dimensional_feels.model.toRickAndMortyCharacter
 import com.ps.dimensional_feels.presentation.components.CustomAlertDialog
 import com.ps.dimensional_feels.presentation.screens.auth.AuthenticationScreen
 import com.ps.dimensional_feels.presentation.screens.auth.AuthenticationViewModel
 import com.ps.dimensional_feels.presentation.screens.home.HomeScreen
 import com.ps.dimensional_feels.presentation.screens.home.HomeViewModel
 import com.ps.dimensional_feels.presentation.screens.write.WriteScreen
+import com.ps.dimensional_feels.presentation.screens.write.WriteViewModel
 import com.ps.dimensional_feels.util.Constants.APP_ID
 import com.ps.dimensional_feels.util.RequestState
 import com.stevdzasan.messagebar.rememberMessageBarState
@@ -44,7 +49,9 @@ fun SetupNavGraph(
             navController.popBackStack()
             navController.navigate(Screen.Home.route)
         }, onDataLoaded = onDataLoaded)
-        homeRoute(onNavigateToWrite = {
+        homeRoute(onNavigateToWriteWithArgs = {
+            navController.navigate(Screen.Write.passDiaryId(it))
+        }, onNavigateToWrite = {
             navController.navigate(Screen.Write.route)
         }, navigateToAuth = {
             navController.popBackStack()
@@ -97,7 +104,10 @@ fun NavGraphBuilder.authenticationRoute(navigateHome: () -> Unit, onDataLoaded: 
 }
 
 fun NavGraphBuilder.homeRoute(
-    onNavigateToWrite: () -> Unit, navigateToAuth: () -> Unit, onDataLoaded: () -> Unit
+    onNavigateToWriteWithArgs: (String) -> Unit,
+    onNavigateToWrite: () -> Unit,
+    navigateToAuth: () -> Unit,
+    onDataLoaded: () -> Unit
 ) {
     composable(route = Screen.Home.route) {
         val viewModel: HomeViewModel = viewModel()
@@ -105,7 +115,6 @@ fun NavGraphBuilder.homeRoute(
         var isSignOutDialogOpen by remember { mutableStateOf(false) }
         val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
         val scope = rememberCoroutineScope()
-        val userId = App.create(APP_ID).currentUser?.id
 
         LaunchedEffect(key1 = diaries) {
             if (diaries !is RequestState.Loading) {
@@ -117,6 +126,7 @@ fun NavGraphBuilder.homeRoute(
             drawerState = drawerState,
             onSignOutClicked = { isSignOutDialogOpen = true },
             onMenuClicked = { scope.launch { drawerState.open() } },
+            onNavigateToWriteWithArgs = onNavigateToWriteWithArgs,
             onNavigateToWrite = { onNavigateToWrite() })
 
         CustomAlertDialog(title = stringResource(id = R.string.google_sign_out),
@@ -149,9 +159,29 @@ fun NavGraphBuilder.writeRoute(onBackPressed: () -> Unit) {
         })
     ) {
         val pagerState = rememberPagerState()
-        WriteScreen(selectedDiary = null,
+        val viewModel: WriteViewModel = viewModel()
+        val uiState = viewModel.uiState
+        val pageNumber by remember {
+            derivedStateOf {
+                pagerState.currentPage
+            }
+        }
+
+        LaunchedEffect(uiState) {
+            Log.d("lolipop", "State $uiState")
+        }
+
+        WriteScreen(uiState = uiState,
             pagerState = pagerState,
             onBackPressed = onBackPressed,
-            onDeleteConfirmed = {})
+            onDeleteConfirmed = {},
+            moodName = {
+                getMoodByPosition(
+                    position = pageNumber,
+                    character = uiState.characters.name.toRickAndMortyCharacter()
+                ).name
+            },
+            onTitleChanged = { viewModel.setTitle(title = it) },
+            onDescriptionChanged = { viewModel.setDescription(description = it) })
     }
 }

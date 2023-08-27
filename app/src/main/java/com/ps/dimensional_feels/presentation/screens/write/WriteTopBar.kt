@@ -28,12 +28,42 @@ import androidx.compose.ui.text.style.TextAlign
 import com.ps.dimensional_feels.R
 import com.ps.dimensional_feels.model.Diary
 import com.ps.dimensional_feels.presentation.components.CustomAlertDialog
+import com.ps.dimensional_feels.util.Constants.DATE_PATTERN
+import com.ps.dimensional_feels.util.Constants.DATE_TIME_PATTERN
+import com.ps.dimensional_feels.util.Constants.TIME_PATTERN
+import com.ps.dimensional_feels.util.toInstant
+import java.text.SimpleDateFormat
+import java.time.LocalDate
+import java.time.LocalTime
+import java.time.format.DateTimeFormatter
+import java.util.Date
+import java.util.Locale
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun WriteTopBar(
-    selectedDiary: Diary?, onBackPressed: () -> Unit, onDeleteConfirmed: () -> Unit
+    selectedDiary: Diary?,
+    moodName: () -> String,
+    onBackPressed: () -> Unit,
+    onDeleteConfirmed: () -> Unit
 ) {
+    val currentDate by remember { mutableStateOf(LocalDate.now()) }
+    val currentTime by remember { mutableStateOf(LocalTime.now()) }
+    val formattedDate = remember(currentDate) {
+        DateTimeFormatter.ofPattern(DATE_PATTERN).format(currentDate).uppercase()
+    }
+    val formattedTime = remember(currentTime) {
+        DateTimeFormatter.ofPattern(TIME_PATTERN).format(currentTime).uppercase()
+    }
+    val selectedDiaryDateTime = remember(selectedDiary) {
+        if (selectedDiary != null) {
+            SimpleDateFormat(
+                DATE_TIME_PATTERN, Locale.getDefault()
+            ).format(Date.from(selectedDiary.date.toInstant())).uppercase()
+        } else {
+            "$formattedDate, $formattedTime"
+        }
+    }
     CenterAlignedTopAppBar(navigationIcon = {
         IconButton(onClick = onBackPressed) {
             Icon(
@@ -44,14 +74,17 @@ fun WriteTopBar(
     }, title = {
         Column {
             Text(
-                text = "Happy", modifier = Modifier.fillMaxWidth(), style = TextStyle.Default.copy(
+                text = moodName(),
+                modifier = Modifier.fillMaxWidth(),
+                style = TextStyle.Default.copy(
                     fontSize = MaterialTheme.typography.titleLarge.fontSize,
                     fontWeight = FontWeight.Bold
-                ), textAlign = TextAlign.Center
+                ),
+                textAlign = TextAlign.Center
             )
             Text(
                 modifier = Modifier.fillMaxWidth(),
-                text = "26 SEP 2023, 10:00 AM",
+                text = selectedDiaryDateTime,
                 style = TextStyle.Default.copy(
                     fontSize = MaterialTheme.typography.bodySmall.fontSize
                 ),

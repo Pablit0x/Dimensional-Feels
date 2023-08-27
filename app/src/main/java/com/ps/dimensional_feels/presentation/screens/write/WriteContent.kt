@@ -1,6 +1,5 @@
 package com.ps.dimensional_feels.presentation.screens.write
 
-import android.widget.Space
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -15,12 +14,15 @@ import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Shapes
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
@@ -31,13 +33,10 @@ import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.HorizontalPager
 import com.google.accompanist.pager.PagerState
 import com.ps.dimensional_feels.R
-import com.ps.dimensional_feels.model.CharacterNames
-import com.ps.dimensional_feels.model.Mood
-import com.ps.dimensional_feels.model.MoodIcon
 import com.ps.dimensional_feels.model.RickAndMortyCharacters
 import com.ps.dimensional_feels.model.getMoodByPosition
 
-@OptIn(ExperimentalPagerApi::class)
+@OptIn(ExperimentalPagerApi::class, ExperimentalMaterial3Api::class)
 @Composable
 fun WriteContent(
     paddingValues: PaddingValues,
@@ -91,6 +90,15 @@ fun WriteContent(
                 keyboardOptions = KeyboardOptions.Default.copy(
                     imeAction = ImeAction.Next
                 ),
+                colors = TextFieldDefaults.colors(
+                    focusedContainerColor = Color.Transparent,
+                    unfocusedContainerColor = Color.Transparent,
+                    focusedIndicatorColor = Color.Unspecified,
+                    disabledIndicatorColor = Color.Unspecified,
+                    unfocusedIndicatorColor = Color.Unspecified,
+                    focusedPlaceholderColor = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.38f),
+                    unfocusedPlaceholderColor = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.38f)
+                ),
                 keyboardActions = KeyboardActions(onNext = {}),
                 maxLines = 1,
                 singleLine = true
@@ -103,6 +111,15 @@ fun WriteContent(
                 placeholder = {
                     Text(text = stringResource(id = R.string.description_placeholder))
                 },
+                colors = TextFieldDefaults.colors(
+                    focusedContainerColor = Color.Transparent,
+                    unfocusedContainerColor = Color.Transparent,
+                    focusedIndicatorColor = Color.Unspecified,
+                    disabledIndicatorColor = Color.Unspecified,
+                    unfocusedIndicatorColor = Color.Unspecified,
+                    focusedPlaceholderColor = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.38f),
+                    unfocusedPlaceholderColor = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.38f)
+                ),
                 keyboardOptions = KeyboardOptions.Default.copy(
                     imeAction = ImeAction.Next
                 ),

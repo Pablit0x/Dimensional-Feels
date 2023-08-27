@@ -3,6 +3,7 @@ package com.ps.dimensional_feels.data.repository
 import com.ps.dimensional_feels.model.Diary
 import com.ps.dimensional_feels.util.Constants.APP_ID
 import com.ps.dimensional_feels.util.RequestState
+import com.ps.dimensional_feels.util.exceptions.UserNotAuthenticatedException
 import com.ps.dimensional_feels.util.toInstant
 import io.realm.kotlin.Realm
 import io.realm.kotlin.ext.query
@@ -12,6 +13,7 @@ import io.realm.kotlin.query.Sort
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.map
+import org.mongodb.kbson.ObjectId
 import java.time.ZoneId
 
 object MongoDb : MongoRepository {
@@ -54,6 +56,20 @@ object MongoDb : MongoRepository {
         }
     }
 
+    override fun getSelectedDiary(diaryId: ObjectId): Flow<RequestState<Diary>> {
+        return if (user != null) {
+            try {
+                realm.query<Diary>(query = "_id == $0", diaryId).asFlow().map {
+                    RequestState.Success(data = it.list.first())
+                }
+            } catch (e: Exception) {
+                flow { emit(RequestState.Error(e)) }
+            }
+        } else {
+            flow { emit(RequestState.Error(UserNotAuthenticatedException())) }
+        }
+    }
+
     override suspend fun insertDiary(diary: Diary): RequestState<Diary> {
         return if (user != null) {
             realm.write {
@@ -69,5 +85,3 @@ object MongoDb : MongoRepository {
         }
     }
 }
-
-private class UserNotAuthenticatedException : Exception("User is not logged in.")

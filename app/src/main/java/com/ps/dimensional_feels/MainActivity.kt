@@ -6,6 +6,7 @@ import androidx.activity.compose.setContent
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.core.view.WindowCompat
 import androidx.navigation.compose.rememberNavController
+import com.google.firebase.FirebaseApp
 import com.ps.dimensional_feels.navigation.Screen
 import com.ps.dimensional_feels.navigation.SetupNavGraph
 import com.ps.dimensional_feels.presentation.theme.DimensionalFeelsTheme
@@ -17,6 +18,8 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         installSplashScreen().setKeepOnScreenCondition { keepSplashOpened }
+        WindowCompat.setDecorFitsSystemWindows(window, false)
+        FirebaseApp.initializeApp(applicationContext)
         setContent {
             DimensionalFeelsTheme {
                 val navController = rememberNavController()

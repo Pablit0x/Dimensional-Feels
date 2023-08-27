@@ -4,7 +4,7 @@ plugins {
     id ("dagger.hilt.android.plugin")
     kotlin("kapt")
     id ("io.realm.kotlin")
-//    id ("com.google.gms.google-services")
+    id ("com.google.gms.google-services")
 }
 
 android {
@@ -77,8 +77,8 @@ dependencies {
     implementation ("androidx.navigation:navigation-compose:2.6.0")
 
     // Firebase
-//    implementation ("com.google.firebase:firebase-auth-ktx:22.1.0")
-//    implementation ("com.google.firebase:firebase-storage-ktx:20.2.1")
+    implementation ("com.google.firebase:firebase-auth-ktx:22.1.0")
+    implementation ("com.google.firebase:firebase-storage-ktx:20.2.1")
 
     // Room components
     implementation ("androidx.room:room-runtime:2.5.2")

@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "17268274910",
+    "project_id": "happydays-396822",
+    "storage_bucket": "happydays-396822.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:17268274910:android:8132408e787b8f5bbc344f",
+        "android_client_info": {
+          "package_name": "com.ps.dimensional_feels"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "17268274910-rti5vpam61jic8rsh61h2h9gqm66se8f.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBzohudvuNcw_zka4slUMFeGh96yeME8gQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "17268274910-90f4ghads21n894s1f4ntrapf48slgr0.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

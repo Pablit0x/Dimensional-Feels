@@ -13,4 +13,5 @@
     <string name="navigate_back">Navigate Back</string>
     <string name="overflow_menu_icon">Overflow Menu</string>
     <string name="delete_diary">Delete Diary</string>
+    <string name="success">Success</string>
 </resources>

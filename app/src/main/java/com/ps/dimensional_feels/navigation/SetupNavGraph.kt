@@ -71,6 +71,7 @@ fun SetupNavGraph(
 
 fun NavGraphBuilder.authenticationRoute(navigateHome: () -> Unit, onDataLoaded: () -> Unit) {
     composable(route = Screen.Authentication.route) {
+        val context = LocalContext.current
         val viewModel: AuthenticationViewModel = viewModel()
         val loadingState by viewModel.loadingState
         val authenticated by viewModel.authenticated
@@ -90,12 +91,16 @@ fun NavGraphBuilder.authenticationRoute(navigateHome: () -> Unit, onDataLoaded: 
                 oneTapSignInState.open()
                 viewModel.setLoading(loading = true)
             },
-            onTokenIdReceived = { tokenId ->
+            onSuccessfulFirebaseSignIn = { tokenId ->
                 viewModel.signInWithMongoAtlas(tokenId = tokenId, onSuccess = {
-                    messageBarState.addSuccess(message = "Success")
+                    messageBarState.addSuccess(message = context.getString(R.string.success))
                 }, onError = { errorMsg ->
                     messageBarState.addError(exception = Exception(errorMsg))
                 })
+            },
+            onFailedFirebaseSignIn = {
+                messageBarState.addError(it)
+                viewModel.setLoading(false)
             },
             onDialogDismissed = { errorMsg ->
                 messageBarState.addError(Exception(errorMsg))

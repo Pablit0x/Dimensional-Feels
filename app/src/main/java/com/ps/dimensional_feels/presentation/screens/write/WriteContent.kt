@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
@@ -65,6 +66,7 @@ fun WriteContent(
     Column(
         modifier = Modifier
             .fillMaxSize()
+            .imePadding()
             .padding(
                 top = paddingValues.calculateTopPadding()
             )
@@ -146,7 +148,7 @@ fun WriteContent(
             Spacer(modifier = Modifier.height(12.dp))
             GalleryUploader(
                 galleryState = galleryState,
-                onAddClicked = { /*TODO*/ },
+                onAddClicked = { focusManager.clearFocus() },
                 onImageSelected = onImageSelected,
                 onImageClicked = {}
             )

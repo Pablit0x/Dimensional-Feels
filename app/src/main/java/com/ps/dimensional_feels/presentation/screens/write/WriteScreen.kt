@@ -22,8 +22,7 @@ fun WriteScreen(
     onDeleteConfirmed: () -> Unit,
     onTitleChanged: (String) -> Unit,
     onDescriptionChanged: (String) -> Unit,
-    onSavedClicked: (Diary) -> Unit,
-
+    onSavedClicked: (Diary) -> Unit
     ) {
     LaunchedEffect(key1 = uiState.mood) {
         val mood = getMoodByName(
@@ -46,7 +45,7 @@ fun WriteScreen(
             pagerState = pagerState,
             onTitleChanged = onTitleChanged,
             onDescriptionChanged = onDescriptionChanged,
-            onSavedClicked = onSavedClicked
+            onSavedClicked = onSavedClicked,
         )
     })
 }

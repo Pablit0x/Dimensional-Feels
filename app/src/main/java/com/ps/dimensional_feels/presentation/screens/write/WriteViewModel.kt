@@ -61,18 +61,44 @@ class WriteViewModel(private val savedStateHandle: SavedStateHandle) : ViewModel
         }
     }
 
-    fun insertDiary(
+    fun upsertDiary(
         diary: Diary, onSuccess: () -> Unit, onError: (String) -> Unit
     ) {
         viewModelScope.launch(Dispatchers.IO) {
-            val result = MongoDb.insertDiary(diary = diary)
-            if (result is RequestState.Success) {
-                withContext(Dispatchers.Main) {
-                    onSuccess()
-                }
-            } else if (result is RequestState.Error) {
-                onError(result.error.message ?: "Unknown error...")
+            if (uiState.selectedDiaryId != null) {
+                updateDiary(diary = diary, onSuccess = onSuccess, onError = onError)
+            } else {
+                insertDiary(diary = diary, onSuccess = onSuccess, onError = onError)
             }
+        }
+    }
+
+    private suspend fun insertDiary(
+        diary: Diary, onSuccess: () -> Unit, onError: (String) -> Unit
+    ) {
+        val result = MongoDb.insertDiary(diary = diary)
+        if (result is RequestState.Success) {
+            withContext(Dispatchers.Main) {
+                onSuccess()
+            }
+        } else if (result is RequestState.Error) {
+            onError(result.error.message ?: "Unknown error...")
+        }
+    }
+
+    private suspend fun updateDiary(
+        diary: Diary, onSuccess: () -> Unit, onError: (String) -> Unit
+    ) {
+        val result = MongoDb.updateDiary(diary = diary.apply {
+            _id = ObjectId.invoke(hexString = uiState.selectedDiaryId!!)
+            date = uiState.selectedDiary!!.date
+        })
+        if (result is RequestState.Success) {
+            withContext(Dispatchers.Main) {
+                onSuccess()
+            }
+        } else if (result is RequestState.Error) {
+            onError(result.error.message ?: "Unknown error...")
         }
     }
 

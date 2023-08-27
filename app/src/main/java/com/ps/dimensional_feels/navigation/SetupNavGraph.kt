@@ -184,7 +184,7 @@ fun NavGraphBuilder.writeRoute(onBackPressed: () -> Unit) {
             onTitleChanged = { viewModel.setTitle(title = it) },
             onDescriptionChanged = { viewModel.setDescription(description = it) },
             onSavedClicked = {
-                viewModel.insertDiary(diary = it.apply {
+                viewModel.upsertDiary(diary = it.apply {
                     this.mood = getMoodByPosition(
                         position = pageNumber,
                         character = uiState.characters.name.toRickAndMortyCharacter()

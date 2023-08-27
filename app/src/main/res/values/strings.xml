@@ -19,6 +19,7 @@
     <string name="title_placeholder">Enter title…</string>
     <string name="description_placeholder">Tell me about it…</string>
     <string name="save">Save</string>
+    <string name="update">Update</string>
     <string name="fields_cannot_be_empty">Description and title cannot be empty!</string>
 
 </resources>

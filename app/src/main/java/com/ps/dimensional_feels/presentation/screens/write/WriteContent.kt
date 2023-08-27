@@ -21,6 +21,9 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
@@ -35,6 +38,10 @@ import com.google.accompanist.pager.PagerState
 import com.ps.dimensional_feels.R
 import com.ps.dimensional_feels.model.Diary
 import com.ps.dimensional_feels.model.getMoodByPosition
+import com.ps.dimensional_feels.util.Constants
+import java.time.LocalDate
+import java.time.LocalTime
+import java.time.format.DateTimeFormatter
 
 @OptIn(ExperimentalPagerApi::class)
 @Composable
@@ -44,10 +51,17 @@ fun WriteContent(
     pagerState: PagerState,
     onTitleChanged: (String) -> Unit,
     onDescriptionChanged: (String) -> Unit,
-    onSavedClicked: (Diary) -> Unit,
+    onSavedClicked: (Diary) -> Unit
 ) {
     val scrollState = rememberScrollState()
     val context = LocalContext.current
+
+    val currentDate by remember { mutableStateOf(LocalDate.now()) }
+    val currentTime by remember { mutableStateOf(LocalTime.now()) }
+    val formattedDate = remember(currentDate) {
+        DateTimeFormatter.ofPattern(Constants.DATE_PATTERN).format(currentDate).uppercase()
+    }
+
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -132,12 +146,10 @@ fun WriteContent(
                     .fillMaxWidth()
                     .height(54.dp), onClick = {
                     if (uiState.title.isNotEmpty() && uiState.description.isNotEmpty()) {
-                        onSavedClicked(
-                            Diary().apply {
-                                this.title = uiState.title
-                                this.description = uiState.description
-                            }
-                        )
+                        onSavedClicked(Diary().apply {
+                            this.title = uiState.title
+                            this.description = uiState.description
+                        })
                     } else {
                         Toast.makeText(
                             context,
@@ -147,7 +159,11 @@ fun WriteContent(
                     }
                 }, shape = Shapes().small
             ) {
-                Text(text = stringResource(id = R.string.save))
+                Text(
+                    text = if (uiState.selectedDiaryId == null) stringResource(id = R.string.save) else stringResource(
+                        id = R.string.update
+                    )
+                )
             }
         }
     }

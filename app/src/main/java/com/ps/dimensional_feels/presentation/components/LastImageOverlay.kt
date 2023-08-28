@@ -19,12 +19,11 @@ fun LastImageOverlay(
     imageSize: Dp, numberOfRemainingImages: Int, imageShape: CornerBasedShape
 ) {
     Box(contentAlignment = Alignment.Center) {
-        Surface(
-            modifier = Modifier
-                .clip(imageShape)
-                .size(imageSize),
-            color = MaterialTheme.colorScheme.primaryContainer
-        ) {}
+        Surface(modifier = Modifier
+            .clip(imageShape)
+            .size(imageSize),
+            color = MaterialTheme.colorScheme.primaryContainer,
+            content = {})
         Text(
             text = "+${numberOfRemainingImages}", style = TextStyle.Default.copy(
                 fontSize = MaterialTheme.typography.bodyLarge.fontSize,
@@ -32,5 +31,4 @@ fun LastImageOverlay(
             ), color = MaterialTheme.colorScheme.onPrimaryContainer
         )
     }
-
 }

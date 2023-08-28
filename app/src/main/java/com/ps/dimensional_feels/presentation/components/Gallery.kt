@@ -32,14 +32,16 @@ fun Gallery(
     spaceBetween: Dp = 10.dp,
     imageShape: CornerBasedShape = Shapes().small
 ) {
-    val context = LocalContext.current
-
     BoxWithConstraints(modifier = modifier) {
+
+        val context = LocalContext.current
+
         val numberOfVisibleImages by remember {
             derivedStateOf {
                 max(a = 0, b = maxWidth.div(spaceBetween + imageSize).toInt())
             }
         }
+
         val remainingImages by remember {
             derivedStateOf {
                 images.size - numberOfVisibleImages
@@ -67,7 +69,5 @@ fun Gallery(
                 )
             }
         }
-
-
     }
 }

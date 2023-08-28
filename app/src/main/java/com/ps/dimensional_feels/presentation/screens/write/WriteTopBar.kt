@@ -6,11 +6,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.DateRange
-import androidx.compose.material.icons.filled.Delete
-import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material3.CenterAlignedTopAppBar
-import androidx.compose.material3.DropdownMenu
-import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -34,7 +30,7 @@ import com.maxkeppeler.sheets.clock.ClockDialog
 import com.maxkeppeler.sheets.clock.models.ClockSelection
 import com.ps.dimensional_feels.R
 import com.ps.dimensional_feels.model.Diary
-import com.ps.dimensional_feels.presentation.components.CustomAlertDialog
+import com.ps.dimensional_feels.presentation.components.DeleteDiaryDropDownMenu
 import com.ps.dimensional_feels.util.Constants.DATE_PATTERN
 import com.ps.dimensional_feels.util.Constants.DATE_TIME_PATTERN
 import com.ps.dimensional_feels.util.Constants.TIME_PATTERN
@@ -131,7 +127,7 @@ fun WriteTopBar(
             }
         }
         if (selectedDiary != null) {
-            DeleteDiaryAction(
+            DeleteDiaryDropDownMenu(
                 selectedDiary = selectedDiary,
                 onDeleteConfirmed = { onDeleteConfirmed() })
         }
@@ -151,40 +147,4 @@ fun WriteTopBar(
     })
 
 
-}
-
-
-@Composable
-fun DeleteDiaryAction(
-    selectedDiary: Diary?, onDeleteConfirmed: () -> Unit
-) {
-    var expanded by remember { mutableStateOf(false) }
-    var openDialog by remember { mutableStateOf(false) }
-
-    DropdownMenu(expanded = expanded, onDismissRequest = { expanded = false }) {
-        DropdownMenuItem(leadingIcon = {
-            Icon(
-                imageVector = Icons.Default.Delete, contentDescription = stringResource(
-                    id = R.string.delete_diary
-                ), tint = MaterialTheme.colorScheme.error
-            )
-        }, text = {
-            Text(text = stringResource(id = R.string.delete))
-        }, onClick = {
-            openDialog = true
-            expanded = false
-        })
-    }
-    CustomAlertDialog(title = stringResource(id = R.string.delete),
-        message = "${stringResource(id = R.string.delete_diary_message)}: ${selectedDiary?.title}?",
-        isOpen = openDialog,
-        onCloseDialog = { openDialog = false },
-        onConfirmClicked = { onDeleteConfirmed() })
-    IconButton(onClick = { expanded = !expanded }) {
-        Icon(
-            imageVector = Icons.Default.MoreVert,
-            contentDescription = stringResource(id = R.string.overflow_menu_icon),
-            tint = MaterialTheme.colorScheme.onSurface
-        )
-    }
 }

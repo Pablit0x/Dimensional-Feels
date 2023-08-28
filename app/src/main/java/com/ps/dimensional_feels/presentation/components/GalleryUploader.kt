@@ -50,14 +50,17 @@ fun GalleryUploader(
             }
         })
 
-    val context = LocalContext.current
 
     BoxWithConstraints(modifier = modifier) {
+
+        val context = LocalContext.current
+
         val numberOfVisibleImages by remember {
             derivedStateOf {
                 max(a = 0, b = maxWidth.div(spaceBetween + imageSize).toInt().minus(2))
             }
         }
+
         val remainingImages by remember {
             derivedStateOf {
                 galleryState.images.size - numberOfVisibleImages
@@ -93,7 +96,5 @@ fun GalleryUploader(
                 )
             }
         }
-
-
     }
 }

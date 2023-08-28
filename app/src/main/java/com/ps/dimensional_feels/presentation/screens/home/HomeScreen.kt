@@ -19,6 +19,7 @@ import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.res.stringResource
 import com.ps.dimensional_feels.R
 import com.ps.dimensional_feels.data.repository.Diaries
+import com.ps.dimensional_feels.presentation.components.EmptyPage
 import com.ps.dimensional_feels.util.RequestState
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -54,7 +55,7 @@ fun HomeScreen(
                 }
 
                 is RequestState.Error -> {
-                    EmptyDiaryPage(
+                    EmptyPage(
                         modifier = Modifier.padding(padding),
                         title = stringResource(id = R.string.error_diary_title),
                         description = "${diaries.error.message}"
@@ -68,7 +69,6 @@ fun HomeScreen(
                         CircularProgressIndicator()
                     }
                 }
-
                 else -> {}
             }
         })

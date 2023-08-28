@@ -28,7 +28,6 @@ fun ZoomableImage(
 
     val context = LocalContext.current
 
-
     Box(modifier = Modifier
         .fillMaxSize()
         .pointerInput(Unit) {

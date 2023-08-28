@@ -11,6 +11,8 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.FirebaseStorage
+import com.ps.dimensional_feels.data.database.ImageToUploadDao
+import com.ps.dimensional_feels.data.database.entity.ImageToUpload
 import com.ps.dimensional_feels.data.repository.MongoDb
 import com.ps.dimensional_feels.model.Diary
 import com.ps.dimensional_feels.model.GalleryImage
@@ -23,14 +25,19 @@ import com.ps.dimensional_feels.util.RequestState
 import com.ps.dimensional_feels.util.exceptions.DiaryAlreadyDeletedException
 import com.ps.dimensional_feels.util.fetchImagesFromFirebase
 import com.ps.dimensional_feels.util.toRealmInstant
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.mongodb.kbson.ObjectId
 import java.time.ZonedDateTime
+import javax.inject.Inject
 
-class WriteViewModel(private val savedStateHandle: SavedStateHandle) : ViewModel() {
+@HiltViewModel
+class WriteViewModel @Inject constructor(
+    private val imageToUploadDao: ImageToUploadDao, private val savedStateHandle: SavedStateHandle
+) : ViewModel() {
 
     var uiState by mutableStateOf(WriteUiState())
         private set
@@ -71,8 +78,7 @@ class WriteViewModel(private val savedStateHandle: SavedStateHandle) : ViewModel
                             onImageDownload = { downloadedImage ->
                                 galleryState.addImage(
                                     GalleryImage(
-                                        image = downloadedImage,
-                                        remoteImagePath = extractImagePath(
+                                        image = downloadedImage, remoteImagePath = extractImagePath(
                                             fullImageUrl = downloadedImage.toString()
                                         )
                                     )
@@ -156,7 +162,20 @@ class WriteViewModel(private val savedStateHandle: SavedStateHandle) : ViewModel
         val storage = FirebaseStorage.getInstance().reference
         galleryState.images.forEach { galleryImage ->
             val imagePath = storage.child(galleryImage.remoteImagePath)
-            imagePath.putFile(galleryImage.image)
+            imagePath.putFile(galleryImage.image).addOnProgressListener {
+                val sessionUri = it.uploadSessionUri
+                if (sessionUri != null) {
+                    viewModelScope.launch(Dispatchers.IO) {
+                        imageToUploadDao.addImageToUpload(
+                            ImageToUpload(
+                                remoteImagePath = galleryImage.remoteImagePath,
+                                imageUri = galleryImage.image.toString(),
+                                sessionUri = sessionUri.toString()
+                            )
+                        )
+                    }
+                }
+            }
         }
     }
 

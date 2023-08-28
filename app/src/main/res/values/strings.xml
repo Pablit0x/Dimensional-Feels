@@ -21,5 +21,6 @@
     <string name="save">Save</string>
     <string name="update">Update</string>
     <string name="fields_cannot_be_empty">Description and title cannot be empty!</string>
+    <string name="image">Image</string>
 
 </resources>

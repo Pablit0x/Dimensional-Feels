@@ -1,6 +1,5 @@
 package com.ps.dimensional_feels.navigation
 
-import android.widget.Toast
 import androidx.compose.material3.DrawerValue
 import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
@@ -13,6 +12,7 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
@@ -23,9 +23,7 @@ import androidx.navigation.navArgument
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.rememberPagerState
 import com.ps.dimensional_feels.R
-import com.ps.dimensional_feels.model.GalleryImage
 import com.ps.dimensional_feels.model.getMoodByPosition
-import com.ps.dimensional_feels.model.rememberGalleryState
 import com.ps.dimensional_feels.model.toRickAndMortyCharacter
 import com.ps.dimensional_feels.presentation.components.CustomAlertDialog
 import com.ps.dimensional_feels.presentation.screens.auth.AuthenticationScreen
@@ -168,7 +166,7 @@ fun NavGraphBuilder.writeRoute(onBackPressed: () -> Unit) {
     ) {
         val context = LocalContext.current
         val pagerState = rememberPagerState()
-        val viewModel: WriteViewModel = viewModel()
+        val viewModel = hiltViewModel<WriteViewModel>()
         val galleryState = viewModel.galleryState
         val uiState = viewModel.uiState
         val pageNumber by remember {
@@ -184,9 +182,7 @@ fun NavGraphBuilder.writeRoute(onBackPressed: () -> Unit) {
             onDeleteConfirmed = {
                 viewModel.deleteDiary(onSuccess = {
                     onBackPressed()
-                }, onError = {
-                    Toast.makeText(context, it, Toast.LENGTH_SHORT).show()
-                })
+                }, onError = {})
             },
             moodName = {
                 getMoodByPosition(
@@ -212,6 +208,7 @@ fun NavGraphBuilder.writeRoute(onBackPressed: () -> Unit) {
                 viewModel.addImage(
                     image = it, imageType = type
                 )
-            })
+            },
+            onImageDeleteClicked = {})
     }
 }

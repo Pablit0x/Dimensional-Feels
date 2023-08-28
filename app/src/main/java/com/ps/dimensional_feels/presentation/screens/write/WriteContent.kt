@@ -39,6 +39,7 @@ import com.google.accompanist.pager.HorizontalPager
 import com.google.accompanist.pager.PagerState
 import com.ps.dimensional_feels.R
 import com.ps.dimensional_feels.model.Diary
+import com.ps.dimensional_feels.model.GalleryImage
 import com.ps.dimensional_feels.model.GalleryState
 import com.ps.dimensional_feels.model.getMoodByPosition
 import com.ps.dimensional_feels.presentation.components.GalleryUploader
@@ -54,7 +55,8 @@ fun WriteContent(
     onTitleChanged: (String) -> Unit,
     onDescriptionChanged: (String) -> Unit,
     onSavedClicked: (Diary) -> Unit,
-    onImageSelected: (Uri) -> Unit
+    onImageSelected: (Uri) -> Unit,
+    onImageClicked: (GalleryImage, Int) -> Unit
 ) {
     val scrollState = rememberScrollState()
     val context = LocalContext.current
@@ -147,10 +149,14 @@ fun WriteContent(
         }
         Column(verticalArrangement = Arrangement.Bottom) {
             Spacer(modifier = Modifier.height(12.dp))
-            GalleryUploader(galleryState = galleryState,
+            GalleryUploader(
+                galleryState = galleryState,
                 onAddClicked = { focusManager.clearFocus() },
                 onImageSelected = onImageSelected,
-                onImageClicked = {})
+                onImageClicked = { galleryImage, index ->
+                    onImageClicked(galleryImage, index)
+                }
+            )
             Spacer(modifier = Modifier.height(12.dp))
 
             Button(

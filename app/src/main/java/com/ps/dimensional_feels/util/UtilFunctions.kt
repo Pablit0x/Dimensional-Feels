@@ -1,7 +1,10 @@
 package com.ps.dimensional_feels.util
 
 import android.net.Uri
+import androidx.core.net.toUri
 import com.google.firebase.storage.FirebaseStorage
+import com.google.firebase.storage.ktx.storageMetadata
+import com.ps.dimensional_feels.data.database.entity.ImageToUpload
 import io.realm.kotlin.types.RealmInstant
 import java.time.Instant
 
@@ -49,4 +52,17 @@ fun fetchImagesFromFirebase(
             }
         }
     }
+}
+
+fun retryUploadingImageToFirebase(
+    imageToUpload: ImageToUpload, onSuccess: () -> Unit
+) {
+    val storage = FirebaseStorage.getInstance().reference
+    storage.child(
+        imageToUpload.remoteImagePath
+    )
+        .putFile(
+            imageToUpload.imageUri.toUri(), storageMetadata { },
+            imageToUpload.sessionUri.toUri()
+        ).addOnSuccessListener { onSuccess() }
 }

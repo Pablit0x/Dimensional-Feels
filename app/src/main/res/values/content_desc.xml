@@ -14,5 +14,7 @@
     <string name="navigate_back">Navigate Back</string>
     <string name="overflow_menu_icon">Overflow Menu</string>
     <string name="delete_diary">Delete Diary</string>
+    <string name="delete_image">Delete Image</string>
     <string name="success">Success</string>
+    <string name="close_image">Close Image</string>
 </resources>

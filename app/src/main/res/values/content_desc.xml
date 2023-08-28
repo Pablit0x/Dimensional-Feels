@@ -9,6 +9,7 @@
     <string name="add_new_image">Add New Image</string>
     <string name="app_logo">Happy Days App Logo</string>
     <string name="mood_icon">Mood</string>
+    <string name="loading">Loading…</string>
     <string name="gallery_image">Gallery Image</string>
     <string name="navigate_back">Navigate Back</string>
     <string name="overflow_menu_icon">Overflow Menu</string>

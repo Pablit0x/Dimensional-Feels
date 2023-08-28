@@ -8,6 +8,8 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.ktx.auth
+import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.FirebaseStorage
 import com.ps.dimensional_feels.data.repository.MongoDb
 import com.ps.dimensional_feels.model.Diary
@@ -15,11 +17,11 @@ import com.ps.dimensional_feels.model.GalleryImage
 import com.ps.dimensional_feels.model.GalleryState
 import com.ps.dimensional_feels.model.Mood
 import com.ps.dimensional_feels.model.getMoodByName
-import com.ps.dimensional_feels.model.rememberGalleryState
 import com.ps.dimensional_feels.model.toRickAndMortyCharacter
 import com.ps.dimensional_feels.navigation.NavigationArguments.WRITE_SCREEN_ARGUMENT_KEY
 import com.ps.dimensional_feels.util.RequestState
 import com.ps.dimensional_feels.util.exceptions.DiaryAlreadyDeletedException
+import com.ps.dimensional_feels.util.fetchImagesFromFirebase
 import com.ps.dimensional_feels.util.toRealmInstant
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.catch
@@ -65,6 +67,17 @@ class WriteViewModel(private val savedStateHandle: SavedStateHandle) : ViewModel
                         setTitle(title = diary.data.title)
                         setDescription(description = diary.data.description)
 
+                        fetchImagesFromFirebase(remoteImagePaths = diary.data.images,
+                            onImageDownload = { downloadedImage ->
+                                galleryState.addImage(
+                                    GalleryImage(
+                                        image = downloadedImage,
+                                        remoteImagePath = extractImagePath(
+                                            fullImageUrl = downloadedImage.toString()
+                                        )
+                                    )
+                                )
+                            })
                     }
                 }
             }
@@ -139,7 +152,7 @@ class WriteViewModel(private val savedStateHandle: SavedStateHandle) : ViewModel
         }
     }
 
-    private fun uploadImagesToFirebase(){
+    private fun uploadImagesToFirebase() {
         val storage = FirebaseStorage.getInstance().reference
         galleryState.images.forEach { galleryImage ->
             val imagePath = storage.child(galleryImage.remoteImagePath)
@@ -185,5 +198,11 @@ class WriteViewModel(private val savedStateHandle: SavedStateHandle) : ViewModel
                 updatedDateTime = null
             )
         }
+    }
+
+    private fun extractImagePath(fullImageUrl: String): String {
+        val chunks = fullImageUrl.split("%2F")
+        val imageName = chunks[2].split("?").first()
+        return "images/${Firebase.auth.currentUser?.uid}/$imageName"
     }
 }

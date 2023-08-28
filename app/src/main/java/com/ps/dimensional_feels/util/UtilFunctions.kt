@@ -7,6 +7,13 @@ import com.google.firebase.storage.ktx.storageMetadata
 import com.ps.dimensional_feels.data.database.entity.ImageToUpload
 import io.realm.kotlin.types.RealmInstant
 import java.time.Instant
+import java.time.LocalDate
+import java.time.ZoneId
+
+fun convertMillisToLocalDate(millis: Long): LocalDate {
+    val instant = Instant.ofEpochMilli(millis)
+    return instant.atZone(ZoneId.systemDefault()).toLocalDate()
+}
 
 fun RealmInstant.toInstant(): Instant {
     val sec: Long = this.epochSeconds

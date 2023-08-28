@@ -23,7 +23,7 @@ fun ImageTopBar(title: String, onBackClicked: () -> Unit, onDeleteClicked: () ->
             )
         }
     }, actions = {
-        IconButton(onClick = onBackClicked) {
+        IconButton(onClick = onDeleteClicked) {
             Icon(
                 imageVector = Icons.Default.Delete,
                 contentDescription = stringResource(id = R.string.delete_image)

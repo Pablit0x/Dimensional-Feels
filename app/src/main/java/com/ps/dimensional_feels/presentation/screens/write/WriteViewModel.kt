@@ -11,7 +11,9 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.FirebaseStorage
+import com.ps.dimensional_feels.data.database.ImageToDeleteDao
 import com.ps.dimensional_feels.data.database.ImageToUploadDao
+import com.ps.dimensional_feels.data.database.entity.ImageToDelete
 import com.ps.dimensional_feels.data.database.entity.ImageToUpload
 import com.ps.dimensional_feels.data.repository.MongoDb
 import com.ps.dimensional_feels.model.Diary
@@ -37,7 +39,9 @@ import javax.inject.Inject
 
 @HiltViewModel
 class WriteViewModel @Inject constructor(
-    private val imageToUploadDao: ImageToUploadDao, private val savedStateHandle: SavedStateHandle
+    private val imageToDeleteDao: ImageToDeleteDao,
+    private val imageToUploadDao: ImageToUploadDao,
+    private val savedStateHandle: SavedStateHandle
 ) : ViewModel() {
 
     var uiState by mutableStateOf(WriteUiState())
@@ -229,11 +233,19 @@ class WriteViewModel @Inject constructor(
         val storage = FirebaseStorage.getInstance().reference
         if (images != null) {
             images.forEach { remotePath ->
-                storage.child(remotePath).delete()
+                storage.child(remotePath).delete().addOnFailureListener { e ->
+                    viewModelScope.launch(Dispatchers.IO) {
+                        imageToDeleteDao.addImageToDelete(ImageToDelete(remoteImagePath = remotePath))
+                    }
+                }
             }
         } else {
-            galleryState.imagesToBeDeleted.map { it.remoteImagePath }.forEach {
-                storage.child(it).delete()
+            galleryState.imagesToBeDeleted.map { it.remoteImagePath }.forEach { remotePath ->
+                storage.child(remotePath).delete().addOnFailureListener { e ->
+                    viewModelScope.launch(Dispatchers.IO) {
+                        imageToDeleteDao.addImageToDelete(ImageToDelete(remoteImagePath = remotePath))
+                    }
+                }
             }
         }
     }

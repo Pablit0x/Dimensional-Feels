@@ -21,6 +21,7 @@ import com.ps.dimensional_feels.R
 import com.ps.dimensional_feels.data.repository.Diaries
 import com.ps.dimensional_feels.presentation.components.EmptyPage
 import com.ps.dimensional_feels.util.RequestState
+import java.time.ZonedDateTime
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -31,7 +32,10 @@ fun HomeScreen(
     onSignOutClicked: () -> Unit,
     onMenuClicked: () -> Unit,
     onNavigateToWrite: () -> Unit,
-    onNavigateToWriteWithArgs: (String) -> Unit
+    onNavigateToWriteWithArgs: (String) -> Unit,
+    dateIsSelected: Boolean,
+    onDateSelected: (ZonedDateTime) -> Unit,
+    onDateReset: () -> Unit
 ) {
     val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior()
     NavigationDrawer(
@@ -40,7 +44,13 @@ fun HomeScreen(
         onSignOutClicked = onSignOutClicked
     ) {
         Scaffold(modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection), topBar = {
-            HomeTopBar(scrollBehavior = scrollBehavior, onMenuClicked = onMenuClicked)
+            HomeTopBar(
+                scrollBehavior = scrollBehavior,
+                onMenuClicked = onMenuClicked,
+                dateIsSelected = dateIsSelected,
+                onDateSelected = onDateSelected,
+                onDateReset = onDateReset
+            )
         }, floatingActionButton = {
             FloatingActionButton(onClick = onNavigateToWrite) {
                 Icon(

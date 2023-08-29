@@ -138,7 +138,14 @@ fun NavGraphBuilder.homeRoute(
             onSignOutClicked = { isSignOutDialogOpen = true },
             onMenuClicked = { scope.launch { drawerState.open() } },
             onNavigateToWriteWithArgs = onNavigateToWriteWithArgs,
-            onNavigateToWrite = { onNavigateToWrite() })
+            onNavigateToWrite = { onNavigateToWrite() },
+            dateIsSelected = viewModel.dateIsSelected,
+            onDateSelected = {
+                viewModel.getDiaries(zonedDateTime = it)
+            },
+            onDateReset = {
+                viewModel.getDiaries()
+            })
 
         CustomAlertDialog(title = stringResource(id = R.string.delete_all_diaries),
             message = stringResource(

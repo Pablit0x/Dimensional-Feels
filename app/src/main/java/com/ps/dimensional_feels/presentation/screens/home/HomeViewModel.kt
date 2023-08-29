@@ -18,9 +18,12 @@ import com.ps.dimensional_feels.util.RequestState
 import com.ps.dimensional_feels.util.exceptions.NoInternetConnectionException
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.cancelAndJoin
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import java.time.ZonedDateTime
 import javax.inject.Inject
 
 @HiltViewModel
@@ -32,8 +35,14 @@ class HomeViewModel @Inject constructor(
     var diaries: MutableState<Diaries> = mutableStateOf(RequestState.Idle)
     private var network by mutableStateOf(ConnectivityObserver.Status.Unavailable)
 
+    private lateinit var allDiariesJob: Job
+    private lateinit var filteredDiariesJob: Job
+
+    var dateIsSelected by mutableStateOf(false)
+        private set
+
     init {
-        observeAllDiaries()
+        getDiaries()
         observeConnectivityObserver()
     }
 
@@ -45,8 +54,32 @@ class HomeViewModel @Inject constructor(
         }
     }
 
+    fun getDiaries(zonedDateTime: ZonedDateTime? = null) {
+        dateIsSelected = zonedDateTime != null
+        diaries.value = RequestState.Loading
+        if (dateIsSelected && zonedDateTime != null) {
+            observeFilteredDiaries(zonedDateTime = zonedDateTime)
+        } else {
+            observeAllDiaries()
+        }
+    }
+
+    private fun observeFilteredDiaries(zonedDateTime: ZonedDateTime) {
+        filteredDiariesJob = viewModelScope.launch {
+            if (::allDiariesJob.isInitialized) {
+                allDiariesJob.cancelAndJoin()
+            }
+            MongoDb.getFilteredDiaries(zonedDateTime).collect {
+                diaries.value = it
+            }
+        }
+    }
+
     private fun observeAllDiaries() {
-        viewModelScope.launch {
+        allDiariesJob = viewModelScope.launch {
+            if (::filteredDiariesJob.isInitialized) {
+                filteredDiariesJob.cancelAndJoin()
+            }
             MongoDb.getAllDiaries().collect { result ->
                 diaries.value = result
             }
@@ -88,4 +121,5 @@ class HomeViewModel @Inject constructor(
             onError(NoInternetConnectionException())
         }
     }
+
 }

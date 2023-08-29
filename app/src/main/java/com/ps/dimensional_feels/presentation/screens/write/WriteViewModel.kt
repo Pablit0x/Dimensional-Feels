@@ -135,7 +135,6 @@ class WriteViewModel @Inject constructor(
         if (result is RequestState.Success) {
             uploadImagesToFirebase()
             deleteImagesFromFirebase()
-            galleryState.clearImagesToBeDeleted()
             withContext(Dispatchers.Main) {
                 onSuccess()
             }

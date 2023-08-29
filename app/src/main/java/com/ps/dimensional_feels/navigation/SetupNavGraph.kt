@@ -1,5 +1,6 @@
 package com.ps.dimensional_feels.navigation
 
+import android.widget.Toast
 import androidx.compose.material3.DrawerValue
 import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
@@ -116,9 +117,12 @@ fun NavGraphBuilder.homeRoute(
     onDataLoaded: () -> Unit
 ) {
     composable(route = Screen.Home.route) {
-        val viewModel: HomeViewModel = viewModel()
+        val context = LocalContext.current
+        val viewModel = hiltViewModel<HomeViewModel>()
         val diaries by viewModel.diaries
         var isSignOutDialogOpen by remember { mutableStateOf(false) }
+        var isDeleteAllDialogOpen by remember { mutableStateOf(false) }
+
         val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
         val scope = rememberCoroutineScope()
 
@@ -130,12 +134,38 @@ fun NavGraphBuilder.homeRoute(
 
         HomeScreen(diaries = diaries,
             drawerState = drawerState,
+            onDeleteAllClicked = { isDeleteAllDialogOpen = true },
             onSignOutClicked = { isSignOutDialogOpen = true },
             onMenuClicked = { scope.launch { drawerState.open() } },
             onNavigateToWriteWithArgs = onNavigateToWriteWithArgs,
             onNavigateToWrite = { onNavigateToWrite() })
 
-        CustomAlertDialog(title = stringResource(id = R.string.google_sign_out),
+        CustomAlertDialog(title = stringResource(id = R.string.delete_all_diaries),
+            message = stringResource(
+                id = R.string.delete_all_diaries_message
+            ),
+            isOpen = isDeleteAllDialogOpen,
+            onCloseDialog = { isDeleteAllDialogOpen = false },
+            onConfirmClicked = {
+                viewModel.deleteAllDiaries(onSuccess = {
+                    Toast.makeText(
+                        context, context.getString(R.string.all_diaries_deleted), Toast.LENGTH_SHORT
+                    ).show()
+                    scope.launch {
+                        drawerState.close()
+                    }
+                }, onError = {
+                    Toast.makeText(
+                        context,
+                        it.message ?: context.getString(R.string.unknown_error),
+                        Toast.LENGTH_SHORT
+                    ).show()
+                })
+            })
+
+
+        CustomAlertDialog(
+            title = stringResource(id = R.string.google_sign_out),
             message = stringResource(
                 id = R.string.sign_out_message
             ),

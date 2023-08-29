@@ -17,4 +17,5 @@
     <string name="delete_image">Delete Image</string>
     <string name="success">Success</string>
     <string name="close_image">Close Image</string>
+    <string name="delete_all_diaries_icon">Delete All Diaries</string>
 </resources>

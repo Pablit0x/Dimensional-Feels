@@ -27,14 +27,18 @@ import com.ps.dimensional_feels.util.RequestState
 fun HomeScreen(
     diaries: Diaries,
     drawerState: DrawerState,
+    onDeleteAllClicked: () -> Unit,
     onSignOutClicked: () -> Unit,
     onMenuClicked: () -> Unit,
     onNavigateToWrite: () -> Unit,
     onNavigateToWriteWithArgs: (String) -> Unit
 ) {
-
     val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior()
-    NavigationDrawer(drawerState = drawerState, onSignOutClicked = onSignOutClicked) {
+    NavigationDrawer(
+        drawerState = drawerState,
+        onDeleteAllClicked = onDeleteAllClicked,
+        onSignOutClicked = onSignOutClicked
+    ) {
         Scaffold(modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection), topBar = {
             HomeTopBar(scrollBehavior = scrollBehavior, onMenuClicked = onMenuClicked)
         }, floatingActionButton = {

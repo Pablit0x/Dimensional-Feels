@@ -94,7 +94,8 @@ fun DiaryHolder(
                 DiaryHeader(
                     character = diary.character.toRickAndMortyCharacter(),
                     moodName = diary.mood,
-                    time = diary.date.toInstant()
+                    time = diary.date.toInstant(),
+                    title = diary.title
                 )
                 Text(
                     modifier = Modifier.padding(14.dp),

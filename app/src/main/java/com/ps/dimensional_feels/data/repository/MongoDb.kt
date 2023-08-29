@@ -111,8 +111,8 @@ object MongoDb : MongoRepository {
         return if (user != null) {
             realm.write {
                 val diary =
-                    query<Diary>(query = "_id == $0 AND owner_id == $1", diaryId, user.id)
-                        .first().find()
+                    query<Diary>(query = "_id == $0 AND owner_id == $1", diaryId, user.id).first()
+                        .find()
                 if (diary != null) {
                     try {
                         delete(diary)
@@ -122,6 +122,22 @@ object MongoDb : MongoRepository {
                     }
                 } else {
                     RequestState.Error(QueriedDiaryDoesNotExist())
+                }
+            }
+        } else {
+            RequestState.Error(UserNotAuthenticatedException())
+        }
+    }
+
+    override suspend fun deleteAllDiaries(): RequestState<Boolean> {
+        return if (user != null) {
+            realm.write {
+                val diaries = this.query<Diary>("owner_id = $0", user.id).find()
+                try {
+                    delete(diaries)
+                    RequestState.Success(data = true)
+                } catch (e: Exception) {
+                    RequestState.Error(e)
                 }
             }
         } else {

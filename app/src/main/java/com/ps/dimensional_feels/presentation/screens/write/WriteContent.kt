@@ -17,6 +17,7 @@ import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
+import androidx.compose.material3.Divider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Shapes
 import androidx.compose.material3.Text
@@ -107,6 +108,7 @@ fun WriteContent(
                 keyboardOptions = KeyboardOptions.Default.copy(
                     imeAction = ImeAction.Next
                 ),
+                label = { Text(text = stringResource(id = R.string.title_label)) },
                 colors = TextFieldDefaults.colors(
                     focusedContainerColor = Color.Transparent,
                     unfocusedContainerColor = Color.Transparent,
@@ -122,6 +124,9 @@ fun WriteContent(
                 maxLines = 1,
                 singleLine = true
             )
+            Spacer(modifier = Modifier.height(4.dp))
+            Divider()
+            Spacer(modifier = Modifier.height(4.dp))
 
             TextField(
                 modifier = Modifier.fillMaxWidth(),
@@ -149,14 +154,12 @@ fun WriteContent(
         }
         Column(verticalArrangement = Arrangement.Bottom) {
             Spacer(modifier = Modifier.height(12.dp))
-            GalleryUploader(
-                galleryState = galleryState,
+            GalleryUploader(galleryState = galleryState,
                 onAddClicked = { focusManager.clearFocus() },
                 onImageSelected = onImageSelected,
                 onImageClicked = { galleryImage, index ->
                     onImageClicked(galleryImage, index)
-                }
-            )
+                })
             Spacer(modifier = Modifier.height(12.dp))
 
             Button(

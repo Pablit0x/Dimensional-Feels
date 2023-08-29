@@ -9,7 +9,10 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material3.DrawerState
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalDrawerSheet
 import androidx.compose.material3.ModalNavigationDrawer
@@ -25,7 +28,10 @@ import com.ps.dimensional_feels.R
 
 @Composable
 fun NavigationDrawer(
-    drawerState: DrawerState, onSignOutClicked: () -> Unit, content: @Composable () -> Unit
+    drawerState: DrawerState,
+    onDeleteAllClicked: () -> Unit,
+    onSignOutClicked: () -> Unit,
+    content: @Composable () -> Unit
 ) {
     ModalNavigationDrawer(drawerState = drawerState, drawerContent = {
         ModalDrawerSheet {
@@ -58,6 +64,22 @@ fun NavigationDrawer(
                     )
                 }
             }, selected = false, onClick = onSignOutClicked)
+
+            NavigationDrawerItem(label = {
+                Row(modifier = Modifier.padding(horizontal = 12.dp)) {
+                    Icon(
+                        imageVector = Icons.Default.Delete,
+                        contentDescription = stringResource(
+                            id = R.string.delete_all_diaries_icon
+                        )
+                    )
+                    Spacer(modifier = Modifier.width(12.dp))
+                    Text(
+                        text = stringResource(id = R.string.delete_all_diaries),
+                        color = MaterialTheme.colorScheme.onSurface
+                    )
+                }
+            }, selected = false, onClick = onDeleteAllClicked)
         }
     }, content = content)
 }

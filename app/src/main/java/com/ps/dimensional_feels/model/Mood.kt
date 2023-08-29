@@ -9,7 +9,7 @@ import com.ps.dimensional_feels.presentation.theme.DrunkColor
 import com.ps.dimensional_feels.presentation.theme.HappyColor
 
 open class Mood(
-    val contentColor: Color, val containerColor: Color, val icon: Int, val name: String,
+    val onContainerColor: Color, val containerColor: Color, val icon: Int, val name: String,
 ) {
     class Happy(character: RickAndMortyCharacters = RickAndMortyCharacters.Rick) : Mood(
         icon = when (character) {
@@ -18,7 +18,7 @@ open class Mood(
             RickAndMortyCharacters.Beth -> MoodIcon.Default.icon
             RickAndMortyCharacters.Jerry -> MoodIcon.Default.icon
             RickAndMortyCharacters.Summer -> MoodIcon.Default.icon
-        }, contentColor = Color.Black, containerColor = HappyColor, name = "Happy"
+        }, onContainerColor = Color.Black, containerColor = HappyColor, name = "Happy"
     ) {
         companion object {
             const val name: String = "Happy"
@@ -33,7 +33,7 @@ open class Mood(
             RickAndMortyCharacters.Beth -> MoodIcon.Default.icon
             RickAndMortyCharacters.Jerry -> MoodIcon.Default.icon
             RickAndMortyCharacters.Summer -> MoodIcon.Default.icon
-        }, contentColor = Color.Black, containerColor = AngryColor, name = "Angry"
+        }, onContainerColor = Color.White, containerColor = AngryColor, name = "Angry"
     ) {
         companion object {
             const val name: String = "Angry"
@@ -48,7 +48,7 @@ open class Mood(
             RickAndMortyCharacters.Beth -> MoodIcon.Default.icon
             RickAndMortyCharacters.Jerry -> MoodIcon.Default.icon
             RickAndMortyCharacters.Summer -> MoodIcon.Default.icon
-        }, contentColor = Color.Black, containerColor = ConfusedColor, name = "Confused"
+        }, onContainerColor = Color.White, containerColor = ConfusedColor, name = "Confused"
     ) {
         companion object {
             const val name: String = "Confused"
@@ -64,7 +64,7 @@ open class Mood(
                 RickAndMortyCharacters.Beth -> MoodIcon.Default.icon
                 RickAndMortyCharacters.Jerry -> MoodIcon.Default.icon
                 RickAndMortyCharacters.Summer -> MoodIcon.Default.icon
-            }, contentColor = Color.Black, containerColor = DepressedColor, name = "Depressed"
+            }, onContainerColor = Color.Black, containerColor = DepressedColor, name = "Depressed"
         ) {
         companion object {
             const val name: String = "Depressed"
@@ -79,7 +79,7 @@ open class Mood(
             RickAndMortyCharacters.Beth -> MoodIcon.Default.icon
             RickAndMortyCharacters.Jerry -> MoodIcon.Default.icon
             RickAndMortyCharacters.Summer -> MoodIcon.Default.icon
-        }, contentColor = Color.Black, containerColor = AmorousColor, name = "Amorous"
+        }, onContainerColor = Color.White, containerColor = AmorousColor, name = "Amorous"
     ) {
         companion object {
             const val name: String = "Amorous"
@@ -94,7 +94,7 @@ open class Mood(
             RickAndMortyCharacters.Beth -> MoodIcon.Default.icon
             RickAndMortyCharacters.Jerry -> MoodIcon.Default.icon
             RickAndMortyCharacters.Summer -> MoodIcon.Default.icon
-        }, contentColor = Color.Black, containerColor = DrunkColor, name = "Drunk"
+        }, onContainerColor = Color.Black, containerColor = DrunkColor, name = "Drunk"
     ) {
         companion object {
             const val name: String = "Drunk"

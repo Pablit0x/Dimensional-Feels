@@ -1,7 +1,12 @@
 package com.ps.dimensional_feels.navigation
 
+import android.util.Log
 import android.widget.Toast
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.DrawerValue
+import androidx.compose.material3.Text
 import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -11,6 +16,8 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -43,7 +50,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
 @Composable
-fun SetupNavGraph(
+fun NavGraph(
     startDestinationRoute: String, navController: NavHostController, onDataLoaded: () -> Unit
 ) {
     NavHost(navController = navController, startDestination = startDestinationRoute) {
@@ -51,7 +58,9 @@ fun SetupNavGraph(
             navController.popBackStack()
             navController.navigate(Screen.Home.route)
         }, onDataLoaded = onDataLoaded)
-        homeRoute(onNavigateToWriteWithArgs = {
+        homeRoute(onNavigateToCalendarWithArgs = {
+            navController.navigate(Screen.Calendar.passCurrentDate(123456L))
+        }, onNavigateToWriteWithArgs = {
             navController.navigate(Screen.Write.passDiaryId(it))
         }, onNavigateToWrite = {
             navController.navigate(Screen.Write.route)
@@ -63,6 +72,7 @@ fun SetupNavGraph(
         writeRoute(onBackPressed = {
             navController.popBackStack()
         })
+        calendarRoute(onCancelPressed = {}, onSelectDate = {})
     }
 
 }
@@ -111,6 +121,7 @@ fun NavGraphBuilder.authenticationRoute(navigateHome: () -> Unit, onDataLoaded: 
 }
 
 fun NavGraphBuilder.homeRoute(
+    onNavigateToCalendarWithArgs: (Long) -> Unit,
     onNavigateToWriteWithArgs: (String) -> Unit,
     onNavigateToWrite: () -> Unit,
     navigateToAuth: () -> Unit,
@@ -130,6 +141,7 @@ fun NavGraphBuilder.homeRoute(
             if (diaries !is RequestState.Loading) {
                 onDataLoaded()
             }
+            onNavigateToCalendarWithArgs(1234L)
         }
 
         HomeScreen(diaries = diaries,
@@ -171,8 +183,7 @@ fun NavGraphBuilder.homeRoute(
             })
 
 
-        CustomAlertDialog(
-            title = stringResource(id = R.string.google_sign_out),
+        CustomAlertDialog(title = stringResource(id = R.string.google_sign_out),
             message = stringResource(
                 id = R.string.sign_out_message
             ),
@@ -188,6 +199,26 @@ fun NavGraphBuilder.homeRoute(
                     }
                 }
             })
+    }
+}
+
+fun NavGraphBuilder.calendarRoute(onCancelPressed: () -> Unit, onSelectDate: (Long) -> Unit) {
+    composable(
+        route = Screen.Calendar.route,
+        arguments = listOf(navArgument(name = NavigationArguments.CALENDAR_SCREEN_ARGUMENT_KEY) {
+            type = NavType.LongType
+            defaultValue = 0L
+        })
+    ) { entry ->
+        val x = entry.arguments?.getLong(NavigationArguments.CALENDAR_SCREEN_ARGUMENT_KEY)
+
+        Log.d("lolipop", "entry = $x")
+        Column(
+            modifier = Modifier.fillMaxSize(), horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.Center
+        ) {
+            Text(text = "Calendar $x")
+        }
     }
 }
 

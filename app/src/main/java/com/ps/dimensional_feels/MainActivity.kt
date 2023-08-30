@@ -11,7 +11,7 @@ import com.google.firebase.FirebaseApp
 import com.ps.dimensional_feels.data.database.ImageToDeleteDao
 import com.ps.dimensional_feels.data.database.ImageToUploadDao
 import com.ps.dimensional_feels.navigation.Screen
-import com.ps.dimensional_feels.navigation.SetupNavGraph
+import com.ps.dimensional_feels.navigation.NavGraph
 import com.ps.dimensional_feels.presentation.theme.DimensionalFeelsTheme
 import com.ps.dimensional_feels.util.Constants.APP_ID
 import com.ps.dimensional_feels.util.retryDeletingImagesFromFirebase
@@ -41,7 +41,7 @@ class MainActivity : ComponentActivity() {
         setContent {
             DimensionalFeelsTheme {
                 val navController = rememberNavController()
-                SetupNavGraph(startDestinationRoute = getStartDestination(),
+                NavGraph(startDestinationRoute = getStartDestination(),
                     navController = navController,
                     onDataLoaded = { keepSplashOpened = false })
             }

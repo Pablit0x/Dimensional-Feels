@@ -16,6 +16,8 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.map
 import org.mongodb.kbson.ObjectId
+import java.time.LocalDateTime
+import java.time.LocalTime
 import java.time.ZoneId
 import java.time.ZonedDateTime
 
@@ -65,9 +67,18 @@ object MongoDb : MongoRepository {
                 realm.query<Diary>(
                     "owner_id == $0 AND date < $1 AND date > $2",
                     user.id,
-                    RealmInstant.from(zonedDateTime.plusDays(1).toInstant().epochSecond, 0),
-                    RealmInstant.from(zonedDateTime.minusDays(1).toInstant().epochSecond, 0)
-                ).asFlow().map { result ->
+                    RealmInstant.from(
+                        LocalDateTime.of(
+                            zonedDateTime.toLocalDate().plusDays(1), LocalTime.MIDNIGHT
+                        ).toEpochSecond(zonedDateTime.offset), 0
+                    ),
+                    RealmInstant.from(
+                        LocalDateTime.of(
+                            zonedDateTime.toLocalDate(), LocalTime.MIDNIGHT
+                        ).toEpochSecond(zonedDateTime.offset), 0
+                    ),
+
+                    ).asFlow().map { result ->
                     RequestState.Success(data = result.list.groupBy {
                         it.date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate()
                     })

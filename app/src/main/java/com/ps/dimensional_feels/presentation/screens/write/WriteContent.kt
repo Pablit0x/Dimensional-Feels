@@ -39,11 +39,11 @@ import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.HorizontalPager
 import com.google.accompanist.pager.PagerState
 import com.ps.dimensional_feels.R
-import com.ps.dimensional_feels.model.Diary
-import com.ps.dimensional_feels.model.GalleryImage
-import com.ps.dimensional_feels.model.GalleryState
-import com.ps.dimensional_feels.model.getMoodByPosition
-import com.ps.dimensional_feels.presentation.components.GalleryUploader
+import com.ps.ui.GalleryImage
+import com.ps.ui.GalleryState
+import com.ps.ui.components.GalleryUploader
+import com.ps.util.model.Diary
+import com.ps.util.model.getMoodByPosition
 import io.realm.kotlin.ext.toRealmList
 
 @OptIn(ExperimentalPagerApi::class)

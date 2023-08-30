@@ -1,7 +1,7 @@
 package com.ps.dimensional_feels.di
 
 import android.content.Context
-import com.ps.dimensional_feels.connectivity.NetworkConnectivityObserver
+import com.ps.util.connectivity.NetworkConnectivityObserver
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn

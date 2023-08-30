@@ -1,8 +1,8 @@
 package com.ps.dimensional_feels.presentation.screens.write
 
-import com.ps.dimensional_feels.model.Diary
-import com.ps.dimensional_feels.model.Mood
-import com.ps.dimensional_feels.model.RickAndMortyCharacters
+import com.ps.util.model.Diary
+import com.ps.util.model.Mood
+import com.ps.util.model.RickAndMortyCharacters
 import io.realm.kotlin.types.RealmInstant
 
 data class WriteUiState(

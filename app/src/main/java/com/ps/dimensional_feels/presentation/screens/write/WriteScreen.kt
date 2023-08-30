@@ -20,13 +20,13 @@ import androidx.compose.ui.res.stringResource
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.PagerState
 import com.ps.dimensional_feels.R
-import com.ps.dimensional_feels.model.Diary
-import com.ps.dimensional_feels.model.GalleryImage
-import com.ps.dimensional_feels.model.GalleryState
-import com.ps.dimensional_feels.model.getMoodByName
-import com.ps.dimensional_feels.model.getPositionByMood
-import com.ps.dimensional_feels.model.toRickAndMortyCharacter
-import com.ps.dimensional_feels.presentation.components.ZoomableImage
+import com.ps.ui.GalleryImage
+import com.ps.ui.GalleryState
+import com.ps.ui.components.ZoomableImage
+import com.ps.util.model.Diary
+import com.ps.util.model.getMoodByName
+import com.ps.util.model.getPositionByMood
+import com.ps.util.model.toRickAndMortyCharacter
 import java.time.ZonedDateTime
 
 @OptIn(ExperimentalPagerApi::class)

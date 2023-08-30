@@ -5,4 +5,5 @@ plugins {
     id ("io.realm.kotlin") version "1.10.0" apply false
     id ("com.google.dagger.hilt.android") version "2.44" apply false
     id ("com.google.gms.google-services") version "4.3.15" apply false
+    alias(libs.plugins.com.android.library) apply false
 }

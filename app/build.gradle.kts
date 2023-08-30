@@ -82,7 +82,7 @@ dependencies {
 
     // Room components
     implementation (libs.room.runtime)
-    kapt ("androidx.room:room-compiler:2.5.2")
+    kapt (libs.room.compiler)
     implementation (libs.room.ktx)
 
     // Runtime Compose
@@ -123,4 +123,11 @@ dependencies {
 
     // Desugar JDK
     coreLibraryDesugaring (libs.desugar.jdk)
+
+    implementation(project(":core:ui"))
+    implementation(project(":core:util"))
+    implementation(project(":data:mongo"))
+    implementation(project(":feature:auth"))
+    implementation(project(":feature:home"))
+    implementation(project(":feature:write"))
 }

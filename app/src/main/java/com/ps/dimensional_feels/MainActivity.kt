@@ -3,19 +3,22 @@ package com.ps.dimensional_feels
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.core.net.toUri
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.core.view.WindowCompat
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.compose.rememberNavController
 import com.google.firebase.FirebaseApp
-import com.ps.dimensional_feels.data.database.ImageToDeleteDao
-import com.ps.dimensional_feels.data.database.ImageToUploadDao
-import com.ps.dimensional_feels.navigation.Screen
+import com.google.firebase.storage.FirebaseStorage
+import com.google.firebase.storage.ktx.storageMetadata
 import com.ps.dimensional_feels.navigation.SetupNavGraph
-import com.ps.dimensional_feels.presentation.theme.DimensionalFeelsTheme
-import com.ps.dimensional_feels.util.Constants.APP_ID
-import com.ps.dimensional_feels.util.retryDeletingImagesFromFirebase
-import com.ps.dimensional_feels.util.retryUploadingImageToFirebase
+import com.ps.mongo.database.ImageToDeleteDao
+import com.ps.mongo.database.ImageToUploadDao
+import com.ps.mongo.database.entity.ImageToDelete
+import com.ps.mongo.database.entity.ImageToUpload
+import com.ps.ui.theme.DimensionalFeelsTheme
+import com.ps.util.Constants.APP_ID
+import com.ps.util.Screen
 import dagger.hilt.android.AndroidEntryPoint
 import io.realm.kotlin.mongodb.App
 import kotlinx.coroutines.CoroutineScope
@@ -35,7 +38,7 @@ class MainActivity : ComponentActivity() {
     lateinit var imageToDeleteDao: ImageToDeleteDao
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        installSplashScreen().setKeepOnScreenCondition { keepSplashOpened }
+//        installSplashScreen().setKeepOnScreenCondition { keepSplashOpened }
         WindowCompat.setDecorFitsSystemWindows(window, false)
         FirebaseApp.initializeApp(applicationContext)
         setContent {
@@ -81,4 +84,22 @@ private fun cleanupCheck(
 private fun getStartDestination(): String {
     val user = App.create(APP_ID).currentUser
     return if (user != null && user.loggedIn) Screen.Home.route else Screen.Authentication.route
+}
+
+fun retryUploadingImageToFirebase(
+    imageToUpload: ImageToUpload, onSuccess: () -> Unit
+) {
+    val storage = FirebaseStorage.getInstance().reference
+    storage.child(
+        imageToUpload.remoteImagePath
+    ).putFile(
+        imageToUpload.imageUri.toUri(), storageMetadata { }, imageToUpload.sessionUri.toUri()
+    ).addOnSuccessListener { onSuccess() }
+}
+
+fun retryDeletingImagesFromFirebase(
+    imageToDelete: ImageToDelete, onSuccess: () -> Unit
+) {
+    val storage = FirebaseStorage.getInstance().reference
+    storage.child(imageToDelete.remoteImagePath).delete().addOnSuccessListener { onSuccess() }
 }

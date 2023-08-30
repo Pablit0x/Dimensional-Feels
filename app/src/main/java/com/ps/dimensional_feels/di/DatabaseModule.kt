@@ -2,8 +2,8 @@ package com.ps.dimensional_feels.di
 
 import android.content.Context
 import androidx.room.Room
-import com.ps.dimensional_feels.data.database.ImagesDatabase
-import com.ps.dimensional_feels.util.Constants.IMAGE_DATABASE
+import com.ps.mongo.database.ImagesDatabase
+import com.ps.util.Constants.IMAGE_DATABASE
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn

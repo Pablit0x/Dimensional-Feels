@@ -13,10 +13,11 @@ import com.ps.dimensional_feels.connectivity.NetworkConnectivityObserver
 import com.ps.dimensional_feels.data.database.ImageToDeleteDao
 import com.ps.dimensional_feels.data.database.entity.ImageToDelete
 import com.ps.dimensional_feels.data.repository.Diaries
-import com.ps.dimensional_feels.data.repository.MongoDb
+import com.ps.dimensional_feels.data.repository.MongoRepository
 import com.ps.dimensional_feels.util.RequestState
 import com.ps.dimensional_feels.util.exceptions.NoInternetConnectionException
 import dagger.hilt.android.lifecycle.HiltViewModel
+import io.realm.kotlin.mongodb.User
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.cancelAndJoin
@@ -28,6 +29,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class HomeViewModel @Inject constructor(
+    private val user: User?,
+    private val mongoRepository: MongoRepository,
     private val imageToDeleteDao: ImageToDeleteDao,
     private val connectivityObserver: NetworkConnectivityObserver
 ) : ViewModel() {
@@ -69,7 +72,7 @@ class HomeViewModel @Inject constructor(
             if (::allDiariesJob.isInitialized) {
                 allDiariesJob.cancelAndJoin()
             }
-            MongoDb.getFilteredDiaries(zonedDateTime).collect {
+            mongoRepository.getFilteredDiaries(zonedDateTime).collect {
                 diaries.value = it
             }
         }
@@ -80,7 +83,7 @@ class HomeViewModel @Inject constructor(
             if (::filteredDiariesJob.isInitialized) {
                 filteredDiariesJob.cancelAndJoin()
             }
-            MongoDb.getAllDiaries().collect { result ->
+            mongoRepository.getAllDiaries().collect { result ->
                 diaries.value = result
             }
         }
@@ -103,7 +106,7 @@ class HomeViewModel @Inject constructor(
                     }
                 }
                 viewModelScope.launch(Dispatchers.IO) {
-                    val result = MongoDb.deleteAllDiaries()
+                    val result = mongoRepository.deleteAllDiaries()
                     if (result is RequestState.Success) {
                         withContext(Dispatchers.Main) {
                             onSuccess()
@@ -119,6 +122,17 @@ class HomeViewModel @Inject constructor(
             }
         } else {
             onError(NoInternetConnectionException())
+        }
+    }
+
+    fun logOut(navigateToAuth: () -> Unit){
+        viewModelScope.launch {
+            user?.let {
+                it.logOut()
+                withContext(Dispatchers.Main) {
+                    navigateToAuth()
+                }
+            }
         }
     }
 

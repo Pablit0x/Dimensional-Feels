@@ -19,6 +19,7 @@ import com.stevdzasan.onetap.OneTapSignInWithGoogle
 
 @Composable
 fun AuthenticationScreen(
+    firebaseAuth: FirebaseAuth,
     oneTapSignInState: OneTapSignInState,
     messageBarState: MessageBarState,
     isLoading: Boolean,
@@ -56,7 +57,7 @@ fun AuthenticationScreen(
         clientId = CLIENT_ID,
         onTokenIdReceived = { tokenId ->
             val credential = GoogleAuthProvider.getCredential(tokenId, null)
-            FirebaseAuth.getInstance().signInWithCredential(credential)
+            firebaseAuth.signInWithCredential(credential)
                 .addOnCompleteListener { result ->
                     if (result.isSuccessful) {
                         onSuccessfulFirebaseSignIn(tokenId)

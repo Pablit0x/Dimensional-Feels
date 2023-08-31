@@ -21,7 +21,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
@@ -40,14 +39,10 @@ import com.ps.dimensional_feels.presentation.screens.home.HomeScreen
 import com.ps.dimensional_feels.presentation.screens.home.HomeViewModel
 import com.ps.dimensional_feels.presentation.screens.write.WriteScreen
 import com.ps.dimensional_feels.presentation.screens.write.WriteViewModel
-import com.ps.dimensional_feels.util.Constants.APP_ID
 import com.ps.dimensional_feels.util.RequestState
 import com.stevdzasan.messagebar.rememberMessageBarState
 import com.stevdzasan.onetap.rememberOneTapSignInState
-import io.realm.kotlin.mongodb.App
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 
 @Composable
 fun NavGraph(
@@ -59,7 +54,7 @@ fun NavGraph(
             navController.navigate(Screen.Home.route)
         }, onDataLoaded = onDataLoaded)
         homeRoute(onNavigateToCalendarWithArgs = {
-            navController.navigate(Screen.Calendar.passCurrentDate(123456L))
+//            navController.navigate(Screen.Calendar.passCurrentDate(123456L))
         }, onNavigateToWriteWithArgs = {
             navController.navigate(Screen.Write.passDiaryId(it))
         }, onNavigateToWrite = {
@@ -81,9 +76,10 @@ fun NavGraph(
 fun NavGraphBuilder.authenticationRoute(navigateHome: () -> Unit, onDataLoaded: () -> Unit) {
     composable(route = Screen.Authentication.route) {
         val context = LocalContext.current
-        val viewModel: AuthenticationViewModel = viewModel()
+        val viewModel = hiltViewModel<AuthenticationViewModel>()
         val loadingState by viewModel.loadingState
         val authenticated by viewModel.authenticated
+        val firebaseAuth = viewModel.firebaseAuthentication
         val oneTapSignInState = rememberOneTapSignInState()
         val messageBarState = rememberMessageBarState()
 
@@ -92,6 +88,7 @@ fun NavGraphBuilder.authenticationRoute(navigateHome: () -> Unit, onDataLoaded: 
         }
 
         AuthenticationScreen(
+            firebaseAuth = firebaseAuth,
             oneTapSignInState = oneTapSignInState,
             messageBarState = messageBarState,
             isLoading = loadingState,
@@ -190,14 +187,7 @@ fun NavGraphBuilder.homeRoute(
             isOpen = isSignOutDialogOpen,
             onCloseDialog = { isSignOutDialogOpen = false },
             onConfirmClicked = {
-                scope.launch(Dispatchers.IO) {
-                    App.create(APP_ID).currentUser?.let { user ->
-                        user.logOut()
-                        withContext(Dispatchers.Main) {
-                            navigateToAuth()
-                        }
-                    }
-                }
+                viewModel.logOut(navigateToAuth = { navigateToAuth() })
             })
     }
 }
@@ -214,7 +204,8 @@ fun NavGraphBuilder.calendarRoute(onCancelPressed: () -> Unit, onSelectDate: (Lo
 
         Log.d("lolipop", "entry = $x")
         Column(
-            modifier = Modifier.fillMaxSize(), horizontalAlignment = Alignment.CenterHorizontally,
+            modifier = Modifier.fillMaxSize(),
+            horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center
         ) {
             Text(text = "Calendar $x")

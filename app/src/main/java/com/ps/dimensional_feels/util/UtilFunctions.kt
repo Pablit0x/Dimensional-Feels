@@ -1,11 +1,7 @@
 package com.ps.dimensional_feels.util
 
 import android.net.Uri
-import androidx.core.net.toUri
 import com.google.firebase.storage.FirebaseStorage
-import com.google.firebase.storage.ktx.storageMetadata
-import com.ps.dimensional_feels.data.database.entity.ImageToDelete
-import com.ps.dimensional_feels.data.database.entity.ImageToUpload
 import io.realm.kotlin.types.RealmInstant
 import java.time.Instant
 import java.time.LocalDate
@@ -37,8 +33,6 @@ fun Instant.toRealmInstant(): RealmInstant {
         RealmInstant.from(sec + 1, -1_000_000 + nano)
     }
 }
-
-
 fun fetchImagesFromFirebase(
     remoteImagePaths: List<String>,
     onImageDownload: (Uri) -> Unit,
@@ -62,20 +56,4 @@ fun fetchImagesFromFirebase(
     }
 }
 
-fun retryUploadingImageToFirebase(
-    imageToUpload: ImageToUpload, onSuccess: () -> Unit
-) {
-    val storage = FirebaseStorage.getInstance().reference
-    storage.child(
-        imageToUpload.remoteImagePath
-    ).putFile(
-        imageToUpload.imageUri.toUri(), storageMetadata { }, imageToUpload.sessionUri.toUri()
-    ).addOnSuccessListener { onSuccess() }
-}
 
-fun retryDeletingImagesFromFirebase(
-    imageToDelete: ImageToDelete, onSuccess: () -> Unit
-) {
-    val storage = FirebaseStorage.getInstance().reference
-    storage.child(imageToDelete.remoteImagePath).delete().addOnSuccessListener { onSuccess() }
-}

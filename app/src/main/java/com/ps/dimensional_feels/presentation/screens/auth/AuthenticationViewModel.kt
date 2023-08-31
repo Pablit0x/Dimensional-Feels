@@ -3,7 +3,8 @@ package com.ps.dimensional_feels.presentation.screens.auth
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.ps.dimensional_feels.util.Constants.APP_ID
+import com.google.firebase.auth.FirebaseAuth
+import dagger.hilt.android.lifecycle.HiltViewModel
 import io.realm.kotlin.mongodb.App
 import io.realm.kotlin.mongodb.Credentials
 import io.realm.kotlin.mongodb.GoogleAuthType
@@ -11,13 +12,20 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import javax.inject.Inject
 
-class AuthenticationViewModel : ViewModel() {
+@HiltViewModel
+class AuthenticationViewModel @Inject constructor(
+    private val app : App,
+    firebaseAuth: FirebaseAuth
+) : ViewModel() {
     var loadingState = mutableStateOf(false)
         private set
 
     var authenticated = mutableStateOf(false)
         private set
+
+    var firebaseAuthentication = firebaseAuth
 
     fun setLoading(loading: Boolean) {
         loadingState.value = loading
@@ -29,7 +37,7 @@ class AuthenticationViewModel : ViewModel() {
         viewModelScope.launch {
             try {
                 val result = withContext(Dispatchers.IO) {
-                    App.create(APP_ID).login(
+                    app.login(
                         credentials = Credentials.google(
                             token = tokenId, type = GoogleAuthType.ID_TOKEN
                         )

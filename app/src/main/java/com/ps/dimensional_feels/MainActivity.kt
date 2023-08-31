@@ -3,19 +3,22 @@ package com.ps.dimensional_feels
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.core.net.toUri
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.core.view.WindowCompat
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.compose.rememberNavController
 import com.google.firebase.FirebaseApp
+import com.google.firebase.storage.FirebaseStorage
+import com.google.firebase.storage.ktx.storageMetadata
 import com.ps.dimensional_feels.data.database.ImageToDeleteDao
 import com.ps.dimensional_feels.data.database.ImageToUploadDao
-import com.ps.dimensional_feels.navigation.Screen
+import com.ps.dimensional_feels.data.database.entity.ImageToDelete
+import com.ps.dimensional_feels.data.database.entity.ImageToUpload
 import com.ps.dimensional_feels.navigation.NavGraph
+import com.ps.dimensional_feels.navigation.Screen
 import com.ps.dimensional_feels.presentation.theme.DimensionalFeelsTheme
 import com.ps.dimensional_feels.util.Constants.APP_ID
-import com.ps.dimensional_feels.util.retryDeletingImagesFromFirebase
-import com.ps.dimensional_feels.util.retryUploadingImageToFirebase
 import dagger.hilt.android.AndroidEntryPoint
 import io.realm.kotlin.mongodb.App
 import kotlinx.coroutines.CoroutineScope
@@ -27,6 +30,9 @@ import javax.inject.Inject
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     private var keepSplashOpened = true
+
+    @Inject
+    lateinit var firebaseStorage: FirebaseStorage
 
     @Inject
     lateinit var imageToUploadDao: ImageToUploadDao
@@ -47,6 +53,7 @@ class MainActivity : ComponentActivity() {
             }
         }
         cleanupCheck(
+            firebaseStorage = firebaseStorage,
             scope = lifecycleScope,
             imageToUploadDao = imageToUploadDao,
             imageToDeleteDao = imageToDeleteDao
@@ -56,24 +63,33 @@ class MainActivity : ComponentActivity() {
 
 
 private fun cleanupCheck(
-    scope: CoroutineScope, imageToUploadDao: ImageToUploadDao, imageToDeleteDao: ImageToDeleteDao
+    firebaseStorage: FirebaseStorage,
+    scope: CoroutineScope,
+    imageToUploadDao: ImageToUploadDao,
+    imageToDeleteDao: ImageToDeleteDao
 ) {
     scope.launch(Dispatchers.IO + SupervisorJob()) {
         val uploadResult = imageToUploadDao.getAllImages()
         uploadResult.forEach { imageToUpload ->
-            retryUploadingImageToFirebase(imageToUpload = imageToUpload, onSuccess = {
-                scope.launch(Dispatchers.IO) {
-                    imageToUploadDao.deleteImageToUpload(imageId = imageToUpload.id)
-                }
-            })
+            retryUploadingImageToFirebase(
+                firebaseStorage = firebaseStorage,
+                imageToUpload = imageToUpload,
+                onSuccess = {
+                    scope.launch(Dispatchers.IO) {
+                        imageToUploadDao.deleteImageToUpload(imageId = imageToUpload.id)
+                    }
+                })
         }
         val deleteResult = imageToDeleteDao.getAllImages()
         deleteResult.forEach { imageToDelete ->
-            retryDeletingImagesFromFirebase(imageToDelete = imageToDelete, onSuccess = {
-                scope.launch(Dispatchers.IO) {
-                    imageToDeleteDao.cleanupImage(imageId = imageToDelete.id)
-                }
-            })
+            retryDeletingImagesFromFirebase(
+                firebaseStorage = firebaseStorage,
+                imageToDelete = imageToDelete,
+                onSuccess = {
+                    scope.launch(Dispatchers.IO) {
+                        imageToDeleteDao.cleanupImage(imageId = imageToDelete.id)
+                    }
+                })
         }
     }
 }
@@ -81,4 +97,22 @@ private fun cleanupCheck(
 private fun getStartDestination(): String {
     val user = App.create(APP_ID).currentUser
     return if (user != null && user.loggedIn) Screen.Home.route else Screen.Authentication.route
+}
+
+private fun retryUploadingImageToFirebase(
+    firebaseStorage: FirebaseStorage, imageToUpload: ImageToUpload, onSuccess: () -> Unit
+) {
+    val storage = firebaseStorage.reference
+    storage.child(
+        imageToUpload.remoteImagePath
+    ).putFile(
+        imageToUpload.imageUri.toUri(), storageMetadata { }, imageToUpload.sessionUri.toUri()
+    ).addOnSuccessListener { onSuccess() }
+}
+
+private fun retryDeletingImagesFromFirebase(
+    firebaseStorage: FirebaseStorage, imageToDelete: ImageToDelete, onSuccess: () -> Unit
+) {
+    val storage = firebaseStorage.reference
+    storage.child(imageToDelete.remoteImagePath).delete().addOnSuccessListener { onSuccess() }
 }

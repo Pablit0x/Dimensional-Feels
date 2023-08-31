@@ -8,14 +8,12 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.auth.ktx.auth
-import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.FirebaseStorage
 import com.ps.dimensional_feels.data.database.ImageToDeleteDao
 import com.ps.dimensional_feels.data.database.ImageToUploadDao
 import com.ps.dimensional_feels.data.database.entity.ImageToDelete
 import com.ps.dimensional_feels.data.database.entity.ImageToUpload
-import com.ps.dimensional_feels.data.repository.MongoDb
+import com.ps.dimensional_feels.data.repository.MongoRepository
 import com.ps.dimensional_feels.model.Diary
 import com.ps.dimensional_feels.model.GalleryImage
 import com.ps.dimensional_feels.model.GalleryState
@@ -38,6 +36,9 @@ import javax.inject.Inject
 
 @HiltViewModel
 class WriteViewModel @Inject constructor(
+    private val firebaseAuth: FirebaseAuth,
+    private val firebaseStorage: FirebaseStorage,
+    private val mongoRepository: MongoRepository,
     private val imageToDeleteDao: ImageToDeleteDao,
     private val imageToUploadDao: ImageToUploadDao,
     private val savedStateHandle: SavedStateHandle
@@ -64,7 +65,7 @@ class WriteViewModel @Inject constructor(
     private fun fetchSelectedDiary() {
         uiState.selectedDiaryId?.let { selectedId ->
             viewModelScope.launch {
-                MongoDb.getSelectedDiary(diaryId = ObjectId(hexString = selectedId)).catch {
+                mongoRepository.getSelectedDiary(diaryId = ObjectId(hexString = selectedId)).catch {
                     emit(RequestState.Error(DiaryAlreadyDeletedException()))
                 }.collect { diary ->
                     if (diary is RequestState.Success) {
@@ -109,7 +110,7 @@ class WriteViewModel @Inject constructor(
     private suspend fun insertDiary(
         diary: Diary, onSuccess: () -> Unit, onError: (String) -> Unit
     ) {
-        val result = MongoDb.insertDiary(diary = diary.apply {
+        val result = mongoRepository.insertDiary(diary = diary.apply {
             if (uiState.updatedDateTime != null) {
                 date = uiState.updatedDateTime!!
             }
@@ -127,7 +128,7 @@ class WriteViewModel @Inject constructor(
     private suspend fun updateDiary(
         diary: Diary, onSuccess: () -> Unit, onError: (String) -> Unit
     ) {
-        val result = MongoDb.updateDiary(diary = diary.apply {
+        val result = mongoRepository.updateDiary(diary = diary.apply {
             _id = ObjectId.invoke(hexString = uiState.selectedDiaryId!!)
             date =
                 if (uiState.updatedDateTime != null) uiState.updatedDateTime!! else uiState.selectedDiary!!.date
@@ -149,7 +150,7 @@ class WriteViewModel @Inject constructor(
         viewModelScope.launch(Dispatchers.IO) {
             if (uiState.selectedDiaryId != null) {
                 val result =
-                    MongoDb.deleteDiary(diaryId = ObjectId.invoke(hexString = uiState.selectedDiaryId!!))
+                    mongoRepository.deleteDiary(diaryId = ObjectId.invoke(hexString = uiState.selectedDiaryId!!))
                 if (result is RequestState.Success) {
                     withContext(Dispatchers.Main) {
                         uiState.selectedDiary?.let {
@@ -167,7 +168,7 @@ class WriteViewModel @Inject constructor(
     }
 
     private fun uploadImagesToFirebase() {
-        val storage = FirebaseStorage.getInstance().reference
+        val storage = firebaseStorage.reference
         galleryState.images.forEach { galleryImage ->
             val imagePath = storage.child(galleryImage.remoteImagePath)
             imagePath.putFile(galleryImage.image).addOnProgressListener {
@@ -189,7 +190,7 @@ class WriteViewModel @Inject constructor(
 
     fun addImage(image: Uri, imageType: String) {
         val remoteImagePath =
-            "images/${FirebaseAuth.getInstance().currentUser?.uid}/${image.lastPathSegment}-${System.currentTimeMillis()}.$imageType"
+            "images/${firebaseAuth.currentUser?.uid}/${image.lastPathSegment}-${System.currentTimeMillis()}.$imageType"
         galleryState.addImage(
             GalleryImage(image = image, remoteImagePath = remoteImagePath)
         )
@@ -228,10 +229,10 @@ class WriteViewModel @Inject constructor(
     }
 
     private fun deleteImagesFromFirebase(images: List<String>? = null) {
-        val storage = FirebaseStorage.getInstance().reference
+        val storageRef = firebaseStorage.reference
         if (images != null) {
             images.forEach { remotePath ->
-                storage.child(remotePath).delete().addOnFailureListener { e ->
+                storageRef.child(remotePath).delete().addOnFailureListener { e ->
                     viewModelScope.launch(Dispatchers.IO) {
                         imageToDeleteDao.addImageToDelete(ImageToDelete(remoteImagePath = remotePath))
                     }
@@ -239,7 +240,7 @@ class WriteViewModel @Inject constructor(
             }
         } else {
             galleryState.imagesToBeDeleted.map { it.remoteImagePath }.forEach { remotePath ->
-                storage.child(remotePath).delete().addOnFailureListener { e ->
+                storageRef.child(remotePath).delete().addOnFailureListener { e ->
                     viewModelScope.launch(Dispatchers.IO) {
                         imageToDeleteDao.addImageToDelete(ImageToDelete(remoteImagePath = remotePath))
                     }
@@ -251,6 +252,6 @@ class WriteViewModel @Inject constructor(
     private fun extractImagePath(fullImageUrl: String): String {
         val chunks = fullImageUrl.split("%2F")
         val imageName = chunks[2].split("?").first()
-        return "images/${Firebase.auth.currentUser?.uid}/$imageName"
+        return "images/${firebaseAuth.currentUser?.uid}/$imageName"
     }
 }

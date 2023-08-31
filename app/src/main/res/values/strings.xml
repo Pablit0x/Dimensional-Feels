@@ -11,6 +11,7 @@
     <string name="delete_all_diaries_message">Are you sure you want to delete all diaries?</string>
     <string name="confirm">Confirm</string>
     <string name="cancel">Cancel</string>
+    <string name="dismiss">Dismiss</string>
     <string name="next">Next</string>
     <string name="show_gallery">Show Gallery</string>
     <string name="hide_gallery">Hide Gallery</string>
@@ -23,6 +24,7 @@
     <string name="title_label">Title</string>
     <string name="description_placeholder">Tell me about it…</string>
     <string name="save">Save</string>
+    <string name="apply">Apply</string>
     <string name="update">Update</string>
     <string name="fields_cannot_be_empty">Description and title cannot be empty!</string>
     <string name="image">Image</string>

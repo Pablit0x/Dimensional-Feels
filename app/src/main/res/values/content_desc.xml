@@ -18,4 +18,6 @@
     <string name="success">Success</string>
     <string name="close_image">Close Image</string>
     <string name="delete_all_diaries_icon">Delete All Diaries</string>
+    <string name="apply_selected_date_filter">Apply Selected Date Filter</string>
+    <string name="dismiss_date_dialog">Dismiss Date Dialog</string>
 </resources>

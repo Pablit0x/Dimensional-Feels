@@ -7,8 +7,8 @@ import java.time.Instant
 import java.time.LocalDate
 import java.time.ZoneId
 
-fun convertMillisToLocalDate(millis: Long): LocalDate {
-    val instant = Instant.ofEpochMilli(millis)
+fun Long.toLocalDate(): LocalDate {
+    val instant = Instant.ofEpochMilli(this)
     return instant.atZone(ZoneId.systemDefault()).toLocalDate()
 }
 

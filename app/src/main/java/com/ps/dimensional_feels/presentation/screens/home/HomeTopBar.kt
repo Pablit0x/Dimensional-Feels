@@ -15,11 +15,14 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
+import androidx.compose.material3.TimePicker
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarScrollBehavior
 import androidx.compose.material3.rememberDatePickerState
+import androidx.compose.material3.rememberTimePickerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -27,6 +30,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.ps.dimensional_feels.R
+import com.ps.dimensional_feels.presentation.components.TimePickerDialog
 import com.ps.dimensional_feels.util.toLocalDate
 import java.time.LocalTime
 import java.time.ZoneId
@@ -42,6 +46,7 @@ fun HomeTopBar(
     onDateReset: () -> Unit
 ) {
     var showDatePicker by remember { mutableStateOf(false) }
+    var showTimePicker by remember { mutableStateOf(false) }
 
     TopAppBar(scrollBehavior = scrollBehavior, navigationIcon = {
         IconButton(onClick = onMenuClicked) {
@@ -64,7 +69,7 @@ fun HomeTopBar(
             }
         } else {
             IconButton(onClick = {
-                showDatePicker = true
+                showTimePicker = true
             }) {
                 Icon(
                     imageVector = Icons.Default.DateRange,
@@ -74,8 +79,7 @@ fun HomeTopBar(
         }
 
         if (showDatePicker) {
-            val datePickerState =
-                rememberDatePickerState(initialSelectedDateMillis = System.currentTimeMillis())
+            val datePickerState = rememberDatePickerState()
             DatePickerDialog(onDismissRequest = { showDatePicker = false }, confirmButton = {
                 Button(onClick = {
                     datePickerState.selectedDateMillis?.let { dateMillis ->
@@ -105,6 +109,25 @@ fun HomeTopBar(
                 }
             }) {
                 DatePicker(state = datePickerState)
+            }
+        }
+
+        if (showTimePicker) {
+
+            val timePickerState = rememberTimePickerState(
+                initialHour = LocalTime.now().hour, initialMinute = LocalTime.now().minute
+            )
+
+            var selectedHour by remember { mutableIntStateOf(LocalTime.now().hour) }
+            var selectedMinute by remember { mutableIntStateOf(LocalTime.now().minute) }
+
+            TimePickerDialog(
+                onCancel = { showTimePicker = false },
+                onConfirm = {
+                    selectedHour = timePickerState.hour
+                    selectedMinute = timePickerState.minute
+                }) {
+                TimePicker(state = timePickerState)
             }
         }
     })

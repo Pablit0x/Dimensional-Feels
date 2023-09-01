@@ -1,17 +1,27 @@
 package com.ps.dimensional_feels.presentation.screens.write
 
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.filled.ArrowForward
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.DateRange
+import androidx.compose.material3.Button
 import androidx.compose.material3.CenterAlignedTopAppBar
+import androidx.compose.material3.DatePicker
+import androidx.compose.material3.DatePickerDialog
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
+import androidx.compose.material3.TimePicker
+import androidx.compose.material3.rememberDatePickerState
+import androidx.compose.material3.rememberTimePickerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -22,23 +32,20 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
-import com.maxkeppeker.sheets.core.models.base.rememberUseCaseState
-import com.maxkeppeler.sheets.calendar.CalendarDialog
-import com.maxkeppeler.sheets.calendar.models.CalendarConfig
-import com.maxkeppeler.sheets.calendar.models.CalendarSelection
-import com.maxkeppeler.sheets.clock.ClockDialog
-import com.maxkeppeler.sheets.clock.models.ClockSelection
+import androidx.compose.ui.unit.dp
 import com.ps.dimensional_feels.R
 import com.ps.dimensional_feels.model.Diary
 import com.ps.dimensional_feels.presentation.components.DeleteDiaryDropDownMenu
-import com.ps.dimensional_feels.util.Constants.DATE_PATTERN
+import com.ps.dimensional_feels.presentation.components.TimePickerDialog
 import com.ps.dimensional_feels.util.Constants.DATE_TIME_PATTERN
-import com.ps.dimensional_feels.util.Constants.TIME_PATTERN
 import com.ps.dimensional_feels.util.toInstant
+import com.ps.dimensional_feels.util.toLocalDate
 import java.text.SimpleDateFormat
 import java.time.LocalDate
+import java.time.LocalDateTime
 import java.time.LocalTime
 import java.time.ZoneId
+import java.time.ZoneOffset
 import java.time.ZonedDateTime
 import java.time.format.DateTimeFormatter
 import java.util.Date
@@ -53,27 +60,28 @@ fun WriteTopBar(
     onDateTimeUpdated: (ZonedDateTime?) -> Unit,
     onDeleteConfirmed: () -> Unit
 ) {
-    val dateDialog = rememberUseCaseState()
-    val timeDialog = rememberUseCaseState()
+    var showDatePickerDialog by remember { mutableStateOf(false) }
+    var showTimePickerDialog by remember { mutableStateOf(false) }
     var isDateTimeUpdated by remember { mutableStateOf(false) }
+
     var currentDate by remember { mutableStateOf(LocalDate.now()) }
     var currentTime by remember { mutableStateOf(LocalTime.now()) }
-    val formattedDate = remember(currentDate) {
-        DateTimeFormatter.ofPattern(DATE_PATTERN).format(currentDate).uppercase()
-    }
-    val formattedTime = remember(currentTime) {
-        DateTimeFormatter.ofPattern(TIME_PATTERN).format(currentTime).uppercase()
+
+    val formattedDateTime = remember(currentDate, currentTime) {
+        val localDateTime = LocalDateTime.of(currentDate, currentTime)
+        DateTimeFormatter.ofPattern(DATE_TIME_PATTERN).format(localDateTime).uppercase()
     }
 
-    val selectedDiaryDateTime = remember(selectedDiary) {
-        if (selectedDiary != null) {
-            SimpleDateFormat(
-                DATE_TIME_PATTERN, Locale.getDefault()
-            ).format(Date.from(selectedDiary.date.toInstant())).uppercase()
-        } else {
-            "Unknown"
-        }
+    val diaryDateInstant = remember(selectedDiary) {
+        selectedDiary?.date?.toInstant() ?: LocalDateTime.now().toInstant(ZoneOffset.UTC)
     }
+
+    val selectedDiaryDateTime = remember(diaryDateInstant) {
+        SimpleDateFormat(
+            DATE_TIME_PATTERN, Locale.getDefault()
+        ).format(Date.from(diaryDateInstant)).uppercase()
+    }
+
     CenterAlignedTopAppBar(navigationIcon = {
         IconButton(onClick = onBackPressed) {
             Icon(
@@ -94,9 +102,8 @@ fun WriteTopBar(
             )
             Text(
                 modifier = Modifier.fillMaxWidth(),
-                text = if (selectedDiary != null && isDateTimeUpdated) "$formattedDate, $formattedTime"
-                else if (selectedDiary != null) selectedDiaryDateTime
-                else "$formattedDate, $formattedTime",
+                text = if (isDateTimeUpdated) formattedDateTime
+                else selectedDiaryDateTime,
                 style = TextStyle.Default.copy(
                     fontSize = MaterialTheme.typography.bodySmall.fontSize
                 ),
@@ -118,7 +125,7 @@ fun WriteTopBar(
             }
         } else {
             IconButton(onClick = {
-                dateDialog.show()
+                showDatePickerDialog = true
             }) {
                 Icon(
                     imageVector = Icons.Default.DateRange,
@@ -127,24 +134,64 @@ fun WriteTopBar(
             }
         }
         if (selectedDiary != null) {
-            DeleteDiaryDropDownMenu(
-                selectedDiary = selectedDiary,
+            DeleteDiaryDropDownMenu(selectedDiary = selectedDiary,
                 onDeleteConfirmed = { onDeleteConfirmed() })
         }
     })
 
-    CalendarDialog(
-        state = dateDialog, selection = CalendarSelection.Date { localDate ->
-            currentDate = localDate
-            timeDialog.show()
-        }, config = CalendarConfig(monthSelection = true, yearSelection = false)
-    )
 
-    ClockDialog(state = timeDialog, selection = ClockSelection.HoursMinutes { hours, minutes ->
-        currentTime = LocalTime.of(hours, minutes)
-        isDateTimeUpdated = true
-        onDateTimeUpdated(ZonedDateTime.of(currentDate, currentTime, ZoneId.systemDefault()))
-    })
+    if (showDatePickerDialog) {
+        val datePickerState =
+            rememberDatePickerState(initialSelectedDateMillis = diaryDateInstant.toEpochMilli())
+
+        DatePickerDialog(onDismissRequest = { showDatePickerDialog = false }, confirmButton = {
+            Button(onClick = {
+                datePickerState.selectedDateMillis?.let { dateMillis ->
+                    currentDate = dateMillis.toLocalDate()
+                }
+                showDatePickerDialog = false
+                showTimePickerDialog = true
+            }) {
+                Text(text = stringResource(id = R.string.next))
+                Spacer(modifier = Modifier.width(4.dp))
+                Icon(
+                    imageVector = Icons.Default.ArrowForward,
+                    contentDescription = stringResource(id = R.string.next)
+                )
+            }
+        }, dismissButton = {
+            OutlinedButton(onClick = { showDatePickerDialog = false }) {
+                Text(text = stringResource(id = R.string.dismiss))
+                Spacer(modifier = Modifier.width(4.dp))
+                Icon(
+                    imageVector = Icons.Default.Close,
+                    contentDescription = stringResource(id = R.string.dismiss_date_dialog)
+                )
+            }
+        }) {
+            DatePicker(state = datePickerState)
+        }
+    }
+
+    if (showTimePickerDialog) {
+
+        val timePickerState = rememberTimePickerState(
+            initialHour = diaryDateInstant.atOffset(ZoneOffset.UTC).hour,
+            initialMinute = diaryDateInstant.atOffset(ZoneOffset.UTC).minute
+        )
 
 
+        TimePickerDialog(onCancel = { showTimePickerDialog = false }, onConfirm = {
+            currentTime = LocalTime.of(timePickerState.hour, timePickerState.minute)
+            isDateTimeUpdated = true
+            onDateTimeUpdated(
+                ZonedDateTime.of(
+                    currentDate, currentTime, ZoneId.systemDefault()
+                )
+            )
+            showTimePickerDialog = false
+        }) {
+            TimePicker(state = timePickerState)
+        }
+    }
 }

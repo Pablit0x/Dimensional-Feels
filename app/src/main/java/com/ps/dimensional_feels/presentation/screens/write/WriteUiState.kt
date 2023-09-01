@@ -10,7 +10,7 @@ data class WriteUiState(
     val selectedDiary: Diary? = null,
     val title: String = "",
     val description: String = "",
-    val mood: Mood = Mood.Happy(),
     val characters: RickAndMortyCharacters = RickAndMortyCharacters.Rick,
+    val mood: Mood = Mood.Happy(character = characters),
     val updatedDateTime: RealmInstant? = null
 )

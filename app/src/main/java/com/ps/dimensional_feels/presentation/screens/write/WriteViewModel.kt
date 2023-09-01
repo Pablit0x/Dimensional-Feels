@@ -18,6 +18,7 @@ import com.ps.dimensional_feels.model.Diary
 import com.ps.dimensional_feels.model.GalleryImage
 import com.ps.dimensional_feels.model.GalleryState
 import com.ps.dimensional_feels.model.Mood
+import com.ps.dimensional_feels.model.RickAndMortyCharacters
 import com.ps.dimensional_feels.model.getMoodByName
 import com.ps.dimensional_feels.model.toRickAndMortyCharacter
 import com.ps.dimensional_feels.navigation.NavigationArguments.WRITE_SCREEN_ARGUMENT_KEY
@@ -70,6 +71,7 @@ class WriteViewModel @Inject constructor(
                 }.collect { diary ->
                     if (diary is RequestState.Success) {
                         setSelectedDiary(diary = diary.data)
+                        setCharacter(characters = diary.data.character.toRickAndMortyCharacter())
                         setMood(
                             mood = getMoodByName(
                                 name = diary.data.mood,
@@ -207,6 +209,12 @@ class WriteViewModel @Inject constructor(
     fun setMood(mood: Mood) {
         uiState = uiState.copy(
             mood = mood
+        )
+    }
+
+    fun setCharacter(characters: RickAndMortyCharacters) {
+        uiState = uiState.copy(
+            characters = characters
         )
     }
 

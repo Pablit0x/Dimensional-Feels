@@ -25,6 +25,7 @@ import com.ps.dimensional_feels.R
 import com.ps.dimensional_feels.model.Diary
 import com.ps.dimensional_feels.model.GalleryImage
 import com.ps.dimensional_feels.model.GalleryState
+import com.ps.dimensional_feels.model.RickAndMortyCharacters
 import com.ps.dimensional_feels.model.getMoodByName
 import com.ps.dimensional_feels.model.getPositionByMood
 import com.ps.dimensional_feels.model.toRickAndMortyCharacter
@@ -46,13 +47,15 @@ fun WriteScreen(
     onSavedClicked: (Diary) -> Unit,
     onDateTimeUpdated: (ZonedDateTime?) -> Unit,
     onImageSelected: (Uri) -> Unit,
-    onImageDeleteClicked: (GalleryImage) -> Unit
+    onImageDeleteClicked: (GalleryImage) -> Unit,
+    onCharacterChange: (RickAndMortyCharacters) -> Unit,
 ) {
 
     var selectedImageIndex by remember { mutableIntStateOf(0) }
     val imagePagerState = rememberPagerState()
 
     var selectedGalleryImage by remember { mutableStateOf<GalleryImage?>(null) }
+
 
     LaunchedEffect(key1 = uiState.mood) {
         val mood = getMoodByName(
@@ -102,6 +105,9 @@ fun WriteScreen(
                 onImageClicked = { galleryImage, index ->
                     selectedGalleryImage = galleryImage
                     selectedImageIndex = index
+                },
+                onChangeCharacter = {
+                    onCharacterChange(it)
                 })
         }
 

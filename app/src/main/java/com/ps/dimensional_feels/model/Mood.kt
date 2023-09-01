@@ -11,13 +11,13 @@ import com.ps.dimensional_feels.presentation.theme.HappyColor
 open class Mood(
     val onContainerColor: Color, val containerColor: Color, val icon: Int, val name: String,
 ) {
-    class Happy(character: RickAndMortyCharacters = RickAndMortyCharacters.Rick) : Mood(
+    class Happy(character: RickAndMortyCharacters) : Mood(
         icon = when (character) {
             RickAndMortyCharacters.Rick -> MoodIcon.HappyRick.icon
-            RickAndMortyCharacters.Morty -> MoodIcon.Default.icon
-            RickAndMortyCharacters.Beth -> MoodIcon.Default.icon
-            RickAndMortyCharacters.Jerry -> MoodIcon.Default.icon
-            RickAndMortyCharacters.Summer -> MoodIcon.Default.icon
+            RickAndMortyCharacters.Morty -> MoodIcon.HappyMorty.icon
+            RickAndMortyCharacters.Beth -> MoodIcon.HappyBeth.icon
+            RickAndMortyCharacters.Jerry -> MoodIcon.HappyJerry.icon
+            RickAndMortyCharacters.Summer -> MoodIcon.HappySummer.icon
         }, onContainerColor = Color.Black, containerColor = HappyColor, name = "Happy"
     ) {
         companion object {
@@ -26,13 +26,13 @@ open class Mood(
         }
     }
 
-    data class Angry(val character: RickAndMortyCharacters = RickAndMortyCharacters.Rick) : Mood(
+    data class Angry(val character: RickAndMortyCharacters) : Mood(
         icon = when (character) {
             RickAndMortyCharacters.Rick -> MoodIcon.AngryRick.icon
-            RickAndMortyCharacters.Morty -> MoodIcon.Default.icon
-            RickAndMortyCharacters.Beth -> MoodIcon.Default.icon
-            RickAndMortyCharacters.Jerry -> MoodIcon.Default.icon
-            RickAndMortyCharacters.Summer -> MoodIcon.Default.icon
+            RickAndMortyCharacters.Morty -> MoodIcon.AngryMorty.icon
+            RickAndMortyCharacters.Beth -> MoodIcon.AngryBeth.icon
+            RickAndMortyCharacters.Jerry -> MoodIcon.AngryJerry.icon
+            RickAndMortyCharacters.Summer -> MoodIcon.AngrySummer.icon
         }, onContainerColor = Color.White, containerColor = AngryColor, name = "Angry"
     ) {
         companion object {
@@ -41,13 +41,13 @@ open class Mood(
         }
     }
 
-    data class Confused(val character: RickAndMortyCharacters = RickAndMortyCharacters.Rick) : Mood(
+    data class Confused(val character: RickAndMortyCharacters) : Mood(
         icon = when (character) {
             RickAndMortyCharacters.Rick -> MoodIcon.ConfusedRick.icon
-            RickAndMortyCharacters.Morty -> MoodIcon.Default.icon
-            RickAndMortyCharacters.Beth -> MoodIcon.Default.icon
-            RickAndMortyCharacters.Jerry -> MoodIcon.Default.icon
-            RickAndMortyCharacters.Summer -> MoodIcon.Default.icon
+            RickAndMortyCharacters.Morty -> MoodIcon.ConfusedMorty.icon
+            RickAndMortyCharacters.Beth -> MoodIcon.ConfusedBeth.icon
+            RickAndMortyCharacters.Jerry -> MoodIcon.ConfusedJerry.icon
+            RickAndMortyCharacters.Summer -> MoodIcon.ConfusedSummer.icon
         }, onContainerColor = Color.White, containerColor = ConfusedColor, name = "Confused"
     ) {
         companion object {
@@ -56,14 +56,14 @@ open class Mood(
         }
     }
 
-    data class Depressed(val character: RickAndMortyCharacters = RickAndMortyCharacters.Rick) :
+    data class Depressed(val character: RickAndMortyCharacters) :
         Mood(
             icon = when (character) {
                 RickAndMortyCharacters.Rick -> MoodIcon.DepressedRick.icon
-                RickAndMortyCharacters.Morty -> MoodIcon.Default.icon
-                RickAndMortyCharacters.Beth -> MoodIcon.Default.icon
-                RickAndMortyCharacters.Jerry -> MoodIcon.Default.icon
-                RickAndMortyCharacters.Summer -> MoodIcon.Default.icon
+                RickAndMortyCharacters.Morty -> MoodIcon.DepressedMorty.icon
+                RickAndMortyCharacters.Beth -> MoodIcon.DepressedBeth.icon
+                RickAndMortyCharacters.Jerry -> MoodIcon.DepressedJerry.icon
+                RickAndMortyCharacters.Summer -> MoodIcon.DepressedSummer.icon
             }, onContainerColor = Color.Black, containerColor = DepressedColor, name = "Depressed"
         ) {
         companion object {
@@ -72,13 +72,13 @@ open class Mood(
         }
     }
 
-    data class Amorous(val character: RickAndMortyCharacters = RickAndMortyCharacters.Rick) : Mood(
+    data class Amorous(val character: RickAndMortyCharacters) : Mood(
         icon = when (character) {
             RickAndMortyCharacters.Rick -> MoodIcon.AmorousRick.icon
-            RickAndMortyCharacters.Morty -> MoodIcon.Default.icon
-            RickAndMortyCharacters.Beth -> MoodIcon.Default.icon
-            RickAndMortyCharacters.Jerry -> MoodIcon.Default.icon
-            RickAndMortyCharacters.Summer -> MoodIcon.Default.icon
+            RickAndMortyCharacters.Morty -> MoodIcon.AmorousMorty.icon
+            RickAndMortyCharacters.Beth -> MoodIcon.AmorousBeth.icon
+            RickAndMortyCharacters.Jerry -> MoodIcon.AmorousJerry.icon
+            RickAndMortyCharacters.Summer -> MoodIcon.AmorousSummer.icon
         }, onContainerColor = Color.White, containerColor = AmorousColor, name = "Amorous"
     ) {
         companion object {
@@ -87,13 +87,13 @@ open class Mood(
         }
     }
 
-    data class Drunk(val character: RickAndMortyCharacters = RickAndMortyCharacters.Rick) : Mood(
+    data class Drunk(val character: RickAndMortyCharacters) : Mood(
         icon = when (character) {
             RickAndMortyCharacters.Rick -> MoodIcon.DrunkRick.icon
-            RickAndMortyCharacters.Morty -> MoodIcon.Default.icon
-            RickAndMortyCharacters.Beth -> MoodIcon.Default.icon
-            RickAndMortyCharacters.Jerry -> MoodIcon.Default.icon
-            RickAndMortyCharacters.Summer -> MoodIcon.Default.icon
+            RickAndMortyCharacters.Morty -> MoodIcon.DrunkMorty.icon
+            RickAndMortyCharacters.Beth -> MoodIcon.DrunkBeth.icon
+            RickAndMortyCharacters.Jerry -> MoodIcon.DrunkJerry.icon
+            RickAndMortyCharacters.Summer -> MoodIcon.DrunkSummer.icon
         }, onContainerColor = Color.Black, containerColor = DrunkColor, name = "Drunk"
     ) {
         companion object {
@@ -104,7 +104,7 @@ open class Mood(
 }
 
 fun getMoodByName(
-    name: String, character: RickAndMortyCharacters = RickAndMortyCharacters.Rick
+    name: String, character: RickAndMortyCharacters
 ): Mood {
     return when (name) {
         Mood.Happy.name -> Mood.Happy(character = character)

@@ -3,8 +3,6 @@ package com.ps.dimensional_feels.model
 import com.ps.dimensional_feels.R
 
 sealed class MoodIcon(val icon: Int) {
-    object Default : MoodIcon(icon = R.drawable.google_logo)
-
     // Rick
     object HappyRick : MoodIcon(icon = R.drawable.happy_rick)
     object AngryRick : MoodIcon(icon = R.drawable.angry_rick)

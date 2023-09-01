@@ -3,6 +3,7 @@ package com.ps.dimensional_feels.presentation.screens.write
 import android.net.Uri
 import android.widget.Toast
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -33,6 +34,7 @@ import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusDirection
@@ -117,9 +119,13 @@ fun WriteContent(
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.spacedBy(4.dp)
                 ) {
+                    val interactionSource = remember { MutableInteractionSource() }
+
                     Icon(imageVector = Icons.Default.KeyboardArrowLeft,
                         contentDescription = null,
-                        modifier = Modifier.clickable {
+                        modifier = Modifier.clickable(
+                            interactionSource = interactionSource, indication = null
+                        ) {
                             when (uiState.characters) {
                                 RickAndMortyCharacters.Rick -> onChangeCharacter(
                                     RickAndMortyCharacters.Jerry
@@ -149,7 +155,9 @@ fun WriteContent(
                     )
                     Icon(imageVector = Icons.Default.KeyboardArrowRight,
                         contentDescription = null,
-                        modifier = Modifier.clickable {
+                        modifier = Modifier.clickable(
+                            interactionSource = interactionSource, indication = null
+                        ) {
                             when (uiState.characters) {
                                 RickAndMortyCharacters.Rick -> onChangeCharacter(
                                     RickAndMortyCharacters.Morty

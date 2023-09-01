@@ -1,6 +1,5 @@
 package com.ps.dimensional_feels.navigation
 
-import com.ps.dimensional_feels.navigation.NavigationArguments.CALENDAR_SCREEN_ARGUMENT_KEY
 import com.ps.dimensional_feels.navigation.NavigationArguments.WRITE_SCREEN_ARGUMENT_KEY
 
 sealed class Screen(val route: String) {
@@ -8,9 +7,5 @@ sealed class Screen(val route: String) {
     object Home : Screen(route = Routes.HOME)
     object Write : Screen(route = Routes.WRITE_WITH_ARGS) {
         fun passDiaryId(diaryId: String) = "${Routes.WRITE}?$WRITE_SCREEN_ARGUMENT_KEY=$diaryId"
-    }
-    object Calendar : Screen(route = Routes.CALENDAR_WITH_ARGS) {
-        fun passCurrentDate(currentDateMillis: Long) =
-            "${Routes.CALENDAR}?$CALENDAR_SCREEN_ARGUMENT_KEY=$currentDateMillis"
     }
 }

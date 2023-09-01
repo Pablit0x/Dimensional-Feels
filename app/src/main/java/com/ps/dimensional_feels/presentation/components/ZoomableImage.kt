@@ -3,8 +3,11 @@ package com.ps.dimensional_feels.presentation.components
 import androidx.compose.foundation.gestures.detectTransformGestures
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.size
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -13,20 +16,38 @@ import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
+import com.google.accompanist.pager.ExperimentalPagerApi
+import com.google.accompanist.pager.HorizontalPager
+import com.google.accompanist.pager.PagerState
+import com.google.accompanist.pager.rememberPagerState
 import com.ps.dimensional_feels.R
 import com.ps.dimensional_feels.model.GalleryImage
+import com.ps.dimensional_feels.model.getMoodByPosition
 
+@OptIn(ExperimentalPagerApi::class)
 @Composable
 fun ZoomableImage(
-    selectedGalleryImage: GalleryImage
+    pagerState: PagerState,
+    selectedGalleryImageId: Int,
+    galleryImages: List<GalleryImage>,
+    onPageChange: () -> Unit,
 ) {
-    var offsetX by remember { mutableStateOf(0f) }
-    var offsetY by remember { mutableStateOf(0f) }
-    var scale by remember { mutableStateOf(1f) }
+    var offsetX by remember { mutableFloatStateOf(0f) }
+    var offsetY by remember { mutableFloatStateOf(0f) }
+    var scale by remember { mutableFloatStateOf(1f) }
 
     val context = LocalContext.current
+
+    LaunchedEffect(Unit){
+        pagerState.scrollToPage(selectedGalleryImageId)
+    }
+
+    LaunchedEffect(pagerState.currentPage){
+        onPageChange()
+    }
 
     Box(modifier = Modifier
         .fillMaxSize()
@@ -41,18 +62,23 @@ fun ZoomableImage(
                 offsetY = maxOf(minY, minOf(maxY, offsetY + pan.y))
             }
         }) {
-        AsyncImage(
-            modifier = Modifier
-                .fillMaxSize()
-                .graphicsLayer(
-                    scaleX = maxOf(0.5f, minOf(3f, scale)),
-                    scaleY = maxOf(0.5f, minOf(3f, scale)),
-                    translationX = offsetX,
-                    translationY = offsetY
-                ),
-            model = ImageRequest.Builder(context).data(selectedGalleryImage.image.toString())
-                .crossfade(true).build(),
-            contentDescription = stringResource(id = R.string.gallery_image)
-        )
+        HorizontalPager(
+            state = pagerState, count = galleryImages.size
+        ) { page ->
+            AsyncImage(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .graphicsLayer(
+                        scaleX = maxOf(0.5f, minOf(3f, scale)),
+                        scaleY = maxOf(0.5f, minOf(3f, scale)),
+                        translationX = offsetX,
+                        translationY = offsetY
+                    ),
+                model = ImageRequest.Builder(context).data(
+                    galleryImages[page].image.toString()
+                ).crossfade(true).build(),
+                contentDescription = stringResource(id = R.string.gallery_image)
+            )
+        }
     }
 }

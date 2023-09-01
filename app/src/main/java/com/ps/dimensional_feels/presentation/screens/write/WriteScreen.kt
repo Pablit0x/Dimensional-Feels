@@ -11,6 +11,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -19,6 +20,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.PagerState
+import com.google.accompanist.pager.rememberPagerState
 import com.ps.dimensional_feels.R
 import com.ps.dimensional_feels.model.Diary
 import com.ps.dimensional_feels.model.GalleryImage
@@ -47,8 +49,10 @@ fun WriteScreen(
     onImageDeleteClicked: (GalleryImage) -> Unit
 ) {
 
+    var selectedImageIndex by remember { mutableIntStateOf(0) }
+    val imagePagerState = rememberPagerState()
+
     var selectedGalleryImage by remember { mutableStateOf<GalleryImage?>(null) }
-    var selectedImageIndex by remember { mutableStateOf(0) }
 
     LaunchedEffect(key1 = uiState.mood) {
         val mood = getMoodByName(
@@ -67,11 +71,20 @@ fun WriteScreen(
                 onDateTimeUpdated = onDateTimeUpdated
             )
         } else {
-            ImageTopBar(title = "${stringResource(id = R.string.image)} $selectedImageIndex",
+            ImageTopBar(title = "${stringResource(id = R.string.image)} ${imagePagerState.currentPage + 1}",
                 onBackClicked = { selectedGalleryImage = null },
                 onDeleteClicked = {
+                    val index = galleryState.images.indexOf(selectedGalleryImage!!)
                     onImageDeleteClicked(selectedGalleryImage!!)
-                    selectedGalleryImage = null
+                    selectedGalleryImage = if (galleryState.images.isNotEmpty()) {
+                        if (index >= galleryState.images.size) {
+                            galleryState.images[index - 1]
+                        } else {
+                            galleryState.images[index]
+                        }
+                    } else {
+                        null
+                    }
                 })
         }
     }, content = { padding ->
@@ -88,7 +101,7 @@ fun WriteScreen(
                 onImageSelected = onImageSelected,
                 onImageClicked = { galleryImage, index ->
                     selectedGalleryImage = galleryImage
-                    selectedImageIndex = index + 1
+                    selectedImageIndex = index
                 })
         }
 
@@ -96,9 +109,12 @@ fun WriteScreen(
             visible = selectedGalleryImage != null, enter = fadeIn(), exit = fadeOut()
         ) {
             Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                if (selectedGalleryImage != null) {
-                    ZoomableImage(selectedGalleryImage = selectedGalleryImage!!)
-                }
+                ZoomableImage(pagerState = imagePagerState,
+                    selectedGalleryImageId = selectedImageIndex,
+                    galleryImages = galleryState.images.toList(),
+                    onPageChange = {
+                        selectedGalleryImage = galleryState.images[imagePagerState.currentPage]
+                    })
             }
         }
     })

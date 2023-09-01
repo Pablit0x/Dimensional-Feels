@@ -53,9 +53,7 @@ fun NavGraph(
             navController.popBackStack()
             navController.navigate(Screen.Home.route)
         }, onDataLoaded = onDataLoaded)
-        homeRoute(onNavigateToCalendarWithArgs = {
-//            navController.navigate(Screen.Calendar.passCurrentDate(123456L))
-        }, onNavigateToWriteWithArgs = {
+        homeRoute(onNavigateToWriteWithArgs = {
             navController.navigate(Screen.Write.passDiaryId(it))
         }, onNavigateToWrite = {
             navController.navigate(Screen.Write.route)
@@ -67,7 +65,6 @@ fun NavGraph(
         writeRoute(onBackPressed = {
             navController.popBackStack()
         })
-        calendarRoute(onCancelPressed = {}, onSelectDate = {})
     }
 
 }
@@ -118,7 +115,6 @@ fun NavGraphBuilder.authenticationRoute(navigateHome: () -> Unit, onDataLoaded: 
 }
 
 fun NavGraphBuilder.homeRoute(
-    onNavigateToCalendarWithArgs: (Long) -> Unit,
     onNavigateToWriteWithArgs: (String) -> Unit,
     onNavigateToWrite: () -> Unit,
     navigateToAuth: () -> Unit,
@@ -138,7 +134,6 @@ fun NavGraphBuilder.homeRoute(
             if (diaries !is RequestState.Loading) {
                 onDataLoaded()
             }
-            onNavigateToCalendarWithArgs(1234L)
         }
 
         HomeScreen(diaries = diaries,
@@ -189,27 +184,6 @@ fun NavGraphBuilder.homeRoute(
             onConfirmClicked = {
                 viewModel.logOut(navigateToAuth = { navigateToAuth() })
             })
-    }
-}
-
-fun NavGraphBuilder.calendarRoute(onCancelPressed: () -> Unit, onSelectDate: (Long) -> Unit) {
-    composable(
-        route = Screen.Calendar.route,
-        arguments = listOf(navArgument(name = NavigationArguments.CALENDAR_SCREEN_ARGUMENT_KEY) {
-            type = NavType.LongType
-            defaultValue = 0L
-        })
-    ) { entry ->
-        val x = entry.arguments?.getLong(NavigationArguments.CALENDAR_SCREEN_ARGUMENT_KEY)
-
-        Log.d("lolipop", "entry = $x")
-        Column(
-            modifier = Modifier.fillMaxSize(),
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.Center
-        ) {
-            Text(text = "Calendar $x")
-        }
     }
 }
 

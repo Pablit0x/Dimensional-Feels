@@ -55,6 +55,10 @@ android {
 
 dependencies {
 
+    // Lottie Animation
+    implementation ("com.airbnb.android:lottie-compose:6.0.0")
+
+
     implementation("androidx.core:core-ktx:1.10.1")
     implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.6.1")
     implementation("androidx.activity:activity-compose:1.7.2")

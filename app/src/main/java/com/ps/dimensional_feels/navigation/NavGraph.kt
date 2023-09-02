@@ -142,6 +142,12 @@ fun NavGraphBuilder.homeRoute(
             },
             onDateReset = {
                 viewModel.getDiaries()
+            },
+            onSearch = {
+                viewModel.getDiaries(searchText = it)
+            },
+            onSearchReset = {
+                viewModel.getDiaries()
             })
 
         CustomAlertDialog(title = stringResource(id = R.string.delete_all_diaries),
@@ -202,8 +208,7 @@ fun NavGraphBuilder.writeRoute(onBackPressed: () -> Unit) {
             }
         }
 
-        WriteScreen(
-            isLoading = isLoading,
+        WriteScreen(isLoading = isLoading,
             uiState = uiState,
             galleryState = galleryState,
             pagerState = pagerState,

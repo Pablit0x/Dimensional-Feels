@@ -53,10 +53,9 @@ fun DiaryHolder(
     var showGallery by remember { mutableStateOf(true) }
     var galleryLoading by remember { mutableStateOf(false) }
     val downloadedImages = remember { mutableStateListOf<Uri>() }
-    var diaryLoaded by remember { mutableStateOf(false) }
 
     LaunchedEffect(key1 = showGallery) {
-        if (showGallery && downloadedImages.isEmpty() && diary.images.isNotEmpty()) {
+        if (showGallery && downloadedImages.isEmpty()) {
             galleryLoading = true
             fetchImagesFromFirebase(remoteImagePaths = diary.images, onImageDownload = { imageUri ->
                 downloadedImages.add(imageUri)
@@ -67,15 +66,11 @@ fun DiaryHolder(
                 galleryLoading = false
                 showGallery = false
             }, onReadyToDisplay = {
-                diaryLoaded = true
                 galleryLoading = false
             })
-        } else {
-            diaryLoaded = true
         }
     }
 
-    AnimatedVisibility(visible = diaryLoaded, enter = fadeIn()) {
         val interactionSource = remember { MutableInteractionSource() }
 
         Row(modifier = Modifier.clickable(
@@ -129,6 +124,5 @@ fun DiaryHolder(
                     }
                 }
             }
-        }
     }
 }

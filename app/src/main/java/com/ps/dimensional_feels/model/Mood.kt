@@ -18,7 +18,7 @@ open class Mood(
             RickAndMortyCharacters.Beth -> MoodIcon.HappyBeth.icon
             RickAndMortyCharacters.Jerry -> MoodIcon.HappyJerry.icon
             RickAndMortyCharacters.Summer -> MoodIcon.HappySummer.icon
-        }, onContainerColor = Color.Black, containerColor = HappyColor, name = "Happy"
+        }, onContainerColor = Color.White, containerColor = HappyColor, name = name
     ) {
         companion object {
             const val name: String = "Happy"
@@ -33,7 +33,7 @@ open class Mood(
             RickAndMortyCharacters.Beth -> MoodIcon.AngryBeth.icon
             RickAndMortyCharacters.Jerry -> MoodIcon.AngryJerry.icon
             RickAndMortyCharacters.Summer -> MoodIcon.AngrySummer.icon
-        }, onContainerColor = Color.White, containerColor = AngryColor, name = "Angry"
+        }, onContainerColor = Color.White, containerColor = AngryColor, name = name
     ) {
         companion object {
             const val name: String = "Angry"
@@ -48,7 +48,7 @@ open class Mood(
             RickAndMortyCharacters.Beth -> MoodIcon.ConfusedBeth.icon
             RickAndMortyCharacters.Jerry -> MoodIcon.ConfusedJerry.icon
             RickAndMortyCharacters.Summer -> MoodIcon.ConfusedSummer.icon
-        }, onContainerColor = Color.White, containerColor = ConfusedColor, name = "Confused"
+        }, onContainerColor = Color.Black, containerColor = ConfusedColor, name = name
     ) {
         companion object {
             const val name: String = "Confused"
@@ -64,7 +64,7 @@ open class Mood(
                 RickAndMortyCharacters.Beth -> MoodIcon.DepressedBeth.icon
                 RickAndMortyCharacters.Jerry -> MoodIcon.DepressedJerry.icon
                 RickAndMortyCharacters.Summer -> MoodIcon.DepressedSummer.icon
-            }, onContainerColor = Color.Black, containerColor = DepressedColor, name = "Depressed"
+            }, onContainerColor = Color.Black, containerColor = DepressedColor, name = name
         ) {
         companion object {
             const val name: String = "Depressed"
@@ -79,7 +79,7 @@ open class Mood(
             RickAndMortyCharacters.Beth -> MoodIcon.AmorousBeth.icon
             RickAndMortyCharacters.Jerry -> MoodIcon.AmorousJerry.icon
             RickAndMortyCharacters.Summer -> MoodIcon.AmorousSummer.icon
-        }, onContainerColor = Color.White, containerColor = AmorousColor, name = "Amorous"
+        }, onContainerColor = Color.White, containerColor = AmorousColor, name = name
     ) {
         companion object {
             const val name: String = "Amorous"
@@ -94,7 +94,7 @@ open class Mood(
             RickAndMortyCharacters.Beth -> MoodIcon.DrunkBeth.icon
             RickAndMortyCharacters.Jerry -> MoodIcon.DrunkJerry.icon
             RickAndMortyCharacters.Summer -> MoodIcon.DrunkSummer.icon
-        }, onContainerColor = Color.Black, containerColor = DrunkColor, name = "Drunk"
+        }, onContainerColor = Color.White, containerColor = DrunkColor, name = name
     ) {
         companion object {
             const val name: String = "Drunk"

@@ -1,5 +1,6 @@
 package com.ps.dimensional_feels.presentation.screens.home
 
+import android.util.Log
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
@@ -7,6 +8,8 @@ import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.DateRange
 import androidx.compose.material.icons.filled.Menu
+import androidx.compose.material.icons.filled.Search
+import androidx.compose.material.icons.filled.SearchOff
 import androidx.compose.material3.Button
 import androidx.compose.material3.DatePicker
 import androidx.compose.material3.DatePickerDialog
@@ -43,11 +46,14 @@ fun HomeTopBar(
     onMenuClicked: () -> Unit,
     dateIsSelected: Boolean,
     onDateSelected: (ZonedDateTime) -> Unit,
+    searchActive: Boolean,
+    onSearchClicked: () -> Unit,
     onDateReset: () -> Unit
 ) {
     var showDatePicker by remember { mutableStateOf(false) }
 
-    TopAppBar(scrollBehavior = scrollBehavior, navigationIcon = {
+    TopAppBar(
+        scrollBehavior = scrollBehavior, navigationIcon = {
         IconButton(onClick = onMenuClicked) {
             Icon(
                 imageVector = Icons.Default.Menu,
@@ -110,6 +116,15 @@ fun HomeTopBar(
             }) {
                 DatePicker(state = datePickerState)
             }
+        }
+
+        IconButton(onClick = {
+            onSearchClicked()
+        }) {
+            Icon(
+                imageVector = if(!searchActive) Icons.Default.Search else Icons.Default.SearchOff,
+                contentDescription = stringResource(id = androidx.compose.material3.R.string.search_bar_search)
+            )
         }
     })
 }

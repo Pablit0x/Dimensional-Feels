@@ -41,7 +41,27 @@ class MongoRepositoryImpl @Inject constructor(
         }
     }
 
-    override fun getFilteredDiaries(zonedDateTime: ZonedDateTime): Flow<Diaries> {
+    override fun getTextFilteredDiaries(searchText: String): Flow<Diaries> {
+        return if (user != null && realm != null) {
+            try {
+                realm.query<Diary>(
+                    "owner_id == $0 AND title CONTAINS[c] $1 OR description CONTAINS[c] $1",
+                    user.id,
+                    searchText
+                    ).asFlow().map { result ->
+                    RequestState.Success(data = result.list.groupBy {
+                        it.date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate()
+                    })
+                }
+            } catch (e: Exception) {
+                flow { emit(RequestState.Error(e)) }
+            }
+        } else {
+            flow { emit(RequestState.Error(UserNotAuthenticatedException())) }
+        }
+    }
+
+    override fun getDateFilteredDiaries(zonedDateTime: ZonedDateTime): Flow<Diaries> {
         return if (user != null && realm != null) {
             try {
                 realm.query<Diary>(

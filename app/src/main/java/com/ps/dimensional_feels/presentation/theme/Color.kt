@@ -69,9 +69,9 @@ val seed = Color(0xFF004344)
 // Mood Colors
 
 
-val HappyColor = Color(0xFFFFEE58)
-val AmorousColor = Color(0xFFEC407A)
-val ConfusedColor = Color(0xFFFF7043)
-val AngryColor = Color(0xFFEF5350)
-val DrunkColor = Color(0xFF66BB6A)
+val HappyColor = Color(0xFF9966CC)
+val AmorousColor = Color(0xFFFF0099 )
+val ConfusedColor = Color(0xFFFFA300)
+val AngryColor = Color(0xFFFF5733)
+val DrunkColor = Color(0xFF70B62D)
 val DepressedColor = Color(0xFFBDBDBD)

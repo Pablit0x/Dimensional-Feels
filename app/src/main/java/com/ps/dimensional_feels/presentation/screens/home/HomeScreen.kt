@@ -13,6 +13,10 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
@@ -35,9 +39,13 @@ fun HomeScreen(
     onNavigateToWriteWithArgs: (String) -> Unit,
     dateIsSelected: Boolean,
     onDateSelected: (ZonedDateTime) -> Unit,
-    onDateReset: () -> Unit
+    onDateReset: () -> Unit,
+    onSearch: (String) -> Unit,
+    onSearchReset: () -> Unit
 ) {
     val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior()
+    var isSearchOpen by rememberSaveable { mutableStateOf(false) }
+
     NavigationDrawer(
         drawerState = drawerState,
         onDeleteAllClicked = onDeleteAllClicked,
@@ -49,7 +57,11 @@ fun HomeScreen(
                 onMenuClicked = onMenuClicked,
                 dateIsSelected = dateIsSelected,
                 onDateSelected = onDateSelected,
-                onDateReset = onDateReset
+                onDateReset = onDateReset,
+                onSearchClicked = {
+                    isSearchOpen = !isSearchOpen
+                },
+                searchActive = isSearchOpen
             )
         }, floatingActionButton = {
             FloatingActionButton(onClick = onNavigateToWrite) {
@@ -61,11 +73,12 @@ fun HomeScreen(
         }, content = { padding ->
             when (diaries) {
                 is RequestState.Success -> {
-                    HomeContent(
-                        paddingValues = padding,
+                    HomeContent(paddingValues = padding,
                         diariesNotes = diaries.data,
-                        onClick = onNavigateToWriteWithArgs
-                    )
+                        onClick = onNavigateToWriteWithArgs,
+                        isSearchOpen = isSearchOpen,
+                        onSearch = { onSearch(it) },
+                        onSearchReset = onSearchReset)
                 }
 
                 is RequestState.Error -> {
@@ -83,6 +96,7 @@ fun HomeScreen(
                         CircularProgressIndicator()
                     }
                 }
+
                 else -> {}
             }
         })

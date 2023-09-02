@@ -6,6 +6,9 @@ This project is built using Kotlin and leverages Jetpack Compose for a modern an
 
 Start your journey into the multiverse of Android development with Dimensional Feels!
 
+## Demo
+https://github.com/Pablit0x/Dimensional-Feels/assets/76017191/cac46ee5-1619-4a99-abf8-c3daff3f307e
+
 ## Tech Stack
 
 Dimensional Feels utilizes a range of technologies and libraries in the Android ecosystem, including:

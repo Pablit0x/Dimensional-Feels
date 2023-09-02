@@ -1,8 +1,13 @@
 package com.ps.dimensional_feels
 
+import android.Manifest
+import android.os.Build
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.annotation.RequiresApi
+import androidx.compose.runtime.mutableStateOf
 import androidx.core.net.toUri
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.core.view.WindowCompat
@@ -29,6 +34,10 @@ import javax.inject.Inject
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
+
+    private val isPermissionGranted = mutableStateOf(false)
+
+
     private var keepSplashOpened = true
 
     @Inject
@@ -39,8 +48,25 @@ class MainActivity : ComponentActivity() {
 
     @Inject
     lateinit var imageToDeleteDao: ImageToDeleteDao
+
+    @RequiresApi(Build.VERSION_CODES.TIRAMISU)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+//        val permissionLauncher = registerForActivityResult(
+//            ActivityResultContracts.RequestMultiplePermissions()
+//        ) { permissions ->
+//            isPermissionGranted.value = permissions.values.all { it }
+//        }
+//
+//
+//        permissionLauncher.launch(
+//            arrayOf(
+//                Manifest.permission.READ_MEDIA_IMAGES,
+//                Manifest.permission.READ_MEDIA_VIDEO,
+//                )
+//        )
+
         installSplashScreen().setKeepOnScreenCondition { keepSplashOpened }
         WindowCompat.setDecorFitsSystemWindows(window, false)
         FirebaseApp.initializeApp(applicationContext)
@@ -71,8 +97,7 @@ private fun cleanupCheck(
     scope.launch(Dispatchers.IO + SupervisorJob()) {
         val uploadResult = imageToUploadDao.getAllImages()
         uploadResult.forEach { imageToUpload ->
-            retryUploadingImageToFirebase(
-                firebaseStorage = firebaseStorage,
+            retryUploadingImageToFirebase(firebaseStorage = firebaseStorage,
                 imageToUpload = imageToUpload,
                 onSuccess = {
                     scope.launch(Dispatchers.IO) {
@@ -82,8 +107,7 @@ private fun cleanupCheck(
         }
         val deleteResult = imageToDeleteDao.getAllImages()
         deleteResult.forEach { imageToDelete ->
-            retryDeletingImagesFromFirebase(
-                firebaseStorage = firebaseStorage,
+            retryDeletingImageFromFirebase(firebaseStorage = firebaseStorage,
                 imageToDelete = imageToDelete,
                 onSuccess = {
                     scope.launch(Dispatchers.IO) {
@@ -99,18 +123,23 @@ private fun getStartDestination(): String {
     return if (user != null && user.loggedIn) Screen.Home.route else Screen.Authentication.route
 }
 
-private fun retryUploadingImageToFirebase(
+fun retryUploadingImageToFirebase(
     firebaseStorage: FirebaseStorage, imageToUpload: ImageToUpload, onSuccess: () -> Unit
 ) {
     val storage = firebaseStorage.reference
-    storage.child(
-        imageToUpload.remoteImagePath
-    ).putFile(
-        imageToUpload.imageUri.toUri(), storageMetadata { }, imageToUpload.sessionUri.toUri()
-    ).addOnSuccessListener { onSuccess() }
+
+    try {
+        storage.child(imageToUpload.remoteImagePath).putFile(
+            imageToUpload.imageUri.toUri(), storageMetadata { }, imageToUpload.sessionUri.toUri()
+        )
+    } catch (e: Exception) {
+        e.printStackTrace()
+    } finally {
+        onSuccess()
+    }
 }
 
-private fun retryDeletingImagesFromFirebase(
+fun retryDeletingImageFromFirebase(
     firebaseStorage: FirebaseStorage, imageToDelete: ImageToDelete, onSuccess: () -> Unit
 ) {
     val storage = firebaseStorage.reference

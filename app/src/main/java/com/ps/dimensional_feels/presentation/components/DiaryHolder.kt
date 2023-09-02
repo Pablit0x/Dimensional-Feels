@@ -52,12 +52,13 @@ fun DiaryHolder(
     val localDensity = LocalDensity.current
     val context = LocalContext.current
     var componentHeight by remember { mutableStateOf(0.dp) }
-    var showGallery by remember { mutableStateOf(false) }
+    var showGallery by remember { mutableStateOf(true) }
     var galleryLoading by remember { mutableStateOf(false) }
     val downloadedImages = remember { mutableStateListOf<Uri>() }
+    var diaryLoaded by remember{ mutableStateOf(false) }
 
     LaunchedEffect(key1 = showGallery) {
-        if (showGallery && downloadedImages.isEmpty()) {
+        if (showGallery && downloadedImages.isEmpty() && diary.images.isNotEmpty()) {
             galleryLoading = true
             fetchImagesFromFirebase(remoteImagePaths = diary.images, onImageDownload = { imageUri ->
                 downloadedImages.add(imageUri)
@@ -68,67 +69,65 @@ fun DiaryHolder(
                 galleryLoading = false
                 showGallery = false
             }, onReadyToDisplay = {
+                diaryLoaded = true
                 galleryLoading = false
             })
+        } else {
+            diaryLoaded = true
         }
     }
 
-    Row(modifier = Modifier.clickable(indication = null, interactionSource = remember {
-        MutableInteractionSource()
-    }) { onClick(diary._id.toString()) }) {
-        Spacer(modifier = Modifier.width(14.dp))
-        Surface(modifier = Modifier
-            .width(2.dp)
-            .height(componentHeight + 14.dp),
-            tonalElevation = Elevation.Level1,
-            content = {})
-        Spacer(modifier = Modifier.width(20.dp))
-        Surface(
-            modifier = Modifier
-                .clip(shape = Shapes().medium)
-                .onGloballyPositioned {
-                    componentHeight = with(localDensity) { it.size.height.toDp() }
-                }, tonalElevation = Elevation.Level1
-        ) {
-            Column(modifier = Modifier.fillMaxWidth()) {
-                DiaryHeader(
-                    character = diary.character.toRickAndMortyCharacter(),
-                    moodName = diary.mood,
-                    time = diary.date.toInstant(),
-                    title = diary.title
-                )
-                Text(
-                    modifier = Modifier.padding(14.dp),
-                    text = diary.description,
-                    style = TextStyle.Default.copy(
-                        fontSize = MaterialTheme.typography.bodyLarge.fontSize
-                    ),
-                    maxLines = 4,
-                    overflow = TextOverflow.Ellipsis
-                )
-                if (diary.images.isNotEmpty()) {
-                    TextButton(onClick = { showGallery = !showGallery }) {
-                        Text(
-                            text = if (showGallery && galleryLoading) stringResource(id = R.string.loading) else if (showGallery) stringResource(
-                                id = R.string.hide_gallery
-                            ) else stringResource(
-                                id = R.string.show_gallery
-                            ), style = TextStyle.Default.copy(
-                                fontFamily = FontFamily.Monospace
+    AnimatedVisibility(visible = diaryLoaded, enter = fadeIn()) {
+        val interactionSource = remember { MutableInteractionSource() }
+
+        Row(modifier = Modifier.clickable(
+            indication = null, interactionSource = interactionSource
+        ) { onClick(diary._id.toString()) }) {
+            Spacer(modifier = Modifier.width(14.dp))
+            Surface(modifier = Modifier
+                .width(2.dp)
+                .height(componentHeight + 14.dp),
+                tonalElevation = Elevation.Level1,
+                content = {})
+            Spacer(modifier = Modifier.width(20.dp))
+            Surface(
+                modifier = Modifier
+                    .clip(shape = Shapes().medium)
+                    .onGloballyPositioned {
+                        componentHeight = with(localDensity) { it.size.height.toDp() }
+                    }, tonalElevation = Elevation.Level1
+            ) {
+                Column(modifier = Modifier.fillMaxWidth()) {
+                    DiaryHeader(
+                        character = diary.character.toRickAndMortyCharacter(),
+                        moodName = diary.mood,
+                        time = diary.date.toInstant(),
+                        title = diary.title
+                    )
+                    Text(
+                        modifier = Modifier.padding(14.dp),
+                        text = diary.description,
+                        style = TextStyle.Default.copy(
+                            fontSize = MaterialTheme.typography.bodyLarge.fontSize
+                        ),
+                        maxLines = 4,
+                        overflow = TextOverflow.Ellipsis
+                    )
+                    AnimatedVisibility(
+                        visible = showGallery, enter = fadeIn() + expandVertically(
+                            animationSpec = spring(
+                                dampingRatio = Spring.DampingRatioMediumBouncy,
+                                stiffness = Spring.StiffnessLow
                             )
                         )
-                    }
-                }
-                AnimatedVisibility(
-                    visible = showGallery && !galleryLoading, enter = fadeIn() + expandVertically(
-                        animationSpec = spring(
-                            dampingRatio = Spring.DampingRatioMediumBouncy,
-                            stiffness = Spring.StiffnessLow
-                        )
-                    )
-                ) {
-                    Column(modifier = Modifier.padding(all = 14.dp)) {
-                        Gallery(images = downloadedImages)
+                    ) {
+                        Column(modifier = Modifier.padding(all = 14.dp)) {
+                            if (galleryLoading) {
+                                Text(text = stringResource(id = R.string.loading))
+                            } else {
+                                Gallery(images = downloadedImages)
+                            }
+                        }
                     }
                 }
             }

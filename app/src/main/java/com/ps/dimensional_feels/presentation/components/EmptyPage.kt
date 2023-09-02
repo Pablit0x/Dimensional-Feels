@@ -1,8 +1,10 @@
 package com.ps.dimensional_feels.presentation.components
 
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -16,6 +18,7 @@ import com.ps.dimensional_feels.R
 @Composable
 fun EmptyPage(
     modifier: Modifier = Modifier,
+    showLoading : Boolean = false,
     title: String = stringResource(id = R.string.empty_diary_title),
     description: String = stringResource(id = R.string.empty_diary_description)
 ) {
@@ -24,6 +27,11 @@ fun EmptyPage(
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
+
+        AnimatedVisibility(visible = showLoading) {
+            CircularProgressIndicator()
+        }
+
         Text(
             text = title, style = TextStyle.Default.copy(
                 fontSize = MaterialTheme.typography.titleMedium.fontSize,

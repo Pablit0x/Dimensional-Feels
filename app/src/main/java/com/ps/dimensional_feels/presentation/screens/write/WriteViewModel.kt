@@ -2,6 +2,7 @@ package com.ps.dimensional_feels.presentation.screens.write
 
 import android.net.Uri
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.SavedStateHandle
@@ -98,19 +99,24 @@ class WriteViewModel @Inject constructor(
     }
 
     fun upsertDiary(
-        diary: Diary, onSuccess: () -> Unit, onError: (String) -> Unit
+        diary: Diary, onLoading: () -> Unit, onSuccess: () -> Unit, onError: (String) -> Unit
     ) {
+
         viewModelScope.launch(Dispatchers.IO) {
             if (uiState.selectedDiaryId != null) {
-                updateDiary(diary = diary, onSuccess = onSuccess, onError = onError)
+                updateDiary(
+                    diary = diary, onLoading = onLoading, onSuccess = onSuccess, onError = onError
+                )
             } else {
-                insertDiary(diary = diary, onSuccess = onSuccess, onError = onError)
+                insertDiary(
+                    diary = diary, onLoading = onLoading, onSuccess = onSuccess, onError = onError
+                )
             }
         }
     }
 
     private suspend fun insertDiary(
-        diary: Diary, onSuccess: () -> Unit, onError: (String) -> Unit
+        diary: Diary, onLoading: () -> Unit, onSuccess: () -> Unit, onError: (String) -> Unit
     ) {
         val result = mongoRepository.insertDiary(diary = diary.apply {
             if (uiState.updatedDateTime != null) {
@@ -118,9 +124,17 @@ class WriteViewModel @Inject constructor(
             }
         })
         if (result is RequestState.Success) {
-            uploadImagesToFirebase()
-            withContext(Dispatchers.Main) {
-                onSuccess()
+            if (galleryState.images.isNotEmpty()) {
+                withContext(Dispatchers.Main) {
+                    onLoading()
+                }
+                uploadImagesToFirebase(onComplete = {
+                    viewModelScope.launch(Dispatchers.Main) { onSuccess() }
+                })
+            } else {
+                withContext(Dispatchers.Main) {
+                    onSuccess()
+                }
             }
         } else if (result is RequestState.Error) {
             onError(result.error.message ?: "Unknown error...")
@@ -128,7 +142,7 @@ class WriteViewModel @Inject constructor(
     }
 
     private suspend fun updateDiary(
-        diary: Diary, onSuccess: () -> Unit, onError: (String) -> Unit
+        diary: Diary, onLoading: () -> Unit, onSuccess: () -> Unit, onError: (String) -> Unit
     ) {
         val result = mongoRepository.updateDiary(diary = diary.apply {
             _id = ObjectId.invoke(hexString = uiState.selectedDiaryId!!)
@@ -136,11 +150,15 @@ class WriteViewModel @Inject constructor(
                 if (uiState.updatedDateTime != null) uiState.updatedDateTime!! else uiState.selectedDiary!!.date
         })
         if (result is RequestState.Success) {
-            uploadImagesToFirebase()
-            deleteImagesFromFirebase()
-            withContext(Dispatchers.Main) {
-                onSuccess()
+            if (galleryState.images.isNotEmpty()) {
+                withContext(Dispatchers.Main) { onLoading() }
+                uploadImagesToFirebase(onComplete = {
+                    viewModelScope.launch(Dispatchers.Main) { onSuccess() }
+                })
+            } else {
+                withContext(Dispatchers.Main) { onLoading() }
             }
+            deleteImagesFromFirebase()
         } else if (result is RequestState.Error) {
             onError(result.error.message ?: "Unknown error...")
         }
@@ -169,8 +187,10 @@ class WriteViewModel @Inject constructor(
         }
     }
 
-    private fun uploadImagesToFirebase() {
+    private fun uploadImagesToFirebase(onComplete: () -> Unit) {
         val storage = firebaseStorage.reference
+        var uploadCount by mutableIntStateOf(0)
+
         galleryState.images.forEach { galleryImage ->
             val imagePath = storage.child(galleryImage.remoteImagePath)
             imagePath.putFile(galleryImage.image).addOnProgressListener {
@@ -185,6 +205,10 @@ class WriteViewModel @Inject constructor(
                             )
                         )
                     }
+                }
+            }.addOnCompleteListener {
+                if (++uploadCount == galleryState.images.size) {
+                    onComplete()
                 }
             }
         }

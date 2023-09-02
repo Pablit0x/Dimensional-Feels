@@ -7,6 +7,7 @@ import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -29,6 +30,7 @@ import com.ps.dimensional_feels.model.RickAndMortyCharacters
 import com.ps.dimensional_feels.model.getMoodByName
 import com.ps.dimensional_feels.model.getPositionByMood
 import com.ps.dimensional_feels.model.toRickAndMortyCharacter
+import com.ps.dimensional_feels.presentation.components.EmptyPage
 import com.ps.dimensional_feels.presentation.components.ZoomableImage
 import java.time.ZonedDateTime
 
@@ -36,6 +38,7 @@ import java.time.ZonedDateTime
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
 fun WriteScreen(
+    isLoading: Boolean,
     uiState: WriteUiState,
     galleryState: GalleryState,
     pagerState: PagerState,
@@ -91,36 +94,42 @@ fun WriteScreen(
                 })
         }
     }, content = { padding ->
-        AnimatedVisibility(
-            visible = selectedGalleryImage == null, enter = fadeIn(), exit = fadeOut()
-        ) {
-            WriteContent(uiState = uiState,
-                galleryState = galleryState,
-                paddingValues = padding,
-                pagerState = pagerState,
-                onTitleChanged = onTitleChanged,
-                onDescriptionChanged = onDescriptionChanged,
-                onSavedClicked = onSavedClicked,
-                onImageSelected = onImageSelected,
-                onImageClicked = { galleryImage, index ->
-                    selectedGalleryImage = galleryImage
-                    selectedImageIndex = index
-                },
-                onChangeCharacter = {
-                    onCharacterChange(it)
-                })
-        }
 
-        AnimatedVisibility(
-            visible = selectedGalleryImage != null, enter = fadeIn(), exit = fadeOut()
-        ) {
-            Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                ZoomableImage(pagerState = imagePagerState,
-                    selectedGalleryImageId = selectedImageIndex,
-                    galleryImages = galleryState.images.toList(),
-                    onPageChange = {
-                        selectedGalleryImage = galleryState.images[imagePagerState.currentPage]
+        if(isLoading){
+            EmptyPage(modifier = Modifier.padding(padding), showLoading = true, title = "Saving...", description = "")
+        }
+        else {
+            AnimatedVisibility(
+                visible = selectedGalleryImage == null, enter = fadeIn(), exit = fadeOut()
+            ) {
+                WriteContent(uiState = uiState,
+                    galleryState = galleryState,
+                    paddingValues = padding,
+                    pagerState = pagerState,
+                    onTitleChanged = onTitleChanged,
+                    onDescriptionChanged = onDescriptionChanged,
+                    onSavedClicked = onSavedClicked,
+                    onImageSelected = onImageSelected,
+                    onImageClicked = { galleryImage, index ->
+                        selectedGalleryImage = galleryImage
+                        selectedImageIndex = index
+                    },
+                    onChangeCharacter = {
+                        onCharacterChange(it)
                     })
+            }
+
+            AnimatedVisibility(
+                visible = selectedGalleryImage != null, enter = fadeIn(), exit = fadeOut()
+            ) {
+                Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+                    ZoomableImage(pagerState = imagePagerState,
+                        selectedGalleryImageId = selectedImageIndex,
+                        galleryImages = galleryState.images.toList(),
+                        onPageChange = {
+                            selectedGalleryImage = galleryState.images[imagePagerState.currentPage]
+                        })
+                }
             }
         }
     })

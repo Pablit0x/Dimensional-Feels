@@ -190,6 +190,7 @@ fun NavGraphBuilder.writeRoute(onBackPressed: () -> Unit) {
             defaultValue = null
         })
     ) {
+        var isLoading by remember { mutableStateOf(false) }
         val context = LocalContext.current
         val pagerState = rememberPagerState()
         val viewModel = hiltViewModel<WriteViewModel>()
@@ -201,7 +202,9 @@ fun NavGraphBuilder.writeRoute(onBackPressed: () -> Unit) {
             }
         }
 
-        WriteScreen(uiState = uiState,
+        WriteScreen(
+            isLoading = isLoading,
+            uiState = uiState,
             galleryState = galleryState,
             pagerState = pagerState,
             onBackPressed = onBackPressed,
@@ -224,7 +227,12 @@ fun NavGraphBuilder.writeRoute(onBackPressed: () -> Unit) {
                         position = pageNumber,
                         character = uiState.characters.name.toRickAndMortyCharacter()
                     ).name
-                }, onSuccess = { onBackPressed() }, {})
+                }, onLoading = {
+                    isLoading = true
+                }, onSuccess = {
+                    isLoading = false
+                    onBackPressed()
+                }, onError = { isLoading = false })
             },
             onDateTimeUpdated = {
                 viewModel.updateDateTime(zonedDateTime = it)

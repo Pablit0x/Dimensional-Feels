@@ -20,7 +20,6 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Shapes
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -35,7 +34,6 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.ps.dimensional_feels.R
@@ -55,7 +53,7 @@ fun DiaryHolder(
     var showGallery by remember { mutableStateOf(true) }
     var galleryLoading by remember { mutableStateOf(false) }
     val downloadedImages = remember { mutableStateListOf<Uri>() }
-    var diaryLoaded by remember{ mutableStateOf(false) }
+    var diaryLoaded by remember { mutableStateOf(false) }
 
     LaunchedEffect(key1 = showGallery) {
         if (showGallery && downloadedImages.isEmpty() && diary.images.isNotEmpty()) {
@@ -105,7 +103,7 @@ fun DiaryHolder(
                         title = diary.title
                     )
                     Text(
-                        modifier = Modifier.padding(14.dp),
+                        modifier = Modifier.padding(horizontal = 14.dp, vertical = 8.dp),
                         text = diary.description,
                         style = TextStyle.Default.copy(
                             fontSize = MaterialTheme.typography.bodyLarge.fontSize
@@ -114,7 +112,7 @@ fun DiaryHolder(
                         overflow = TextOverflow.Ellipsis
                     )
                     AnimatedVisibility(
-                        visible = showGallery, enter = fadeIn() + expandVertically(
+                        visible = downloadedImages.isNotEmpty(), enter = fadeIn() + expandVertically(
                             animationSpec = spring(
                                 dampingRatio = Spring.DampingRatioMediumBouncy,
                                 stiffness = Spring.StiffnessLow

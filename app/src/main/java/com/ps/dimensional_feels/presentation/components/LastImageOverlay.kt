@@ -1,5 +1,6 @@
 package com.ps.dimensional_feels.presentation.components
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CornerBasedShape
@@ -16,9 +17,9 @@ import androidx.compose.ui.unit.Dp
 
 @Composable
 fun LastImageOverlay(
-    imageSize: Dp, numberOfRemainingImages: Int, imageShape: CornerBasedShape
+    imageSize: Dp, numberOfRemainingImages: Int, imageShape: CornerBasedShape, onClick: () -> Unit
 ) {
-    Box(contentAlignment = Alignment.Center) {
+    Box(contentAlignment = Alignment.Center, modifier = Modifier.clickable { onClick() }) {
         Surface(modifier = Modifier
             .clip(imageShape)
             .size(imageSize),

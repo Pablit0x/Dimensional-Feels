@@ -6,12 +6,16 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CornerBasedShape
 import androidx.compose.material3.Shapes
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
@@ -32,41 +36,59 @@ fun Gallery(
     spaceBetween: Dp = 10.dp,
     imageShape: CornerBasedShape = Shapes().small
 ) {
-    BoxWithConstraints(modifier = modifier) {
 
-        val context = LocalContext.current
+    var showAsScrollableRow by remember { mutableStateOf(false) }
+    val context = LocalContext.current
 
-        val numberOfVisibleImages by remember {
-            derivedStateOf {
-                max(a = 0, b = maxWidth.div(spaceBetween + imageSize).toInt())
-            }
-        }
-
-        val remainingImages by remember {
-            derivedStateOf {
-                images.size - numberOfVisibleImages
-            }
-        }
-
-        Row {
-            images.take(numberOfVisibleImages).forEach { image ->
+    if (showAsScrollableRow) {
+        LazyRow {
+            items(images) { imageUri ->
                 AsyncImage(
                     modifier = Modifier
                         .clip(imageShape)
                         .size(imageSize),
-                    model = ImageRequest.Builder(context = context).data(image).crossfade(true)
+                    model = ImageRequest.Builder(context = context).data(imageUri).crossfade(true)
                         .build(),
                     contentScale = ContentScale.Crop,
                     contentDescription = stringResource(id = R.string.gallery_image)
                 )
                 Spacer(modifier = Modifier.width(spaceBetween))
             }
-            if (remainingImages > 0) {
-                LastImageOverlay(
-                    imageSize = imageSize,
-                    numberOfRemainingImages = remainingImages,
-                    imageShape = imageShape
-                )
+        }
+    } else {
+        BoxWithConstraints(modifier = modifier) {
+
+            val numberOfVisibleImages by remember {
+                derivedStateOf {
+                    max(a = 0, b = maxWidth.div(spaceBetween + imageSize).toInt())
+                }
+            }
+
+            val remainingImages by remember {
+                derivedStateOf {
+                    images.size - numberOfVisibleImages
+                }
+            }
+
+            Row {
+                images.take(numberOfVisibleImages).forEach { image ->
+                    AsyncImage(
+                        modifier = Modifier
+                            .clip(imageShape)
+                            .size(imageSize),
+                        model = ImageRequest.Builder(context = context).data(image).crossfade(true)
+                            .build(),
+                        contentScale = ContentScale.Crop,
+                        contentDescription = stringResource(id = R.string.gallery_image)
+                    )
+                    Spacer(modifier = Modifier.width(spaceBetween))
+                }
+                if (remainingImages > 0) {
+                    LastImageOverlay(imageSize = imageSize,
+                        numberOfRemainingImages = remainingImages,
+                        imageShape = imageShape,
+                        onClick = { showAsScrollableRow = true })
+                }
             }
         }
     }

@@ -42,5 +42,4 @@ sealed class MoodIcon(val icon: Int) {
     object DepressedJerry : MoodIcon(icon = R.drawable.depressed_jerry)
     object ConfusedJerry : MoodIcon(icon = R.drawable.confused_jerry)
     object AmorousJerry : MoodIcon(icon = R.drawable.amorous_jerry)
-
 }

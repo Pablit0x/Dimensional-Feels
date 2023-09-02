@@ -14,10 +14,12 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.ps.dimensional_feels.model.RickAndMortyCharacters
 import com.ps.dimensional_feels.model.getMoodByName
+import com.ps.dimensional_feels.util.Constants.TIME_PATTERN
 import java.time.Instant
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
@@ -27,7 +29,8 @@ import java.util.Locale
 fun DiaryHeader(title: String, character: RickAndMortyCharacters, moodName: String, time: Instant) {
     val mood by remember { mutableStateOf(getMoodByName(name = moodName, character = character)) }
     val formatter = remember {
-        DateTimeFormatter.ofPattern("hh:mm a", Locale.getDefault()).withZone(ZoneId.systemDefault())
+        DateTimeFormatter.ofPattern(TIME_PATTERN, Locale.getDefault())
+            .withZone(ZoneId.systemDefault())
     }
     Row(
         modifier = Modifier
@@ -41,9 +44,12 @@ fun DiaryHeader(title: String, character: RickAndMortyCharacters, moodName: Stri
             modifier = Modifier
                 .padding(horizontal = 14.dp)
                 .weight(1f),
-            text = title, color = mood.onContainerColor, style = TextStyle(
+            text = title,
+            color = mood.onContainerColor,
+            style = TextStyle(
                 fontSize = MaterialTheme.typography.titleMedium.fontSize,
-                fontWeight = FontWeight.Bold
+                fontWeight = FontWeight.Medium,
+                fontFamily = FontFamily.SansSerif
             )
         )
         Text(

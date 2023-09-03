@@ -5,9 +5,12 @@ import android.net.Uri
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.pager.PagerState
+import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -19,9 +22,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import com.google.accompanist.pager.ExperimentalPagerApi
-import com.google.accompanist.pager.PagerState
-import com.google.accompanist.pager.rememberPagerState
 import com.ps.dimensional_feels.R
 import com.ps.dimensional_feels.model.Diary
 import com.ps.dimensional_feels.model.GalleryImage
@@ -34,7 +34,7 @@ import com.ps.dimensional_feels.presentation.components.EmptyPage
 import com.ps.dimensional_feels.presentation.components.ZoomableImage
 import java.time.ZonedDateTime
 
-@OptIn(ExperimentalPagerApi::class)
+@OptIn(ExperimentalFoundationApi::class)
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
 fun WriteScreen(
@@ -55,7 +55,9 @@ fun WriteScreen(
 ) {
 
     var selectedImageIndex by remember { mutableIntStateOf(0) }
-    val imagePagerState = rememberPagerState()
+    val imagePagerState = rememberPagerState(
+        pageCount = { galleryState.images.size }
+    )
 
     var selectedGalleryImage by remember { mutableStateOf<GalleryImage?>(null) }
 

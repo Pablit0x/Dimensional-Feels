@@ -62,6 +62,7 @@ dependencies {
     implementation("androidx.core:core-ktx:1.10.1")
     implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.6.1")
     implementation("androidx.activity:activity-compose:1.7.2")
+    implementation ("androidx.compose.foundation:foundation:1.4.1")
     implementation(platform("androidx.compose:compose-bom:2023.08.00"))
     implementation("androidx.compose.ui:ui")
     implementation("androidx.compose.ui:ui-graphics")
@@ -107,7 +108,7 @@ dependencies {
     implementation ("io.coil-kt:coil-compose:2.3.0")
 
     // Pager - Accompanist
-    implementation ("com.google.accompanist:accompanist-pager:0.27.0")
+//    implementation ("com.google.accompanist:accompanist-pager:0.27.0")
 
     // Message Bar Compose
     implementation ("com.github.stevdza-san:MessageBarCompose:1.0.5")

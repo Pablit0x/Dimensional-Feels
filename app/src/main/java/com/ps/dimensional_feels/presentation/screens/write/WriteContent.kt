@@ -2,6 +2,7 @@ package com.ps.dimensional_feels.presentation.screens.write
 
 import android.net.Uri
 import android.widget.Toast
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
@@ -17,6 +18,8 @@ import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.pager.HorizontalPager
+import androidx.compose.foundation.pager.PagerState
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
@@ -47,9 +50,6 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
-import com.google.accompanist.pager.ExperimentalPagerApi
-import com.google.accompanist.pager.HorizontalPager
-import com.google.accompanist.pager.PagerState
 import com.ps.dimensional_feels.R
 import com.ps.dimensional_feels.model.Diary
 import com.ps.dimensional_feels.model.GalleryImage
@@ -59,7 +59,7 @@ import com.ps.dimensional_feels.model.getMoodByPosition
 import com.ps.dimensional_feels.presentation.components.GalleryUploader
 import io.realm.kotlin.ext.toRealmList
 
-@OptIn(ExperimentalPagerApi::class)
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun WriteContent(
     uiState: WriteUiState,
@@ -99,17 +99,21 @@ fun WriteContent(
         ) {
             Spacer(modifier = Modifier.height(30.dp))
             HorizontalPager(
-                state = pagerState, count = 6
-            ) { page ->
-                AsyncImage(
-                    modifier = Modifier.size(120.dp),
-                    model = ImageRequest.Builder(context).data(
-                        getMoodByPosition(
-                            character = uiState.characters, position = page
-                        ).icon
-                    ).crossfade(true).build(),
-                    contentDescription = stringResource(id = R.string.mood_icon)
-                )
+                state = pagerState,
+                verticalAlignment = Alignment.CenterVertically,
+
+                ) { page ->
+                Box(modifier = Modifier.fillMaxWidth(), contentAlignment = Alignment.Center) {
+                    AsyncImage(
+                        modifier = Modifier.size(120.dp),
+                        model = ImageRequest.Builder(context).data(
+                            getMoodByPosition(
+                                character = uiState.characters, position = page
+                            ).icon
+                        ).crossfade(true).build(),
+                        contentDescription = stringResource(id = R.string.mood_icon)
+                    )
+                }
             }
 
             Spacer(modifier = Modifier.height(8.dp))

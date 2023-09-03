@@ -1,6 +1,8 @@
 package com.ps.dimensional_feels.navigation
 
 import android.widget.Toast
+import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.material3.DrawerValue
 import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
@@ -20,8 +22,6 @@ import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
-import com.google.accompanist.pager.ExperimentalPagerApi
-import com.google.accompanist.pager.rememberPagerState
 import com.ps.dimensional_feels.R
 import com.ps.dimensional_feels.model.getMoodByPosition
 import com.ps.dimensional_feels.model.toRickAndMortyCharacter
@@ -186,7 +186,7 @@ fun NavGraphBuilder.homeRoute(
     }
 }
 
-@OptIn(ExperimentalPagerApi::class)
+@OptIn(ExperimentalFoundationApi::class)
 fun NavGraphBuilder.writeRoute(onBackPressed: () -> Unit) {
     composable(
         route = Screen.Write.route,
@@ -198,9 +198,11 @@ fun NavGraphBuilder.writeRoute(onBackPressed: () -> Unit) {
     ) {
         var isLoading by remember { mutableStateOf(false) }
         val context = LocalContext.current
-        val pagerState = rememberPagerState()
         val viewModel = hiltViewModel<WriteViewModel>()
         val galleryState = viewModel.galleryState
+        val pagerState = rememberPagerState(
+            pageCount = { galleryState.images.size },
+        )
         val uiState = viewModel.uiState
         val pageNumber by remember {
             derivedStateOf {
@@ -208,7 +210,8 @@ fun NavGraphBuilder.writeRoute(onBackPressed: () -> Unit) {
             }
         }
 
-        WriteScreen(isLoading = isLoading,
+        WriteScreen(
+            isLoading = isLoading,
             uiState = uiState,
             galleryState = galleryState,
             pagerState = pagerState,

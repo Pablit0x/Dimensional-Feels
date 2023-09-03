@@ -200,8 +200,10 @@ fun NavGraphBuilder.writeRoute(onBackPressed: () -> Unit) {
         val context = LocalContext.current
         val viewModel = hiltViewModel<WriteViewModel>()
         val galleryState = viewModel.galleryState
+
+        // Page count reflects number of moods
         val pagerState = rememberPagerState(
-            pageCount = { galleryState.images.size },
+            pageCount = { 6 },
         )
         val uiState = viewModel.uiState
         val pageNumber by remember {

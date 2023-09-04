@@ -31,7 +31,6 @@ import javax.inject.Inject
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
-    //Test
 
     private var keepSplashOpened = true
 

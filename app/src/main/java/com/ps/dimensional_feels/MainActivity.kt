@@ -5,7 +5,6 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.annotation.RequiresApi
-import androidx.compose.runtime.mutableStateOf
 import androidx.core.net.toUri
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.core.view.WindowCompat
@@ -33,9 +32,6 @@ import javax.inject.Inject
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
 
-    private val isPermissionGranted = mutableStateOf(false)
-
-
     private var keepSplashOpened = true
 
     @Inject
@@ -50,20 +46,6 @@ class MainActivity : ComponentActivity() {
     @RequiresApi(Build.VERSION_CODES.TIRAMISU)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-//        val permissionLauncher = registerForActivityResult(
-//            ActivityResultContracts.RequestMultiplePermissions()
-//        ) { permissions ->
-//            isPermissionGranted.value = permissions.values.all { it }
-//        }
-//
-//
-//        permissionLauncher.launch(
-//            arrayOf(
-//                Manifest.permission.READ_MEDIA_IMAGES,
-//                Manifest.permission.READ_MEDIA_VIDEO,
-//                )
-//        )
 
         installSplashScreen().setKeepOnScreenCondition { keepSplashOpened }
         WindowCompat.setDecorFitsSystemWindows(window, false)

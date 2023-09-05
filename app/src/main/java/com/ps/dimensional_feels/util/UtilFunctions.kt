@@ -33,6 +33,7 @@ fun Instant.toRealmInstant(): RealmInstant {
         RealmInstant.from(sec + 1, -1_000_000 + nano)
     }
 }
+
 fun fetchImagesFromFirebase(
     remoteImagePaths: List<String>,
     onImageDownload: (Uri) -> Unit,

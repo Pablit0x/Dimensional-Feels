@@ -16,7 +16,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class AuthenticationViewModel @Inject constructor(
-    private val app : App,
+    private val app: App,
     firebaseAuth: FirebaseAuth
 ) : ViewModel() {
     var loadingState = mutableStateOf(false)

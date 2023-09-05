@@ -22,7 +22,6 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.cancelAndJoin
 import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.time.ZonedDateTime
@@ -65,7 +64,7 @@ class HomeViewModel @Inject constructor(
         diaries.value = RequestState.Loading
         if (dateIsSelected && zonedDateTime != null) {
             observeDateFilteredDiaries(zonedDateTime = zonedDateTime)
-        } else if(searchText != null) {
+        } else if (searchText != null) {
             observeTextFilteredDiaries(searchText = searchText)
         } else {
             observeAllDiaries()
@@ -91,13 +90,13 @@ class HomeViewModel @Inject constructor(
             if (::allDiariesJob.isInitialized) {
                 allDiariesJob.cancelAndJoin()
             }
-            if(::dateFilteredDiariesJob.isInitialized){
+            if (::dateFilteredDiariesJob.isInitialized) {
                 dateFilteredDiariesJob.cancelAndJoin()
             }
             mongoRepository.getTextFilteredDiaries(searchText)
                 .collect {
-                diaries.value = it
-            }
+                    diaries.value = it
+                }
         }
     }
 
@@ -151,7 +150,7 @@ class HomeViewModel @Inject constructor(
         }
     }
 
-    fun logOut(navigateToAuth: () -> Unit){
+    fun logOut(navigateToAuth: () -> Unit) {
         viewModelScope.launch {
             user?.let {
                 it.logOut()

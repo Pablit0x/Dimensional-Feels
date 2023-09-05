@@ -71,58 +71,58 @@ fun DiaryHolder(
         }
     }
 
-        val interactionSource = remember { MutableInteractionSource() }
+    val interactionSource = remember { MutableInteractionSource() }
 
-        Row(modifier = Modifier.clickable(
-            indication = null, interactionSource = interactionSource
-        ) { onClick(diary._id.toString()) }) {
-            Spacer(modifier = Modifier.width(14.dp))
-            Surface(modifier = Modifier
-                .width(2.dp)
-                .height(componentHeight + 14.dp),
-                tonalElevation = Elevation.Level1,
-                content = {})
-            Spacer(modifier = Modifier.width(20.dp))
-            Surface(
-                modifier = Modifier
-                    .clip(shape = Shapes().medium)
-                    .onGloballyPositioned {
-                        componentHeight = with(localDensity) { it.size.height.toDp() }
-                    }, tonalElevation = Elevation.Level1
-            ) {
-                Column(modifier = Modifier.fillMaxWidth()) {
-                    DiaryHeader(
-                        character = diary.character.toRickAndMortyCharacter(),
-                        moodName = diary.mood,
-                        time = diary.date.toInstant(),
-                        title = diary.title
-                    )
-                    Text(
-                        modifier = Modifier.padding(horizontal = 14.dp, vertical = 8.dp),
-                        text = diary.description,
-                        style = TextStyle.Default.copy(
-                            fontSize = MaterialTheme.typography.bodyLarge.fontSize
-                        ),
-                        maxLines = 4,
-                        overflow = TextOverflow.Ellipsis
-                    )
-                    AnimatedVisibility(
-                        visible = downloadedImages.isNotEmpty(), enter = fadeIn() + expandVertically(
-                            animationSpec = spring(
-                                dampingRatio = Spring.DampingRatioMediumBouncy,
-                                stiffness = Spring.StiffnessLow
-                            )
+    Row(modifier = Modifier.clickable(
+        indication = null, interactionSource = interactionSource
+    ) { onClick(diary._id.toString()) }) {
+        Spacer(modifier = Modifier.width(14.dp))
+        Surface(modifier = Modifier
+            .width(2.dp)
+            .height(componentHeight + 14.dp),
+            tonalElevation = Elevation.Level1,
+            content = {})
+        Spacer(modifier = Modifier.width(20.dp))
+        Surface(
+            modifier = Modifier
+                .clip(shape = Shapes().medium)
+                .onGloballyPositioned {
+                    componentHeight = with(localDensity) { it.size.height.toDp() }
+                }, tonalElevation = Elevation.Level1
+        ) {
+            Column(modifier = Modifier.fillMaxWidth()) {
+                DiaryHeader(
+                    character = diary.character.toRickAndMortyCharacter(),
+                    moodName = diary.mood,
+                    time = diary.date.toInstant(),
+                    title = diary.title
+                )
+                Text(
+                    modifier = Modifier.padding(horizontal = 14.dp, vertical = 8.dp),
+                    text = diary.description,
+                    style = TextStyle.Default.copy(
+                        fontSize = MaterialTheme.typography.bodyLarge.fontSize
+                    ),
+                    maxLines = 4,
+                    overflow = TextOverflow.Ellipsis
+                )
+                AnimatedVisibility(
+                    visible = downloadedImages.isNotEmpty(), enter = fadeIn() + expandVertically(
+                        animationSpec = spring(
+                            dampingRatio = Spring.DampingRatioMediumBouncy,
+                            stiffness = Spring.StiffnessLow
                         )
-                    ) {
-                        Column(modifier = Modifier.padding(all = 14.dp)) {
-                            if (galleryLoading) {
-                                Text(text = stringResource(id = R.string.loading))
-                            } else {
-                                Gallery(images = downloadedImages)
-                            }
+                    )
+                ) {
+                    Column(modifier = Modifier.padding(all = 14.dp)) {
+                        if (galleryLoading) {
+                            Text(text = stringResource(id = R.string.loading))
+                        } else {
+                            Gallery(images = downloadedImages)
                         }
                     }
                 }
             }
+        }
     }
 }

@@ -10,5 +10,5 @@ import com.ps.dimensional_feels.data.database.entity.ImageToUpload
 )
 abstract class ImagesDatabase : RoomDatabase() {
     abstract fun imageToUploadDao(): ImageToUploadDao
-    abstract fun imageToDeleteDao() : ImageToDeleteDao
+    abstract fun imageToDeleteDao(): ImageToDeleteDao
 }

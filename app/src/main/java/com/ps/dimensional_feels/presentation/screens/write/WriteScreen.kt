@@ -97,10 +97,14 @@ fun WriteScreen(
         }
     }, content = { padding ->
 
-        if(isLoading){
-            EmptyPage(modifier = Modifier.padding(padding), showLoading = true, title = "Saving...", description = "")
-        }
-        else {
+        if (isLoading) {
+            EmptyPage(
+                modifier = Modifier.padding(padding),
+                showLoading = true,
+                title = "Saving...",
+                description = ""
+            )
+        } else {
             AnimatedVisibility(
                 visible = selectedGalleryImage == null, enter = fadeIn(), exit = fadeOut()
             ) {

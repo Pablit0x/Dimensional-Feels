@@ -14,7 +14,7 @@ import javax.inject.Singleton
 object FirebaseModule {
     @Singleton
     @Provides
-    fun provideFirebaseApp() : FirebaseApp {
+    fun provideFirebaseApp(): FirebaseApp {
         return FirebaseApp.getInstance()
     }
 

@@ -73,12 +73,14 @@ fun HomeScreen(
         }, content = { padding ->
             when (diaries) {
                 is RequestState.Success -> {
-                    HomeContent(paddingValues = padding,
+                    HomeContent(
+                        paddingValues = padding,
                         diariesNotes = diaries.data,
                         onClick = onNavigateToWriteWithArgs,
                         isSearchOpen = isSearchOpen,
                         onSearch = { onSearch(it) },
-                        onSearchReset = onSearchReset)
+                        onSearchReset = onSearchReset
+                    )
                 }
 
                 is RequestState.Error -> {

@@ -70,7 +70,7 @@ val seed = Color(0xFF004344)
 
 
 val HappyColor = Color(0xFF9966CC)
-val AmorousColor = Color(0xFFFF0099 )
+val AmorousColor = Color(0xFFFF0099)
 val ConfusedColor = Color(0xFFFFA300)
 val AngryColor = Color(0xFFFF5733)
 val DrunkColor = Color(0xFF70B62D)

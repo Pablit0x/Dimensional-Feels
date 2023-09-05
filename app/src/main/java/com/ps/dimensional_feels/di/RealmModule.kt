@@ -21,24 +21,24 @@ object RealmModule {
 
     @Provides
     @Singleton
-    fun provideRealmApp() : App {
+    fun provideRealmApp(): App {
         return App.create(APP_ID)
     }
 
     @Provides
     @Singleton
-    fun provideRealmUser(app: App) : User? {
+    fun provideRealmUser(app: App): User? {
         return app.currentUser
     }
 
     @Provides
     @Singleton
-    fun provideRealm(user : User?) : Realm? {
-        return if(user == null){
+    fun provideRealm(user: User?): Realm? {
+        return if (user == null) {
             null
         } else {
             val config =
-                SyncConfiguration.Builder(user , setOf(Diary::class)).initialSubscriptions { sub ->
+                SyncConfiguration.Builder(user, setOf(Diary::class)).initialSubscriptions { sub ->
                     add(
                         query = sub.query<Diary>("owner_id == $0", user.id)
 
@@ -50,7 +50,7 @@ object RealmModule {
 
     @Provides
     @Singleton
-    fun provideMongoRepository(user: User?, realm: Realm?) : MongoRepository{
+    fun provideMongoRepository(user: User?, realm: Realm?): MongoRepository {
         return MongoRepositoryImpl(user = user, realm = realm)
     }
 

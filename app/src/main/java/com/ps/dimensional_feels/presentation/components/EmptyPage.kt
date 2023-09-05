@@ -18,7 +18,7 @@ import com.ps.dimensional_feels.R
 @Composable
 fun EmptyPage(
     modifier: Modifier = Modifier,
-    showLoading : Boolean = false,
+    showLoading: Boolean = false,
     title: String = stringResource(id = R.string.empty_diary_title),
     description: String = stringResource(id = R.string.empty_diary_description)
 ) {

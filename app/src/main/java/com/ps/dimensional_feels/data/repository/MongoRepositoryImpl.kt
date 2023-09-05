@@ -22,7 +22,7 @@ import javax.inject.Inject
 
 class MongoRepositoryImpl @Inject constructor(
     private val user: User?,
-    private val realm : Realm?
+    private val realm: Realm?
 ) : MongoRepository {
     override fun getAllDiaries(): Flow<Diaries> {
         return if (user != null && realm != null) {
@@ -48,7 +48,7 @@ class MongoRepositoryImpl @Inject constructor(
                     "owner_id == $0 AND title CONTAINS[c] $1 OR description CONTAINS[c] $1",
                     user.id,
                     searchText
-                    ).asFlow().map { result ->
+                ).asFlow().map { result ->
                     RequestState.Success(data = result.list.groupBy {
                         it.date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate()
                     })

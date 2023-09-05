@@ -36,11 +36,11 @@ fun ZoomableImage(
 
     val context = LocalContext.current
 
-    LaunchedEffect(Unit){
+    LaunchedEffect(Unit) {
         pagerState.scrollToPage(selectedGalleryImageId)
     }
 
-    LaunchedEffect(pagerState.currentPage){
+    LaunchedEffect(pagerState.currentPage) {
         onPageChange()
     }
 

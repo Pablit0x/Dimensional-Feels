@@ -11,7 +11,7 @@ typealias Diaries = RequestState<Map<LocalDate, List<Diary>>>
 
 interface MongoRepository {
     fun getAllDiaries(): Flow<Diaries>
-    fun getTextFilteredDiaries(searchText : String) : Flow<Diaries>
+    fun getTextFilteredDiaries(searchText: String): Flow<Diaries>
     fun getDateFilteredDiaries(zonedDateTime: ZonedDateTime): Flow<Diaries>
     fun getSelectedDiary(diaryId: ObjectId): Flow<RequestState<Diary>>
     suspend fun insertDiary(diary: Diary): RequestState<Diary>

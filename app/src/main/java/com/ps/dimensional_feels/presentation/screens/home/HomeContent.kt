@@ -11,7 +11,6 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -21,13 +20,11 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import com.ps.dimensional_feels.R
 import com.ps.dimensional_feels.model.Diary
 import com.ps.dimensional_feels.presentation.components.DateHeader
 import com.ps.dimensional_feels.presentation.components.DiaryHolder
@@ -50,9 +47,9 @@ fun HomeContent(
         mutableStateOf(false)
     }
 
-    LaunchedEffect(searchQuery){
-        if(searchQuery != null){
-            if(searchQuery?.isEmpty() == true && !debounced){
+    LaunchedEffect(searchQuery) {
+        if (searchQuery != null) {
+            if (searchQuery?.isEmpty() == true && !debounced) {
                 debounced = true
                 delay(300)
                 onSearchReset()
@@ -76,16 +73,16 @@ fun HomeContent(
                 },
                 placeholder = { Text(text = stringResource(id = androidx.compose.material3.R.string.search_bar_search)) },
                 trailingIcon = {
-                        IconButton(onClick = {
-                            if(searchQuery.isNullOrEmpty()){
-                                onSearchReset()
-                            } else {
-                                onSearch(searchQuery!!)
-                            }
-                        }) {
-                            Icon(
-                                imageVector = Icons.Default.Search, contentDescription = null
-                            )
+                    IconButton(onClick = {
+                        if (searchQuery.isNullOrEmpty()) {
+                            onSearchReset()
+                        } else {
+                            onSearch(searchQuery!!)
+                        }
+                    }) {
+                        Icon(
+                            imageVector = Icons.Default.Search, contentDescription = null
+                        )
                     }
                 },
                 shape = RoundedCornerShape(40),

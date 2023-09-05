@@ -1,10 +1,10 @@
 plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
-    id ("dagger.hilt.android.plugin")
+    id("dagger.hilt.android.plugin")
     kotlin("kapt")
-    id ("io.realm.kotlin")
-    id ("com.google.gms.google-services")
+    id("io.realm.kotlin")
+    id("com.google.gms.google-services")
 }
 
 android {
@@ -56,13 +56,13 @@ android {
 dependencies {
 
     // Lottie Animation
-    implementation ("com.airbnb.android:lottie-compose:6.0.0")
+    implementation("com.airbnb.android:lottie-compose:6.0.0")
 
 
     implementation("androidx.core:core-ktx:1.10.1")
     implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.6.1")
     implementation("androidx.activity:activity-compose:1.7.2")
-    implementation ("androidx.compose.foundation:foundation:1.4.1")
+    implementation("androidx.compose.foundation:foundation:1.4.1")
     implementation(platform("androidx.compose:compose-bom:2023.08.00"))
     implementation("androidx.compose.ui:ui")
     implementation("androidx.compose.ui:ui-graphics")
@@ -78,45 +78,45 @@ dependencies {
 
 
     // Compose Navigation
-    implementation ("androidx.navigation:navigation-compose:2.6.0")
+    implementation("androidx.navigation:navigation-compose:2.6.0")
 
     // Firebase
-    implementation ("com.google.firebase:firebase-auth-ktx:22.1.0")
-    implementation ("com.google.firebase:firebase-storage-ktx:20.2.1")
+    implementation("com.google.firebase:firebase-auth-ktx:22.1.0")
+    implementation("com.google.firebase:firebase-storage-ktx:20.2.1")
 
     // Room components
-    implementation ("androidx.room:room-runtime:2.5.2")
-    kapt ("androidx.room:room-compiler:2.5.2")
-    implementation ("androidx.room:room-ktx:2.5.2")
+    implementation("androidx.room:room-runtime:2.5.2")
+    kapt("androidx.room:room-compiler:2.5.2")
+    implementation("androidx.room:room-ktx:2.5.2")
 
     // Runtime Compose
-    implementation ("androidx.lifecycle:lifecycle-runtime-compose:2.6.1")
+    implementation("androidx.lifecycle:lifecycle-runtime-compose:2.6.1")
 
     // Splash API
-    implementation ("androidx.core:core-splashscreen:1.0.1")
+    implementation("androidx.core:core-splashscreen:1.0.1")
 
     // Mongo DB Realm
-    implementation ("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.7.1")
-    implementation ("io.realm.kotlin:library-sync:1.10.0")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.7.1")
+    implementation("io.realm.kotlin:library-sync:1.10.0")
 
     // Dagger Hilt
-    implementation ("com.google.dagger:hilt-android:2.44.2")
-    kapt ("com.google.dagger:hilt-compiler:2.44.2")
-    implementation ("androidx.hilt:hilt-navigation-compose:1.0.0")
+    implementation("com.google.dagger:hilt-android:2.44.2")
+    kapt("com.google.dagger:hilt-compiler:2.44.2")
+    implementation("androidx.hilt:hilt-navigation-compose:1.0.0")
 
     // Coil
-    implementation ("io.coil-kt:coil-compose:2.3.0")
+    implementation("io.coil-kt:coil-compose:2.3.0")
 
     // Pager - Accompanist
 //    implementation ("com.google.accompanist:accompanist-pager:0.27.0")
 
     // Message Bar Compose
-    implementation ("com.github.stevdza-san:MessageBarCompose:1.0.5")
+    implementation("com.github.stevdza-san:MessageBarCompose:1.0.5")
 
     // One-Tap Compose
-    implementation ("com.github.stevdza-san:OneTapCompose:1.0.3")
+    implementation("com.github.stevdza-san:OneTapCompose:1.0.3")
 
     // Extended Icons
-    implementation ("androidx.compose.material:material-icons-extended:1.5.0")
+    implementation("androidx.compose.material:material-icons-extended:1.5.0")
 
 }

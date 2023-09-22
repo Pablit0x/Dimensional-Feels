@@ -29,6 +29,7 @@
     <string name="description_placeholder">Tell me about it…</string>
     <string name="save">Save</string>
     <string name="apply">Apply</string>
+    <string name="saving">Saving…</string>
     <string name="update">Update</string>
     <string name="fields_cannot_be_empty">Description and title cannot be empty!</string>
     <string name="image">Image</string>

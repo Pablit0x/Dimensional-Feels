@@ -3,6 +3,7 @@
     <string name="google_logo">Google Logo</string>
     <string name="hamburger_menu_icon">Hamburger Menu</string>
     <string name="select_date_icon">Select Date</string>
+    <string name="saving_note">Note is saving</string>
     <string name="navigate_to_canvas">Navigate to canvas</string>
     <string name="reset_date_icon">Reset Date</string>
     <string name="save_drawing">Save Drawing</string>

@@ -49,6 +49,7 @@ fun WriteScreen(
     onDescriptionChanged: (String) -> Unit,
     onSavedClicked: (Diary) -> Unit,
     onDateTimeUpdated: (ZonedDateTime?) -> Unit,
+    onNavigateToDraw : () -> Unit,
     onImageSelected: (Uri) -> Unit,
     onImageDeleteClicked: (GalleryImage) -> Unit,
     onCharacterChange: (RickAndMortyCharacters) -> Unit,
@@ -76,7 +77,8 @@ fun WriteScreen(
                 onBackPressed = onBackPressed,
                 onDeleteConfirmed = onDeleteConfirmed,
                 moodName = moodName,
-                onDateTimeUpdated = onDateTimeUpdated
+                onDateTimeUpdated = onDateTimeUpdated,
+                onNavigateToDraw = onNavigateToDraw
             )
         } else {
             ImageTopBar(title = "${stringResource(id = R.string.image)} ${imagePagerState.currentPage + 1}",

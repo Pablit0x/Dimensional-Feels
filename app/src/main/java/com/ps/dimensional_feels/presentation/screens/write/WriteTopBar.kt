@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.ArrowForward
+import androidx.compose.material.icons.filled.Brush
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.DateRange
 import androidx.compose.material3.Button
@@ -58,7 +59,8 @@ fun WriteTopBar(
     moodName: () -> String,
     onBackPressed: () -> Unit,
     onDateTimeUpdated: (ZonedDateTime?) -> Unit,
-    onDeleteConfirmed: () -> Unit
+    onDeleteConfirmed: () -> Unit,
+    onNavigateToDraw: () -> Unit
 ) {
     var showDatePickerDialog by remember { mutableStateOf(false) }
     var showTimePickerDialog by remember { mutableStateOf(false) }
@@ -101,13 +103,10 @@ fun WriteTopBar(
                 textAlign = TextAlign.Center
             )
             Text(
-                modifier = Modifier.fillMaxWidth(),
-                text = if (isDateTimeUpdated) formattedDateTime
-                else selectedDiaryDateTime,
-                style = TextStyle.Default.copy(
+                modifier = Modifier.fillMaxWidth(), text = if (isDateTimeUpdated) formattedDateTime
+                else selectedDiaryDateTime, style = TextStyle.Default.copy(
                     fontSize = MaterialTheme.typography.bodySmall.fontSize
-                ),
-                textAlign = TextAlign.Center
+                ), textAlign = TextAlign.Center
             )
         }
     }, actions = {
@@ -133,10 +132,10 @@ fun WriteTopBar(
                 )
             }
         }
-        if (selectedDiary != null) {
-            DeleteDiaryDropDownMenu(selectedDiary = selectedDiary,
-                onDeleteConfirmed = { onDeleteConfirmed() })
-        }
+        DeleteDiaryDropDownMenu(
+            selectedDiary = selectedDiary,
+            onDeleteConfirmed = onDeleteConfirmed,
+            onNavigateToDraw = onNavigateToDraw)
     })
 
 

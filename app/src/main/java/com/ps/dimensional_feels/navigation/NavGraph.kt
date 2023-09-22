@@ -28,6 +28,7 @@ import com.ps.dimensional_feels.model.toRickAndMortyCharacter
 import com.ps.dimensional_feels.presentation.components.CustomAlertDialog
 import com.ps.dimensional_feels.presentation.screens.auth.AuthenticationScreen
 import com.ps.dimensional_feels.presentation.screens.auth.AuthenticationViewModel
+import com.ps.dimensional_feels.presentation.screens.draw.DrawScreen
 import com.ps.dimensional_feels.presentation.screens.home.HomeScreen
 import com.ps.dimensional_feels.presentation.screens.home.HomeViewModel
 import com.ps.dimensional_feels.presentation.screens.write.WriteScreen
@@ -56,6 +57,11 @@ fun NavGraph(
         }, onDataLoaded = onDataLoaded
         )
         writeRoute(onBackPressed = {
+            navController.popBackStack()
+        }, onNavigateToDraw = {
+            navController.navigate(Screen.Draw.route)
+        })
+        drawRoute(onBackPressed = {
             navController.popBackStack()
         })
     }
@@ -187,7 +193,9 @@ fun NavGraphBuilder.homeRoute(
 }
 
 @OptIn(ExperimentalFoundationApi::class)
-fun NavGraphBuilder.writeRoute(onBackPressed: () -> Unit) {
+fun NavGraphBuilder.writeRoute(
+    onBackPressed: () -> Unit, onNavigateToDraw: () -> Unit
+) {
     composable(
         route = Screen.Write.route,
         arguments = listOf(navArgument(name = NavigationArguments.WRITE_SCREEN_ARGUMENT_KEY) {
@@ -256,6 +264,16 @@ fun NavGraphBuilder.writeRoute(onBackPressed: () -> Unit) {
             onImageDeleteClicked = {
                 galleryState.removeImage(image = it)
             },
-            onCharacterChange = { viewModel.setCharacter(it) })
+            onCharacterChange = { viewModel.setCharacter(it) },
+            onNavigateToDraw = onNavigateToDraw
+        )
+    }
+}
+
+fun NavGraphBuilder.drawRoute(onBackPressed: () -> Unit) {
+    composable(route = Screen.Draw.route) {
+        DrawScreen(onBackPressed = onBackPressed, onSavedPressed = {
+            onBackPressed()
+        })
     }
 }

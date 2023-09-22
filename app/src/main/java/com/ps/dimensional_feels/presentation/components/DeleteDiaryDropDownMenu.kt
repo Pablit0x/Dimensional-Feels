@@ -1,6 +1,7 @@
 package com.ps.dimensional_feels.presentation.components
 
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Brush
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material3.DropdownMenu
@@ -20,22 +21,38 @@ import com.ps.dimensional_feels.model.Diary
 
 @Composable
 fun DeleteDiaryDropDownMenu(
-    selectedDiary: Diary?, onDeleteConfirmed: () -> Unit
+    selectedDiary: Diary?, onDeleteConfirmed: () -> Unit, onNavigateToDraw: () -> Unit
 ) {
     var expanded by remember { mutableStateOf(false) }
     var openDialog by remember { mutableStateOf(false) }
 
     DropdownMenu(expanded = expanded, onDismissRequest = { expanded = false }) {
+
+        if (selectedDiary != null) {
+            DropdownMenuItem(leadingIcon = {
+                Icon(
+                    imageVector = Icons.Default.Delete, contentDescription = stringResource(
+                        id = R.string.delete_diary
+                    ), tint = MaterialTheme.colorScheme.error
+                )
+            }, text = {
+                Text(text = stringResource(id = R.string.delete))
+            }, onClick = {
+                openDialog = true
+                expanded = false
+            })
+        }
+
         DropdownMenuItem(leadingIcon = {
             Icon(
-                imageVector = Icons.Default.Delete, contentDescription = stringResource(
-                    id = R.string.delete_diary
-                ), tint = MaterialTheme.colorScheme.error
+                imageVector = Icons.Default.Brush, contentDescription = stringResource(
+                    id = R.string.navigate_to_canvas
+                ), tint = MaterialTheme.colorScheme.primary
             )
         }, text = {
-            Text(text = stringResource(id = R.string.delete))
+            Text(text = stringResource(id = R.string.canvas))
         }, onClick = {
-            openDialog = true
+            onNavigateToDraw()
             expanded = false
         })
     }

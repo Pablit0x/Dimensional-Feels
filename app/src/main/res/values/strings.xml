@@ -19,6 +19,8 @@
     <string name="hide_gallery">Hide Gallery</string>
     <string name="empty_diary_title">Empty Diary</string>
     <string name="empty_diary_description">Write something…</string>
+    <string name="canvas">Canvas</string>
+    <string name="adjust_stroke_size">Adjust Stroke Size</string>
     <string name="error_diary_title">Error</string>
     <string name="delete">Delete</string>
     <string name="delete_diary_message">Are you sure you want to delete this diary note</string>

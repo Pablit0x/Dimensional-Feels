@@ -8,4 +8,5 @@ object Routes {
     const val WRITE = "write_screen"
     const val WRITE_WITH_ARGS =
         "write_screen?$WRITE_SCREEN_ARGUMENT_KEY={$WRITE_SCREEN_ARGUMENT_KEY}"
+    const val DRAW = "draw_screen"
 }

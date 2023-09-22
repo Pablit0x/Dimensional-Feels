@@ -49,7 +49,7 @@ fun WriteScreen(
     onDescriptionChanged: (String) -> Unit,
     onSavedClicked: (Diary) -> Unit,
     onDateTimeUpdated: (ZonedDateTime?) -> Unit,
-    onNavigateToDraw : () -> Unit,
+    onNavigateToDraw: () -> Unit,
     onImageSelected: (Uri) -> Unit,
     onImageDeleteClicked: (GalleryImage) -> Unit,
     onCharacterChange: (RickAndMortyCharacters) -> Unit,

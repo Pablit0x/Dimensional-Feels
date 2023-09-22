@@ -12,7 +12,6 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.asAndroidBitmap
 import com.ps.dimensional_feels.util.convertToOldColor
 import io.ak1.drawbox.DrawBox
@@ -51,7 +50,8 @@ fun DrawingContent(onSavePressed: (Bitmap) -> Unit) {
                 redoVisibility = redoCount != 0
             }
 
-            ControlsBar(drawController = drawController,
+            ControlsBar(
+                drawController = drawController,
                 {
                     drawController.saveBitmap()
                 },

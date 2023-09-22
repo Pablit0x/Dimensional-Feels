@@ -7,7 +7,6 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.ArrowForward
-import androidx.compose.material.icons.filled.Brush
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.DateRange
 import androidx.compose.material3.Button
@@ -135,7 +134,8 @@ fun WriteTopBar(
         DeleteDiaryDropDownMenu(
             selectedDiary = selectedDiary,
             onDeleteConfirmed = onDeleteConfirmed,
-            onNavigateToDraw = onNavigateToDraw)
+            onNavigateToDraw = onNavigateToDraw
+        )
     })
 
 

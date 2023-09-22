@@ -1,8 +1,18 @@
 package com.ps.dimensional_feels.presentation.screens.draw
 
 import android.widget.SeekBar
-import androidx.compose.animation.*
-import androidx.compose.foundation.layout.*
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.expandVertically
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.shrinkVertically
+import androidx.compose.animation.slideInVertically
+import androidx.compose.animation.slideOutVertically
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -48,7 +58,10 @@ fun CustomSeekbar(
                 .fillMaxWidth(),
             verticalArrangement = Arrangement.SpaceEvenly
         ) {
-            Text(text = stringResource(id = R.string.adjust_stroke_size), modifier = Modifier.padding(12.dp, 0.dp, 0.dp, 0.dp))
+            Text(
+                text = stringResource(id = R.string.adjust_stroke_size),
+                modifier = Modifier.padding(12.dp, 0.dp, 0.dp, 0.dp)
+            )
             AndroidView(
                 { SeekBar(context) },
                 modifier = Modifier

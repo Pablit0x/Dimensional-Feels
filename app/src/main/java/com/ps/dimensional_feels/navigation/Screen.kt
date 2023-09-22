@@ -8,5 +8,6 @@ sealed class Screen(val route: String) {
     data object Write : Screen(route = Routes.WRITE_WITH_ARGS) {
         fun passDiaryId(diaryId: String) = "${Routes.WRITE}?$WRITE_SCREEN_ARGUMENT_KEY=$diaryId"
     }
+
     data object Draw : Screen(route = Routes.DRAW)
 }

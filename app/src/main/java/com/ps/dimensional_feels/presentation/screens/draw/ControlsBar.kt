@@ -54,7 +54,11 @@ fun ControlsBar(
         ) {
             drawController.reset()
         }
-        ControlMenuItems(Icons.Default.HdrStrong, stringResource(id = R.string.stroke_size), MaterialTheme.colorScheme.primary) {
+        ControlMenuItems(
+            Icons.Default.HdrStrong,
+            stringResource(id = R.string.stroke_size),
+            MaterialTheme.colorScheme.primary
+        ) {
             onSizeClick()
         }
     }

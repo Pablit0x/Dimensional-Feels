@@ -22,7 +22,7 @@ import com.ps.dimensional_feels.model.Mood
 import com.ps.dimensional_feels.model.RickAndMortyCharacters
 import com.ps.dimensional_feels.model.getMoodByName
 import com.ps.dimensional_feels.model.toRickAndMortyCharacter
-import com.ps.dimensional_feels.navigation.NavigationArguments.WRITE_SCREEN_ARGUMENT_KEY
+import com.ps.dimensional_feels.navigation.NavigationArguments.WRITE_SCREEN_ARGUMENT_KEY_DIARY_ID
 import com.ps.dimensional_feels.util.RequestState
 import com.ps.dimensional_feels.util.exceptions.DiaryAlreadyDeletedException
 import com.ps.dimensional_feels.util.fetchImagesFromFirebase
@@ -59,7 +59,7 @@ class WriteViewModel @Inject constructor(
     private fun getDiaryIdArgument() {
         uiState = uiState.copy(
             selectedDiaryId = savedStateHandle.get<String>(
-                key = WRITE_SCREEN_ARGUMENT_KEY
+                key = WRITE_SCREEN_ARGUMENT_KEY_DIARY_ID
             )
         )
     }

@@ -1,5 +1,7 @@
 package com.ps.dimensional_feels.navigation
 
+import android.net.Uri
+import android.util.Log
 import android.widget.Toast
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.pager.rememberPagerState
@@ -15,6 +17,7 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.core.net.toUri
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
@@ -25,6 +28,8 @@ import androidx.navigation.navArgument
 import com.ps.dimensional_feels.R
 import com.ps.dimensional_feels.model.getMoodByPosition
 import com.ps.dimensional_feels.model.toRickAndMortyCharacter
+import com.ps.dimensional_feels.navigation.NavigationArguments.WRITE_SCREEN_ARGUMENT_KEY_DIARY_ID
+import com.ps.dimensional_feels.navigation.NavigationArguments.WRITE_SCREEN_ARGUMENT_KEY_DRAWING_URI
 import com.ps.dimensional_feels.presentation.components.CustomAlertDialog
 import com.ps.dimensional_feels.presentation.screens.auth.AuthenticationScreen
 import com.ps.dimensional_feels.presentation.screens.auth.AuthenticationViewModel
@@ -34,6 +39,7 @@ import com.ps.dimensional_feels.presentation.screens.home.HomeViewModel
 import com.ps.dimensional_feels.presentation.screens.write.WriteScreen
 import com.ps.dimensional_feels.presentation.screens.write.WriteViewModel
 import com.ps.dimensional_feels.util.RequestState
+import com.ps.dimensional_feels.util.saveImage
 import com.stevdzasan.messagebar.rememberMessageBarState
 import com.stevdzasan.onetap.rememberOneTapSignInState
 import kotlinx.coroutines.launch
@@ -63,7 +69,14 @@ fun NavGraph(
         })
         drawRoute(onBackPressed = {
             navController.popBackStack()
-        })
+        }) { uri ->
+            if (uri != null) {
+                navController.previousBackStackEntry?.savedStateHandle?.set(
+                    WRITE_SCREEN_ARGUMENT_KEY_DRAWING_URI, uri.toString()
+                )
+            }
+            navController.popBackStack()
+        }
     }
 
 }
@@ -198,12 +211,14 @@ fun NavGraphBuilder.writeRoute(
 ) {
     composable(
         route = Screen.Write.route,
-        arguments = listOf(navArgument(name = NavigationArguments.WRITE_SCREEN_ARGUMENT_KEY) {
+        arguments = listOf(navArgument(name = WRITE_SCREEN_ARGUMENT_KEY_DIARY_ID) {
             type = NavType.StringType
             nullable = true
             defaultValue = null
         })
-    ) {
+    ) { entry ->
+
+
         var isLoading by remember { mutableStateOf(false) }
         val context = LocalContext.current
         val viewModel = hiltViewModel<WriteViewModel>()
@@ -217,6 +232,14 @@ fun NavGraphBuilder.writeRoute(
         val pageNumber by remember {
             derivedStateOf {
                 pagerState.currentPage
+            }
+        }
+
+        LaunchedEffect(Unit) {
+            val drawingUri =
+                entry.savedStateHandle.get<String>(WRITE_SCREEN_ARGUMENT_KEY_DRAWING_URI)
+            if (drawingUri != null) {
+                viewModel.addImage(image = drawingUri.toUri(), "png")
             }
         }
 
@@ -270,10 +293,13 @@ fun NavGraphBuilder.writeRoute(
     }
 }
 
-fun NavGraphBuilder.drawRoute(onBackPressed: () -> Unit) {
+fun NavGraphBuilder.drawRoute(onBackPressed: () -> Unit, navigateBackAndPassUri: (Uri?) -> Unit) {
     composable(route = Screen.Draw.route) {
+        val context = LocalContext.current
+
         DrawScreen(onBackPressed = onBackPressed, onSavedPressed = {
-            onBackPressed()
+            val uri = context.saveImage(bitmap = it)
+            navigateBackAndPassUri(uri)
         })
     }
 }

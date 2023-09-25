@@ -67,15 +67,18 @@ fun NavGraph(
             navController.navigate(Screen.Draw.route)
         })
         drawRoute(onBackPressed = {
+            navController.previousBackStackEntry?.savedStateHandle?.set(
+                WRITE_SCREEN_ARGUMENT_KEY_DRAWING_URI, null
+            )
             navController.popBackStack()
-        }) { uri ->
+        }, onNavigateBackAndPassUri = { uri ->
             if (uri != null) {
                 navController.previousBackStackEntry?.savedStateHandle?.set(
                     WRITE_SCREEN_ARGUMENT_KEY_DRAWING_URI, uri.toString()
                 )
             }
             navController.popBackStack()
-        }
+        })
     }
 
 }
@@ -218,6 +221,7 @@ fun NavGraphBuilder.writeRoute(
     ) { entry ->
 
 
+        val drawingUri = entry.savedStateHandle.get<String>(WRITE_SCREEN_ARGUMENT_KEY_DRAWING_URI)
         var isLoading by remember { mutableStateOf(false) }
         val context = LocalContext.current
         val viewModel = hiltViewModel<WriteViewModel>()
@@ -235,12 +239,11 @@ fun NavGraphBuilder.writeRoute(
         }
 
         LaunchedEffect(Unit) {
-            val drawingUri =
-                entry.savedStateHandle.get<String>(WRITE_SCREEN_ARGUMENT_KEY_DRAWING_URI)
             if (drawingUri != null) {
                 viewModel.addImage(image = drawingUri.toUri(), "png")
             }
         }
+
 
         WriteScreen(
             isLoading = isLoading,
@@ -292,13 +295,13 @@ fun NavGraphBuilder.writeRoute(
     }
 }
 
-fun NavGraphBuilder.drawRoute(onBackPressed: () -> Unit, navigateBackAndPassUri: (Uri?) -> Unit) {
+fun NavGraphBuilder.drawRoute(onBackPressed: () -> Unit, onNavigateBackAndPassUri: (Uri?) -> Unit) {
     composable(route = Screen.Draw.route) {
         val context = LocalContext.current
 
         DrawScreen(onBackPressed = onBackPressed, onSavedPressed = {
             val uri = context.saveImage(bitmap = it)
-            navigateBackAndPassUri(uri)
+            onNavigateBackAndPassUri(uri)
         })
     }
 }

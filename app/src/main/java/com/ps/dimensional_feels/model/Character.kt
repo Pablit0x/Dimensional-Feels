@@ -1,28 +1,28 @@
 package com.ps.dimensional_feels.model
 
 object CharacterNames {
-    const val rick = "Rick"
-    const val morty = "Morty"
-    const val beth = "Beth"
-    const val summer = "Summer"
-    const val jerry = "Jerry"
+    const val RICK = "Rick"
+    const val MORTY = "Morty"
+    const val BETH = "Beth"
+    const val SUMMER = "Summer"
+    const val JERRY = "Jerry"
 }
 
 sealed class RickAndMortyCharacters(val name: String) {
-    object Rick : RickAndMortyCharacters(name = CharacterNames.rick)
-    object Morty : RickAndMortyCharacters(name = CharacterNames.morty)
-    object Beth : RickAndMortyCharacters(name = CharacterNames.beth)
-    object Summer : RickAndMortyCharacters(name = CharacterNames.summer)
-    object Jerry : RickAndMortyCharacters(name = CharacterNames.jerry)
+    data object Rick : RickAndMortyCharacters(name = CharacterNames.RICK)
+    data object Morty : RickAndMortyCharacters(name = CharacterNames.MORTY)
+    data object Beth : RickAndMortyCharacters(name = CharacterNames.BETH)
+    data object Summer : RickAndMortyCharacters(name = CharacterNames.SUMMER)
+    data object Jerry : RickAndMortyCharacters(name = CharacterNames.JERRY)
 }
 
 fun String.toRickAndMortyCharacter(): RickAndMortyCharacters {
     return when (this) {
-        CharacterNames.rick -> RickAndMortyCharacters.Rick
-        CharacterNames.morty -> RickAndMortyCharacters.Morty
-        CharacterNames.beth -> RickAndMortyCharacters.Beth
-        CharacterNames.summer -> RickAndMortyCharacters.Summer
-        CharacterNames.jerry -> RickAndMortyCharacters.Jerry
+        CharacterNames.RICK -> RickAndMortyCharacters.Rick
+        CharacterNames.MORTY -> RickAndMortyCharacters.Morty
+        CharacterNames.BETH -> RickAndMortyCharacters.Beth
+        CharacterNames.SUMMER -> RickAndMortyCharacters.Summer
+        CharacterNames.JERRY -> RickAndMortyCharacters.Jerry
         else -> RickAndMortyCharacters.Rick
     }
 }

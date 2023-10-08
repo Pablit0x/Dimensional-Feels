@@ -103,7 +103,7 @@ fun WriteScreen(
             EmptyPage(
                 modifier = Modifier.padding(padding),
                 showLoading = true,
-                title = stringResource(id = R.string.save),
+                title = stringResource(id = R.string.saving),
                 description = stringResource(id = R.string.saving_note)
             )
         } else {

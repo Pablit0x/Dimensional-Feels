@@ -156,7 +156,7 @@ class WriteViewModel @Inject constructor(
                     viewModelScope.launch(Dispatchers.Main) { onSuccess() }
                 })
             } else {
-                withContext(Dispatchers.Main) { onLoading() }
+                withContext(Dispatchers.Main) { onSuccess() }
             }
             deleteImagesFromFirebase()
         } else if (result is RequestState.Error) {

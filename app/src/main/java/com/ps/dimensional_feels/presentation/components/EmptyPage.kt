@@ -3,7 +3,9 @@ package com.ps.dimensional_feels.presentation.components
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.height
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -13,6 +15,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.dp
 import com.ps.dimensional_feels.R
 
 @Composable
@@ -38,6 +41,8 @@ fun EmptyPage(
                 fontWeight = FontWeight.Medium
             )
         )
+
+        Spacer(modifier = Modifier.height(8.dp))
 
         Text(
             text = description, style = TextStyle.Default.copy(

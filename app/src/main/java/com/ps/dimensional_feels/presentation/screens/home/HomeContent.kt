@@ -25,6 +25,8 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import com.google.firebase.storage.FirebaseStorage
+import com.ps.dimensional_feels.R
 import com.ps.dimensional_feels.model.Diary
 import com.ps.dimensional_feels.presentation.components.DateHeader
 import com.ps.dimensional_feels.presentation.components.DiaryHolder
@@ -37,6 +39,7 @@ import java.time.LocalDate
 fun HomeContent(
     paddingValues: PaddingValues,
     diariesNotes: Map<LocalDate, List<Diary>>,
+    firebaseStorage: FirebaseStorage,
     onClick: (String) -> Unit,
     isSearchOpen: Boolean,
     onSearch: (String) -> Unit,
@@ -71,7 +74,7 @@ fun HomeContent(
                 onValueChange = {
                     searchQuery = it
                 },
-                placeholder = { Text(text = stringResource(id = androidx.compose.material3.R.string.search_bar_search)) },
+                placeholder = { Text(text = stringResource(id = R.string.search)) },
                 trailingIcon = {
                     IconButton(onClick = {
                         if (searchQuery.isNullOrEmpty()) {
@@ -100,7 +103,11 @@ fun HomeContent(
 
 
                     items(diaries, key = { it._id.toString() }) { diary ->
-                        DiaryHolder(diary = diary, onClick = { onClick(diary._id.toHexString()) })
+                        DiaryHolder(
+                            diary = diary,
+                            onClick = { onClick(diary._id.toHexString()) },
+                            firebaseStorage = firebaseStorage
+                        )
                     }
                 }
             }

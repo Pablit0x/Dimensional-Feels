@@ -1,7 +1,8 @@
 <resources>
     <string name="app_name">DimensionalFeels</string>
     <string name="sign_in_with_google">Sign in with Google</string>
-    <string name="sing_in_as_guest">Sign in anonymously</string>
+    <string name="sign_in_as_guest">Sign in anonymously</string>
+    <string name="search">Search</string>
     <string name="please_wait">Please wait…</string>
     <string name="welcome_back">Welcome back</string>
     <string name="please_sign_in_to_continue">Please sign in to continue.</string>

@@ -36,6 +36,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import com.google.firebase.storage.FirebaseStorage
 import com.ps.dimensional_feels.R
 import com.ps.dimensional_feels.model.Diary
 import com.ps.dimensional_feels.model.toRickAndMortyCharacter
@@ -45,7 +46,7 @@ import com.ps.dimensional_feels.util.toInstant
 
 @Composable
 fun DiaryHolder(
-    diary: Diary, onClick: (String) -> Unit
+    diary: Diary, onClick: (String) -> Unit, firebaseStorage: FirebaseStorage
 ) {
     val localDensity = LocalDensity.current
     val context = LocalContext.current
@@ -57,17 +58,21 @@ fun DiaryHolder(
     LaunchedEffect(key1 = showGallery) {
         if (showGallery && downloadedImages.isEmpty()) {
             galleryLoading = true
-            fetchImagesFromFirebase(remoteImagePaths = diary.images, onImageDownload = { imageUri ->
-                downloadedImages.add(imageUri)
-            }, onImageDownloadFailed = { e ->
-                Toast.makeText(
-                    context, e.message ?: "Unknown error occurred...", Toast.LENGTH_SHORT
-                ).show()
-                galleryLoading = false
-                showGallery = false
-            }, onReadyToDisplay = {
-                galleryLoading = false
-            })
+            fetchImagesFromFirebase(firebaseStorage = firebaseStorage,
+                remoteImagePaths = diary.images,
+                onImageDownload = { imageUri ->
+                    downloadedImages.add(imageUri)
+                },
+                onImageDownloadFailed = { e ->
+                    Toast.makeText(
+                        context, e.message ?: "Unknown error occurred...", Toast.LENGTH_SHORT
+                    ).show()
+                    galleryLoading = false
+                    showGallery = false
+                },
+                onReadyToDisplay = {
+                    galleryLoading = false
+                })
         }
     }
 

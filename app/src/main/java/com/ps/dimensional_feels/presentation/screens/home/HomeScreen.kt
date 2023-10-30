@@ -21,6 +21,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.res.stringResource
+import com.google.firebase.storage.FirebaseStorage
 import com.ps.dimensional_feels.R
 import com.ps.dimensional_feels.data.repository.Diaries
 import com.ps.dimensional_feels.presentation.components.EmptyPage
@@ -30,6 +31,7 @@ import java.time.ZonedDateTime
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomeScreen(
+    firebaseStorage: FirebaseStorage,
     diaries: Diaries,
     drawerState: DrawerState,
     onDeleteAllClicked: () -> Unit,
@@ -79,7 +81,8 @@ fun HomeScreen(
                         onClick = onNavigateToWriteWithArgs,
                         isSearchOpen = isSearchOpen,
                         onSearch = { onSearch(it) },
-                        onSearchReset = onSearchReset
+                        onSearchReset = onSearchReset,
+                        firebaseStorage = firebaseStorage
                     )
                 }
 

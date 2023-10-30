@@ -32,7 +32,9 @@ class HomeViewModel @Inject constructor(
     private val user: User?,
     private val mongoRepository: MongoRepository,
     private val imageToDeleteDao: ImageToDeleteDao,
-    private val connectivityObserver: NetworkConnectivityObserver
+    private val connectivityObserver: NetworkConnectivityObserver,
+    private val firebaseAuth: FirebaseAuth,
+    val firebaseStorage: FirebaseStorage
 ) : ViewModel() {
 
     var diaries: MutableState<Diaries> = mutableStateOf(RequestState.Idle)
@@ -151,6 +153,7 @@ class HomeViewModel @Inject constructor(
     }
 
     fun logOut(navigateToAuth: () -> Unit) {
+        firebaseAuth.signOut()
         viewModelScope.launch {
             user?.let {
                 it.logOut()

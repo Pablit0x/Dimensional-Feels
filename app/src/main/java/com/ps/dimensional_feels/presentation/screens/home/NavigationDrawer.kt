@@ -1,6 +1,5 @@
 package com.ps.dimensional_feels.presentation.screens.home
 
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -11,6 +10,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material.icons.filled.Logout
 import androidx.compose.material3.DrawerState
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -26,7 +26,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.airbnb.lottie.compose.LottieAnimation
@@ -78,8 +77,8 @@ fun NavigationDrawer(
             }
             NavigationDrawerItem(label = {
                 Row(modifier = Modifier.padding(horizontal = 12.dp)) {
-                    Image(
-                        painterResource(id = R.drawable.google_logo),
+                    Icon(
+                        imageVector = Icons.Default.Logout,
                         contentDescription = stringResource(
                             id = R.string.google_logo
                         )

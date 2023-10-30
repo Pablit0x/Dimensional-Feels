@@ -82,7 +82,9 @@ class WriteViewModel @Inject constructor(
                         setTitle(title = diary.data.title)
                         setDescription(description = diary.data.description)
 
-                        fetchImagesFromFirebase(remoteImagePaths = diary.data.images,
+                        fetchImagesFromFirebase(
+                            firebaseStorage = firebaseStorage,
+                            remoteImagePaths = diary.data.images,
                             onImageDownload = { downloadedImage ->
                                 galleryState.addImage(
                                     GalleryImage(
@@ -101,7 +103,6 @@ class WriteViewModel @Inject constructor(
     fun upsertDiary(
         diary: Diary, onLoading: () -> Unit, onSuccess: () -> Unit, onError: (String) -> Unit
     ) {
-
         viewModelScope.launch(Dispatchers.IO) {
             if (uiState.selectedDiaryId != null) {
                 updateDiary(
@@ -207,7 +208,7 @@ class WriteViewModel @Inject constructor(
                     }
                 }
             }.addOnCompleteListener {
-                if (++uploadCount == galleryState.images.size) {
+                if (++uploadCount == galleryState.images.size - 1) {
                     onComplete()
                 }
             }

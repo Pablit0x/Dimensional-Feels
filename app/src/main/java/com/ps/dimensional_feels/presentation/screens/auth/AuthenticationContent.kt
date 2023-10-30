@@ -9,8 +9,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Person
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -27,9 +25,7 @@ import com.ps.dimensional_feels.presentation.components.SignInButton
 @Composable
 fun AuthenticationContent(
     isGoogleLoading: Boolean,
-    isGuestLoading: Boolean,
     onSignInWithGoogleButtonClicked: () -> Unit,
-    onSignAsGuestButtonClicked: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     Column(
@@ -74,16 +70,6 @@ fun AuthenticationContent(
             Column(
                 modifier = Modifier.weight(3f), verticalArrangement = Arrangement.Bottom
             ) {
-
-
-                SignInButton(primaryText = stringResource(id = R.string.sing_in_as_guest),
-                    iconRes = Icons.Default.Person,
-                    isLoading = isGuestLoading,
-                    onClick = onSignAsGuestButtonClicked)
-
-                Spacer(modifier = Modifier.height(12.dp))
-
-
                 SignInButton(primaryText = stringResource(id = R.string.sign_in_with_google),
                     iconRes = R.drawable.google_logo,
                     isLoading = isGoogleLoading,

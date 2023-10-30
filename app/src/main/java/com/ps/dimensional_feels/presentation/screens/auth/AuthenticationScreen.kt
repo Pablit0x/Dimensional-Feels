@@ -23,9 +23,7 @@ fun AuthenticationScreen(
     oneTapSignInState: OneTapSignInState,
     messageBarState: MessageBarState,
     isGoogleLoading: Boolean,
-    isGuestLoading: Boolean,
     authenticated: Boolean,
-    onGuestSignInClicked: () -> Unit,
     onGoogleSignInClicked: () -> Unit,
     onSuccessfulFirebaseSignIn: (String) -> Unit,
     onFailedFirebaseSignIn: (Exception) -> Unit,
@@ -44,8 +42,6 @@ fun AuthenticationScreen(
             ContentWithMessageBar(messageBarState = messageBarState) {
                 AuthenticationContent(
                     isGoogleLoading =  isGoogleLoading,
-                    isGuestLoading = isGuestLoading,
-                    onSignAsGuestButtonClicked = onGuestSignInClicked,
                     onSignInWithGoogleButtonClicked = onGoogleSignInClicked,
                     modifier = Modifier.padding(padding)
                 )

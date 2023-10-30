@@ -45,6 +45,7 @@ fun Instant.toRealmInstant(): RealmInstant {
 }
 
 fun fetchImagesFromFirebase(
+    firebaseStorage: FirebaseStorage,
     remoteImagePaths: List<String>,
     onImageDownload: (Uri) -> Unit,
     onImageDownloadFailed: (Exception) -> Unit = {},
@@ -54,7 +55,7 @@ fun fetchImagesFromFirebase(
         remoteImagePaths.forEachIndexed { index, remoteImagePath ->
             val trimmedRemoteImagePath = remoteImagePath.trim()
             if (trimmedRemoteImagePath.isNotEmpty()) {
-                FirebaseStorage.getInstance().reference.child(trimmedRemoteImagePath).downloadUrl.addOnSuccessListener {
+                firebaseStorage.reference.child(trimmedRemoteImagePath).downloadUrl.addOnSuccessListener {
                     onImageDownload(it)
                     if (remoteImagePaths.lastIndexOf(remoteImagePaths.last()) == index) {
                         onReadyToDisplay()

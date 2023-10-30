@@ -62,7 +62,9 @@ fun NavGraph(
             navController.navigate(Screen.Authentication.route)
         }, onDataLoaded = onDataLoaded
         )
-        writeRoute(onBackPressed = {
+        writeRoute(onNavigateHome = {
+            navController.navigate(Screen.Home.route)
+        }, onBackPressed = {
             navController.popBackStack()
         }, onNavigateToDraw = {
             navController.navigate(Screen.Draw.route)
@@ -90,7 +92,6 @@ fun NavGraphBuilder.authenticationRoute(navigateHome: () -> Unit, onDataLoaded: 
         val context = LocalContext.current
         val viewModel = hiltViewModel<AuthenticationViewModel>()
         val googleLoadingState by viewModel.googleLoadingState
-        val guestLoadingState by viewModel.guestLoadingState
         val authenticated by viewModel.authenticated
         val firebaseAuth = viewModel.firebaseAuth
         val oneTapSignInState = rememberOneTapSignInState()
@@ -105,20 +106,6 @@ fun NavGraphBuilder.authenticationRoute(navigateHome: () -> Unit, onDataLoaded: 
             oneTapSignInState = oneTapSignInState,
             messageBarState = messageBarState,
             isGoogleLoading = googleLoadingState,
-            isGuestLoading = guestLoadingState,
-            onGuestSignInClicked = {
-                viewModel.setGuestLoading(isLoading = true)
-                viewModel.signInAnonymously(onSuccess = {
-                    viewModel.signInWithMongoAtlas(null, onSuccess = {
-                        messageBarState.addSuccess(message = context.getString(R.string.success))
-                    }, onError = { errorMsg ->
-                        messageBarState.addError(exception = Exception(errorMsg))
-                    })
-                }, onError = {
-                    messageBarState.addError(it)
-                    viewModel.setGuestLoading(false)
-                })
-            },
             authenticated = authenticated,
             onGoogleSignInClicked = {
                 oneTapSignInState.open()
@@ -154,6 +141,7 @@ fun NavGraphBuilder.homeRoute(
         val context = LocalContext.current
         val viewModel = hiltViewModel<HomeViewModel>()
         val diaries by viewModel.diaries
+        val firebaseStorage = viewModel.firebaseStorage
         var isSignOutDialogOpen by remember { mutableStateOf(false) }
         var isDeleteAllDialogOpen by remember { mutableStateOf(false) }
 
@@ -166,7 +154,9 @@ fun NavGraphBuilder.homeRoute(
             }
         }
 
-        HomeScreen(diaries = diaries,
+        HomeScreen(
+            firebaseStorage = firebaseStorage,
+            diaries = diaries,
             drawerState = drawerState,
             onDeleteAllClicked = { isDeleteAllDialogOpen = true },
             onSignOutClicked = { isSignOutDialogOpen = true },
@@ -225,7 +215,7 @@ fun NavGraphBuilder.homeRoute(
 
 @OptIn(ExperimentalFoundationApi::class)
 fun NavGraphBuilder.writeRoute(
-    onBackPressed: () -> Unit, onNavigateToDraw: () -> Unit
+    onNavigateHome: () -> Unit, onBackPressed: () -> Unit, onNavigateToDraw: () -> Unit
 ) {
     composable(
         route = Screen.Write.route,
@@ -296,7 +286,7 @@ fun NavGraphBuilder.writeRoute(
                     isLoading = true
                 }, onSuccess = {
                     isLoading = false
-                    onBackPressed()
+                    onNavigateHome()
                 }, onError = { isLoading = false })
             },
             onDateTimeUpdated = {

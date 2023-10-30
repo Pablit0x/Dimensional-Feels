@@ -124,7 +124,7 @@ class MongoRepositoryImpl @Inject constructor(
         return if (user != null && realm != null) {
             realm.write {
                 val queriedDiary = query<Diary>("_id == $0", diary._id).find().first()
-                if (queriedDiary != null) {
+                run {
                     queriedDiary.title = diary.title
                     queriedDiary.description = diary.description
                     queriedDiary.mood = diary.mood
@@ -132,8 +132,6 @@ class MongoRepositoryImpl @Inject constructor(
                     queriedDiary.images = diary.images
                     queriedDiary.date = diary.date
                     RequestState.Success(data = queriedDiary)
-                } else {
-                    RequestState.Error(QueriedDiaryDoesNotExist())
                 }
             }
         } else {

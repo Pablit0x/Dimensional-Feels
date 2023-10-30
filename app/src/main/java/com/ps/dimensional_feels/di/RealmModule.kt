@@ -34,18 +34,17 @@ object RealmModule {
     @Provides
     @Singleton
     fun provideRealm(user: User?): Realm? {
-        return if (user == null) {
-            null
-        } else {
-            val config =
-                SyncConfiguration.Builder(user, setOf(Diary::class)).initialSubscriptions { sub ->
-                    add(
-                        query = sub.query<Diary>("owner_id == $0", user.id)
-
-                    )
-                }.build()
-            Realm.open(config)
+        if (user == null) {
+            return null
         }
+        val config =
+            SyncConfiguration.Builder(user, setOf(Diary::class)).initialSubscriptions { sub ->
+                add(
+                    query = sub.query<Diary>("owner_id == $0", user.id)
+
+                )
+            }.build()
+        return Realm.open(config)
     }
 
     @Provides

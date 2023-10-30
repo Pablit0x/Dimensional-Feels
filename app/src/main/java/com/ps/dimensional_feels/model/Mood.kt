@@ -8,9 +8,13 @@ import com.ps.dimensional_feels.presentation.theme.DepressedColor
 import com.ps.dimensional_feels.presentation.theme.DrunkColor
 import com.ps.dimensional_feels.presentation.theme.HappyColor
 
-open class Mood(
+sealed class Mood(
     val onContainerColor: Color, val containerColor: Color, val icon: Int, val name: String,
 ) {
+
+    companion object{
+        const val MOOD_COUNT : Int = 6;
+    }
     class Happy(character: RickAndMortyCharacters) : Mood(
         icon = when (character) {
             RickAndMortyCharacters.Rick -> MoodIcon.HappyRick.icon

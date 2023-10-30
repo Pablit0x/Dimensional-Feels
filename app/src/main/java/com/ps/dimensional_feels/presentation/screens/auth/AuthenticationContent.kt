@@ -23,7 +23,6 @@ import androidx.compose.ui.unit.dp
 import com.ps.dimensional_feels.R
 import com.ps.dimensional_feels.presentation.components.AnimatedBorderCard
 import com.ps.dimensional_feels.presentation.components.SignInButton
-import com.ps.dimensional_feels.presentation.components.SignInGoogleButton
 
 @Composable
 fun AuthenticationContent(
@@ -80,7 +79,7 @@ fun AuthenticationContent(
                 SignInButton(primaryText = stringResource(id = R.string.sing_in_as_guest),
                     iconRes = Icons.Default.Person,
                     isLoading = isGuestLoading,
-                    onClick = { onSignAsGuestButtonClicked() })
+                    onClick = onSignAsGuestButtonClicked)
 
                 Spacer(modifier = Modifier.height(12.dp))
 
@@ -88,7 +87,7 @@ fun AuthenticationContent(
                 SignInButton(primaryText = stringResource(id = R.string.sign_in_with_google),
                     iconRes = R.drawable.google_logo,
                     isLoading = isGoogleLoading,
-                    onClick = { onSignInWithGoogleButtonClicked() })
+                    onClick = onSignInWithGoogleButtonClicked)
             }
         }
     }

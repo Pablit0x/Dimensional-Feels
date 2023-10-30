@@ -22,9 +22,11 @@ fun AuthenticationScreen(
     firebaseAuth: FirebaseAuth,
     oneTapSignInState: OneTapSignInState,
     messageBarState: MessageBarState,
-    isLoading: Boolean,
+    isGoogleLoading: Boolean,
+    isGuestLoading: Boolean,
     authenticated: Boolean,
-    onSignInButtonClicked: () -> Unit,
+    onGuestSignInClicked: () -> Unit,
+    onGoogleSignInClicked: () -> Unit,
     onSuccessfulFirebaseSignIn: (String) -> Unit,
     onFailedFirebaseSignIn: (Exception) -> Unit,
     onDialogDismissed: (String) -> Unit,
@@ -41,10 +43,10 @@ fun AuthenticationScreen(
         content = { padding ->
             ContentWithMessageBar(messageBarState = messageBarState) {
                 AuthenticationContent(
-                    isGoogleLoading =  isLoading,
-                    isGuestLoading = false,
-                    onSignAsGuestButtonClicked = {},
-                    onSignInWithGoogleButtonClicked = { onSignInButtonClicked() },
+                    isGoogleLoading =  isGoogleLoading,
+                    isGuestLoading = isGuestLoading,
+                    onSignAsGuestButtonClicked = onGuestSignInClicked,
+                    onSignInWithGoogleButtonClicked = onGoogleSignInClicked,
                     modifier = Modifier.padding(padding)
                 )
             }

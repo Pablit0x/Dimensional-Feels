@@ -121,4 +121,7 @@ dependencies {
 
     // Drawing Tool
     implementation("io.ak1:drawbox:1.0.3")
+
+    // Google Auth
+    implementation("com.google.android.gms:play-services-auth:20.7.0")
 }

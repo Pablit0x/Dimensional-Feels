@@ -11,43 +11,57 @@ import io.realm.kotlin.mongodb.GoogleAuthType
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.tasks.await
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 @HiltViewModel
 class AuthenticationViewModel @Inject constructor(
     private val app: App,
-    firebaseAuth: FirebaseAuth
+    val firebaseAuth: FirebaseAuth
 ) : ViewModel() {
-    var loadingState = mutableStateOf(false)
+    var googleLoadingState = mutableStateOf(false)
+        private set
+
+    var guestLoadingState = mutableStateOf(false)
         private set
 
     var authenticated = mutableStateOf(false)
         private set
 
-    var firebaseAuthentication = firebaseAuth
+    fun setGoogleLoading(isLoading: Boolean) {
+        googleLoadingState.value = isLoading
+    }
 
-    fun setLoading(loading: Boolean) {
-        loadingState.value = loading
+    fun setGuestLoading(isLoading : Boolean) {
+        guestLoadingState.value = isLoading
+    }
+
+    fun setAuthentication(isAuthenticated: Boolean){
+        authenticated.value = isAuthenticated
     }
 
     fun signInWithMongoAtlas(
-        tokenId: String, onSuccess: () -> Unit, onError: (Exception) -> Unit
+        tokenId: String?, onSuccess: () -> Unit, onError: (Exception) -> Unit
     ) {
         viewModelScope.launch {
             try {
                 val result = withContext(Dispatchers.IO) {
-                    app.login(
-                        credentials = Credentials.google(
-                            token = tokenId, type = GoogleAuthType.ID_TOKEN
-                        )
-                    ).loggedIn
+                    if(tokenId != null){
+                        app.login(
+                            credentials = Credentials.google(
+                                token = tokenId, type = GoogleAuthType.ID_TOKEN
+                            )
+                        ).loggedIn
+                    } else {
+                        app.login(credentials = Credentials.anonymous()).loggedIn
+                    }
                 }
                 withContext(Dispatchers.Main) {
                     if (result) {
                         onSuccess()
                         delay(600)
-                        authenticated.value = true
+                        setAuthentication(true)
                     }
                 }
             } catch (e: Exception) {
@@ -55,7 +69,18 @@ class AuthenticationViewModel @Inject constructor(
                     onError(e)
                 }
             } finally {
-                loadingState.value = false
+                setGuestLoading(false)
+                setGoogleLoading(false)
+            }
+        }
+    }
+
+    fun signInAnonymously(onSuccess: () -> Unit, onError: (Exception) -> Unit){
+        firebaseAuth.signInAnonymously().addOnCompleteListener { result ->
+            if(result.isSuccessful){
+                onSuccess()
+            } else {
+                onError(result.exception ?: Exception("Anonymous sign-in failed. Please try again."))
             }
         }
     }

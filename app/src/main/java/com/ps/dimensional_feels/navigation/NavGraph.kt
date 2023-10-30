@@ -25,6 +25,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import com.ps.dimensional_feels.R
+import com.ps.dimensional_feels.model.Mood
 import com.ps.dimensional_feels.model.getMoodByPosition
 import com.ps.dimensional_feels.model.toRickAndMortyCharacter
 import com.ps.dimensional_feels.navigation.NavigationArguments.WRITE_SCREEN_ARGUMENT_KEY_DIARY_ID
@@ -88,9 +89,10 @@ fun NavGraphBuilder.authenticationRoute(navigateHome: () -> Unit, onDataLoaded: 
     composable(route = Screen.Authentication.route) {
         val context = LocalContext.current
         val viewModel = hiltViewModel<AuthenticationViewModel>()
-        val loadingState by viewModel.loadingState
+        val googleLoadingState by viewModel.googleLoadingState
+        val guestLoadingState by viewModel.guestLoadingState
         val authenticated by viewModel.authenticated
-        val firebaseAuth = viewModel.firebaseAuthentication
+        val firebaseAuth = viewModel.firebaseAuth
         val oneTapSignInState = rememberOneTapSignInState()
         val messageBarState = rememberMessageBarState()
 
@@ -102,11 +104,25 @@ fun NavGraphBuilder.authenticationRoute(navigateHome: () -> Unit, onDataLoaded: 
             firebaseAuth = firebaseAuth,
             oneTapSignInState = oneTapSignInState,
             messageBarState = messageBarState,
-            isLoading = loadingState,
+            isGoogleLoading = googleLoadingState,
+            isGuestLoading = guestLoadingState,
+            onGuestSignInClicked = {
+                viewModel.setGuestLoading(isLoading = true)
+                viewModel.signInAnonymously(onSuccess = {
+                    viewModel.signInWithMongoAtlas(null, onSuccess = {
+                        messageBarState.addSuccess(message = context.getString(R.string.success))
+                    }, onError = { errorMsg ->
+                        messageBarState.addError(exception = Exception(errorMsg))
+                    })
+                }, onError = {
+                    messageBarState.addError(it)
+                    viewModel.setGuestLoading(false)
+                })
+            },
             authenticated = authenticated,
-            onSignInButtonClicked = {
+            onGoogleSignInClicked = {
                 oneTapSignInState.open()
-                viewModel.setLoading(loading = true)
+                viewModel.setGoogleLoading(isLoading = true)
             },
             onSuccessfulFirebaseSignIn = { tokenId ->
                 viewModel.signInWithMongoAtlas(tokenId = tokenId, onSuccess = {
@@ -117,11 +133,11 @@ fun NavGraphBuilder.authenticationRoute(navigateHome: () -> Unit, onDataLoaded: 
             },
             onFailedFirebaseSignIn = {
                 messageBarState.addError(it)
-                viewModel.setLoading(false)
+                viewModel.setGoogleLoading(false)
             },
             onDialogDismissed = { errorMsg ->
                 messageBarState.addError(Exception(errorMsg))
-                viewModel.setLoading(loading = false)
+                viewModel.setGoogleLoading(isLoading = false)
             },
             navigateHome = navigateHome
         )
@@ -229,7 +245,7 @@ fun NavGraphBuilder.writeRoute(
 
         // Page count reflects number of moods
         val pagerState = rememberPagerState(
-            pageCount = { 6 },
+            pageCount = { Mood.MOOD_COUNT },
         )
         val uiState = viewModel.uiState
         val pageNumber by remember {
@@ -254,7 +270,13 @@ fun NavGraphBuilder.writeRoute(
             onDeleteConfirmed = {
                 viewModel.deleteDiary(onSuccess = {
                     onBackPressed()
-                }, onError = {})
+                }, onError = {
+                    Toast.makeText(
+                        context,
+                        context.getString(R.string.deleting_error_occurred),
+                        Toast.LENGTH_LONG
+                    ).show()
+                })
             },
             moodName = {
                 getMoodByPosition(

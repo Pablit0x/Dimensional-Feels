@@ -230,7 +230,7 @@ class WriteViewModel @Inject constructor(
         uiState = uiState.copy(description = description)
     }
 
-    fun setMood(mood: Mood) {
+    private fun setMood(mood: Mood) {
         uiState = uiState.copy(
             mood = mood
         )
@@ -242,7 +242,7 @@ class WriteViewModel @Inject constructor(
         )
     }
 
-    fun setSelectedDiary(diary: Diary) {
+    private fun setSelectedDiary(diary: Diary) {
         uiState = uiState.copy(
             selectedDiary = diary
         )

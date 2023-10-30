@@ -23,6 +23,7 @@
     <string name="canvas">Canvas</string>
     <string name="adjust_stroke_size">Adjust Stroke Size</string>
     <string name="error_diary_title">Error</string>
+    <string name="deleting_error_occurred">An error occurred while deleting. Please try again.</string>
     <string name="delete">Delete</string>
     <string name="delete_diary_message">Are you sure you want to delete this diary note</string>
     <string name="title_placeholder">Enter title…</string>

@@ -121,6 +121,4 @@ dependencies {
 
     // Drawing Tool
     implementation("io.ak1:drawbox:1.0.3")
-
-
 }

@@ -51,7 +51,7 @@ fun AuthenticationContent(
                 ) {
                     Icon(
                         modifier = Modifier.size(140.dp),
-                        painter = painterResource(id = R.drawable.happy_days_logo),
+                        painter = painterResource(id = R.drawable.dimensional_feels),
                         contentDescription = stringResource(id = R.string.app_name),
                         tint = MaterialTheme.colorScheme.onSurface
                     )

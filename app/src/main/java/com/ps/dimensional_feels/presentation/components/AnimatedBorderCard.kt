@@ -26,7 +26,7 @@ fun AnimatedBorderCard(
     modifier: Modifier = Modifier,
     shape: Shape = RoundedCornerShape(size = 0.dp),
     borderWidth: Dp = 2.dp,
-    brush: Brush = Brush.linearGradient(
+    brush: Brush = Brush.sweepGradient(
         listOf(
             MaterialTheme.colorScheme.primary,
             MaterialTheme.colorScheme.secondary

@@ -160,6 +160,7 @@ fun NavGraphBuilder.homeRoute(
             drawerState = drawerState,
             onDeleteAllClicked = { isDeleteAllDialogOpen = true },
             onSignOutClicked = { isSignOutDialogOpen = true },
+            onSettingsClicked = {},
             onMenuClicked = { scope.launch { drawerState.open() } },
             onNavigateToWriteWithArgs = onNavigateToWriteWithArgs,
             onNavigateToWrite = { onNavigateToWrite() },

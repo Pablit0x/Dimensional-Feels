@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Logout
+import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.DrawerState
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -39,6 +40,7 @@ fun NavigationDrawer(
     drawerState: DrawerState,
     onDeleteAllClicked: () -> Unit,
     onSignOutClicked: () -> Unit,
+    onSettingsClicked: () -> Unit,
     content: @Composable () -> Unit
 ) {
     val composition by rememberLottieComposition(spec = LottieCompositionSpec.RawRes(R.raw.morty))
@@ -105,6 +107,21 @@ fun NavigationDrawer(
                     )
                 }
             }, selected = false, onClick = onDeleteAllClicked)
+
+            NavigationDrawerItem(label = {
+                Row(modifier = Modifier.padding(horizontal = 12.dp)) {
+                    Icon(
+                        imageVector = Icons.Default.Settings, contentDescription = stringResource(
+                            id = R.string.settings
+                        )
+                    )
+                    Spacer(modifier = Modifier.width(12.dp))
+                    Text(
+                        text = stringResource(id = R.string.settings),
+                        color = MaterialTheme.colorScheme.onSurface
+                    )
+                }
+            }, selected = false, onClick = onSettingsClicked)
         }
     }, content = content)
 }

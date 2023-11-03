@@ -9,4 +9,5 @@ object Routes {
     const val WRITE_WITH_ARGS =
         "write_screen?$WRITE_SCREEN_ARGUMENT_KEY_DIARY_ID={$WRITE_SCREEN_ARGUMENT_KEY_DIARY_ID}"
     const val DRAW = "draw_screen"
+    const val SETTINGS = "settings_screen"
 }

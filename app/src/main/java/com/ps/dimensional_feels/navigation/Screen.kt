@@ -11,4 +11,6 @@ sealed class Screen(val route: String) {
     }
 
     data object Draw : Screen(route = Routes.DRAW)
+
+    data object Settings: Screen(route = Routes.SETTINGS)
 }

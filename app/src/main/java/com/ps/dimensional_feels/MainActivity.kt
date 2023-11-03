@@ -5,6 +5,8 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.annotation.RequiresApi
+import androidx.compose.material3.DrawerValue
+import androidx.compose.material3.rememberDrawerState
 import androidx.core.net.toUri
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.core.view.WindowCompat
@@ -52,9 +54,11 @@ class MainActivity : ComponentActivity() {
         FirebaseApp.initializeApp(applicationContext)
         setContent {
             DimensionalFeelsTheme {
+                val drawerState  = rememberDrawerState(initialValue = DrawerValue.Closed)
                 val navController = rememberNavController()
                 NavGraph(startDestinationRoute = getStartDestination(),
                     navController = navController,
+                    drawerState = drawerState,
                     onDataLoaded = { keepSplashOpened = false })
             }
         }

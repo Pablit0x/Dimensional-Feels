@@ -4,6 +4,7 @@ import android.net.Uri
 import android.widget.Toast
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.pager.rememberPagerState
+import androidx.compose.material3.DrawerState
 import androidx.compose.material3.DrawerValue
 import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
@@ -36,6 +37,7 @@ import com.ps.dimensional_feels.presentation.screens.auth.AuthenticationViewMode
 import com.ps.dimensional_feels.presentation.screens.draw.DrawScreen
 import com.ps.dimensional_feels.presentation.screens.home.HomeScreen
 import com.ps.dimensional_feels.presentation.screens.home.HomeViewModel
+import com.ps.dimensional_feels.presentation.screens.settings.SettingsScreen
 import com.ps.dimensional_feels.presentation.screens.write.WriteScreen
 import com.ps.dimensional_feels.presentation.screens.write.WriteViewModel
 import com.ps.dimensional_feels.util.RequestState
@@ -46,7 +48,10 @@ import kotlinx.coroutines.launch
 
 @Composable
 fun NavGraph(
-    startDestinationRoute: String, navController: NavHostController, onDataLoaded: () -> Unit
+    startDestinationRoute: String,
+    navController: NavHostController,
+    drawerState: DrawerState,
+    onDataLoaded: () -> Unit
 ) {
     NavHost(navController = navController, startDestination = startDestinationRoute) {
         authenticationRoute(navigateHome = {
@@ -60,7 +65,7 @@ fun NavGraph(
         }, navigateToAuth = {
             navController.popBackStack()
             navController.navigate(Screen.Authentication.route)
-        }, onDataLoaded = onDataLoaded
+        }, onDataLoaded = onDataLoaded, drawerState = drawerState
         )
         writeRoute(onNavigateHome = {
             navController.navigate(Screen.Home.route)
@@ -82,6 +87,7 @@ fun NavGraph(
             }
             navController.popBackStack()
         })
+        settingsRoute(onBackPressed = { navController.popBackStack() }, drawerState = drawerState)
     }
 
 }
@@ -135,7 +141,8 @@ fun NavGraphBuilder.homeRoute(
     onNavigateToWriteWithArgs: (String) -> Unit,
     onNavigateToWrite: () -> Unit,
     navigateToAuth: () -> Unit,
-    onDataLoaded: () -> Unit
+    onDataLoaded: () -> Unit,
+    drawerState: DrawerState
 ) {
     composable(route = Screen.Home.route) {
         val context = LocalContext.current
@@ -144,8 +151,6 @@ fun NavGraphBuilder.homeRoute(
         val firebaseStorage = viewModel.firebaseStorage
         var isSignOutDialogOpen by remember { mutableStateOf(false) }
         var isDeleteAllDialogOpen by remember { mutableStateOf(false) }
-
-        val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
         val scope = rememberCoroutineScope()
 
         LaunchedEffect(key1 = diaries) {
@@ -154,8 +159,7 @@ fun NavGraphBuilder.homeRoute(
             }
         }
 
-        HomeScreen(
-            firebaseStorage = firebaseStorage,
+        HomeScreen(firebaseStorage = firebaseStorage,
             diaries = diaries,
             drawerState = drawerState,
             onDeleteAllClicked = { isDeleteAllDialogOpen = true },
@@ -316,5 +320,15 @@ fun NavGraphBuilder.drawRoute(onBackPressed: () -> Unit, onNavigateBackAndPassUr
             val uri = context.saveImage(bitmap = it)
             onNavigateBackAndPassUri(uri)
         })
+    }
+}
+
+fun NavGraphBuilder.settingsRoute(
+    onBackPressed: () -> Unit, drawerState: DrawerState
+) {
+    composable(route = Screen.Settings.route) {
+        SettingsScreen(drawerState = drawerState,
+            onDeleteAllClicked = { /*TODO*/ },
+            onSignOutClicked = {})
     }
 }

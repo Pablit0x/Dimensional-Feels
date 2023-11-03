@@ -60,13 +60,17 @@ fun NavGraph(
         }, onDataLoaded = onDataLoaded)
         homeRoute(onNavigateToWriteWithArgs = {
             navController.navigate(Screen.Write.passDiaryId(it))
-        }, onNavigateToWrite = {
-            navController.navigate(Screen.Write.route)
-        }, navigateToAuth = {
-            navController.popBackStack()
-            navController.navigate(Screen.Authentication.route)
-        }, onDataLoaded = onDataLoaded, drawerState = drawerState
-        )
+        },
+            onNavigateToWrite = {
+                navController.navigate(Screen.Write.route)
+            },
+            navigateToAuth = {
+                navController.popBackStack()
+                navController.navigate(Screen.Authentication.route)
+            },
+            onDataLoaded = onDataLoaded,
+            drawerState = drawerState,
+            navigateToSettings = { navController.navigate(Screen.Settings.route) })
         writeRoute(onNavigateHome = {
             navController.navigate(Screen.Home.route)
         }, onBackPressed = {
@@ -87,7 +91,10 @@ fun NavGraph(
             }
             navController.popBackStack()
         })
-        settingsRoute(onBackPressed = { navController.popBackStack() }, drawerState = drawerState)
+        settingsRoute(
+            onNavigateHome = { navController.navigate(Screen.Home.route) },
+            drawerState = drawerState
+        )
     }
 
 }
@@ -141,6 +148,7 @@ fun NavGraphBuilder.homeRoute(
     onNavigateToWriteWithArgs: (String) -> Unit,
     onNavigateToWrite: () -> Unit,
     navigateToAuth: () -> Unit,
+    navigateToSettings: () -> Unit,
     onDataLoaded: () -> Unit,
     drawerState: DrawerState
 ) {
@@ -164,10 +172,10 @@ fun NavGraphBuilder.homeRoute(
             drawerState = drawerState,
             onDeleteAllClicked = { isDeleteAllDialogOpen = true },
             onSignOutClicked = { isSignOutDialogOpen = true },
-            onSettingsClicked = {},
+            onSettingsClicked = navigateToSettings,
             onMenuClicked = { scope.launch { drawerState.open() } },
             onNavigateToWriteWithArgs = onNavigateToWriteWithArgs,
-            onNavigateToWrite = { onNavigateToWrite() },
+            onNavigateToWrite = onNavigateToWrite,
             dateIsSelected = viewModel.dateIsSelected,
             onDateSelected = {
                 viewModel.getDiaries(zonedDateTime = it)
@@ -324,11 +332,12 @@ fun NavGraphBuilder.drawRoute(onBackPressed: () -> Unit, onNavigateBackAndPassUr
 }
 
 fun NavGraphBuilder.settingsRoute(
-    onBackPressed: () -> Unit, drawerState: DrawerState
+    onNavigateHome: () -> Unit, drawerState: DrawerState
 ) {
     composable(route = Screen.Settings.route) {
         SettingsScreen(drawerState = drawerState,
             onDeleteAllClicked = { /*TODO*/ },
-            onSignOutClicked = {})
+            onSignOutClicked = {},
+            onHomeClicked = onNavigateHome)
     }
 }

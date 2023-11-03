@@ -1,4 +1,4 @@
-package com.ps.dimensional_feels.presentation.screens.home
+package com.ps.dimensional_feels.presentation.components
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
@@ -10,8 +10,11 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Logout
 import androidx.compose.material.icons.filled.Settings
+import androidx.compose.material.icons.outlined.Home
+import androidx.compose.material.icons.outlined.Settings
 import androidx.compose.material3.DrawerState
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -34,13 +37,16 @@ import com.airbnb.lottie.compose.LottieCompositionSpec
 import com.airbnb.lottie.compose.animateLottieCompositionAsState
 import com.airbnb.lottie.compose.rememberLottieComposition
 import com.ps.dimensional_feels.R
+import com.ps.dimensional_feels.navigation.Screen
 
 @Composable
 fun NavigationDrawer(
     drawerState: DrawerState,
     onDeleteAllClicked: () -> Unit,
     onSignOutClicked: () -> Unit,
-    onSettingsClicked: () -> Unit,
+    onSettingsClicked: () -> Unit = {},
+    onHomeClicked: () -> Unit = {},
+    currentScreen: Screen,
     content: @Composable () -> Unit
 ) {
     val composition by rememberLottieComposition(spec = LottieCompositionSpec.RawRes(R.raw.morty))
@@ -48,6 +54,10 @@ fun NavigationDrawer(
     val progress by animateLottieCompositionAsState(
         composition = composition, isPlaying = isPlaying
     )
+
+    val homeIcon = if (currentScreen == Screen.Home) Icons.Filled.Home else Icons.Outlined.Home
+    val settingsIcon =
+        if (currentScreen == Screen.Settings) Icons.Filled.Settings else Icons.Outlined.Settings
 
     LaunchedEffect(key1 = progress) {
         if (progress == 0f) {
@@ -77,42 +87,27 @@ fun NavigationDrawer(
                         progress
                     })
             }
-            NavigationDrawerItem(label = {
-                Row(modifier = Modifier.padding(horizontal = 12.dp)) {
+
+            NavigationDrawerItem(modifier = Modifier.padding(horizontal = 12.dp), label = {
+                Row {
                     Icon(
-                        imageVector = Icons.Default.Logout,
-                        contentDescription = stringResource(
-                            id = R.string.google_logo
+                        imageVector = homeIcon, contentDescription = stringResource(
+                            id = R.string.home_route
                         )
                     )
                     Spacer(modifier = Modifier.width(12.dp))
                     Text(
-                        text = stringResource(id = R.string.google_sign_out),
+                        text = stringResource(id = R.string.home),
                         color = MaterialTheme.colorScheme.onSurface
                     )
                 }
-            }, selected = false, onClick = onSignOutClicked)
+            }, selected = currentScreen == Screen.Home, onClick = onHomeClicked)
 
-            NavigationDrawerItem(label = {
-                Row(modifier = Modifier.padding(horizontal = 12.dp)) {
+            NavigationDrawerItem(modifier = Modifier.padding(horizontal = 12.dp), label = {
+                Row {
                     Icon(
-                        imageVector = Icons.Default.Delete, contentDescription = stringResource(
-                            id = R.string.delete_all_diaries_icon
-                        )
-                    )
-                    Spacer(modifier = Modifier.width(12.dp))
-                    Text(
-                        text = stringResource(id = R.string.delete_all_diaries),
-                        color = MaterialTheme.colorScheme.onSurface
-                    )
-                }
-            }, selected = false, onClick = onDeleteAllClicked)
-
-            NavigationDrawerItem(label = {
-                Row(modifier = Modifier.padding(horizontal = 12.dp)) {
-                    Icon(
-                        imageVector = Icons.Default.Settings, contentDescription = stringResource(
-                            id = R.string.settings
+                        imageVector = settingsIcon, contentDescription = stringResource(
+                            id = R.string.settings_route
                         )
                     )
                     Spacer(modifier = Modifier.width(12.dp))
@@ -121,7 +116,24 @@ fun NavigationDrawer(
                         color = MaterialTheme.colorScheme.onSurface
                     )
                 }
-            }, selected = false, onClick = onSettingsClicked)
+            }, selected = currentScreen == Screen.Settings, onClick = onSettingsClicked)
+
+            NavigationDrawerItem(
+                modifier = Modifier.padding(horizontal = 12.dp), label = {
+                    Row {
+                        Icon(
+                            imageVector = Icons.Default.Logout, contentDescription = stringResource(
+                                id = R.string.google_logo
+                            )
+                        )
+                        Spacer(modifier = Modifier.width(12.dp))
+                        Text(
+                            text = stringResource(id = R.string.google_sign_out),
+                            color = MaterialTheme.colorScheme.onSurface
+                        )
+                    }
+                }, selected = false, onClick = onSignOutClicked
+            )
         }
     }, content = content)
 }

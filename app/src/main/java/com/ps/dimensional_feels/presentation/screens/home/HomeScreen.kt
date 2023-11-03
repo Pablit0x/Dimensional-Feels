@@ -24,7 +24,9 @@ import androidx.compose.ui.res.stringResource
 import com.google.firebase.storage.FirebaseStorage
 import com.ps.dimensional_feels.R
 import com.ps.dimensional_feels.data.repository.Diaries
+import com.ps.dimensional_feels.navigation.Screen
 import com.ps.dimensional_feels.presentation.components.EmptyPage
+import com.ps.dimensional_feels.presentation.components.NavigationDrawer
 import com.ps.dimensional_feels.util.RequestState
 import java.time.ZonedDateTime
 
@@ -53,7 +55,8 @@ fun HomeScreen(
         drawerState = drawerState,
         onDeleteAllClicked = onDeleteAllClicked,
         onSignOutClicked = onSignOutClicked,
-        onSettingsClicked = onSettingsClicked
+        onSettingsClicked = onSettingsClicked,
+        currentScreen = Screen.Home
     ) {
         Scaffold(modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection), topBar = {
             HomeTopBar(

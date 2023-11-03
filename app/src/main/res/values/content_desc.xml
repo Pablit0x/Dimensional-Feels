@@ -26,7 +26,8 @@
     <string name="close_image">Close Image</string>
     <string name="login_provider_logo">Login Provider Logo</string>
     <string name="delete_all_diaries_icon">Delete All Diaries</string>
-    <string name="settings">Settings</string>
+    <string name="settings_route">Settings Route</string>
+    <string name="home_route">Home Route</string>
     <string name="apply_selected_date_filter">Apply Selected Date Filter</string>
     <string name="dismiss_date_dialog">Dismiss Date Dialog</string>
 </resources>

@@ -322,8 +322,9 @@ fun NavGraphBuilder.settingsRoute(
 
 
         SettingsScreen(drawerState = drawerState,
-            onDeleteAllClicked = { /*TODO*/ },
+            onClearDiaryClicked = { isDeleteAllDialogOpen = true },
             onSignOutClicked = { isSignOutDialogOpen = true },
+            onDeleteAccountClicked = {},
             onHomeClicked = navigateHome
         )
 
@@ -339,7 +340,7 @@ fun NavGraphBuilder.settingsRoute(
                 scope.launch { drawerState.close() }
             })
 
-        CustomAlertDialog(title = stringResource(id = R.string.delete_all_diaries),
+        CustomAlertDialog(title = stringResource(id = R.string.clear_diary),
             message = stringResource(
                 id = R.string.delete_all_diaries_message
             ),

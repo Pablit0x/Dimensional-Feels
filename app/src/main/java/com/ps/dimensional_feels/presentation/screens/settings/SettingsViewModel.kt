@@ -28,8 +28,8 @@ class SettingsViewModel @Inject constructor(
     private val mongoRepository: MongoRepository,
     private val imageToDeleteDao: ImageToDeleteDao,
     private val connectivityObserver: NetworkConnectivityObserver,
-    private val user : User?
-): ViewModel() {
+    private val user: User?
+) : ViewModel() {
 
     private var network by mutableStateOf(ConnectivityObserver.Status.Unavailable)
 

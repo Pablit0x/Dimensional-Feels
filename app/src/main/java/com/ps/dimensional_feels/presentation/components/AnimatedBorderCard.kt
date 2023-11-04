@@ -32,10 +32,11 @@ fun AnimatedBorderCard(
             MaterialTheme.colorScheme.secondary
         )
     ),
-    animationDuration : Int = 10000,
+    animationDuration: Int = 10000,
     content: @Composable () -> Unit
 ) {
-    val infiniteTransition = rememberInfiniteTransition(label = "Animated Border Card Infinite Transition")
+    val infiniteTransition =
+        rememberInfiniteTransition(label = "Animated Border Card Infinite Transition")
     val degrees by infiniteTransition.animateFloat(
         initialValue = 0f,
         targetValue = 360f,
@@ -45,14 +46,16 @@ fun AnimatedBorderCard(
         label = "Infinite Animation"
     )
 
-    Surface(modifier = modifier,
+    Surface(
+        modifier = modifier,
         shape = shape
     ) {
         Surface(
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier
+                .fillMaxWidth()
                 .padding(borderWidth)
                 .drawWithContent {
-                    rotate(degrees = degrees){
+                    rotate(degrees = degrees) {
                         drawCircle(
                             brush = brush,
                             radius = size.width,

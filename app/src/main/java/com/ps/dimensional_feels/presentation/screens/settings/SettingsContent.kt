@@ -58,14 +58,26 @@ fun SettingsContent(
 
         Spacer(modifier = Modifier.height(6.dp))
 
-        SettingsCardItem(optionText = stringResource(id = R.string.delete_account), optionIcon = Icons.Default.Close, onClick = onDeleteAccountClicked)
+        SettingsCardItem(
+            optionText = stringResource(id = R.string.delete_account),
+            optionIcon = Icons.Default.Close,
+            onClick = onDeleteAccountClicked
+        )
 
         Spacer(modifier = Modifier.height(6.dp))
 
-        SettingsCardItem(optionText = stringResource(id = R.string.sign_out_message), optionIcon = Icons.Default.ExitToApp, onClick = onSignOutClicked)
+        SettingsCardItem(
+            optionText = stringResource(id = R.string.sign_out_message),
+            optionIcon = Icons.Default.ExitToApp,
+            onClick = onSignOutClicked
+        )
 
         Spacer(modifier = Modifier.height(6.dp))
 
-        SettingsCardItem(optionText = stringResource(id = R.string.clear_diary), optionIcon = Icons.Default.Delete, onClick = onClearDiaryClicked)
+        SettingsCardItem(
+            optionText = stringResource(id = R.string.clear_diary),
+            optionIcon = Icons.Default.Delete,
+            onClick = onClearDiaryClicked
+        )
     }
 }

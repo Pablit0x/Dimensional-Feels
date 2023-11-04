@@ -41,7 +41,7 @@ fun AuthenticationScreen(
         content = { padding ->
             ContentWithMessageBar(messageBarState = messageBarState) {
                 AuthenticationContent(
-                    isGoogleLoading =  isGoogleLoading,
+                    isGoogleLoading = isGoogleLoading,
                     onSignInWithGoogleButtonClicked = onGoogleSignInClicked,
                     modifier = Modifier.padding(padding)
                 )

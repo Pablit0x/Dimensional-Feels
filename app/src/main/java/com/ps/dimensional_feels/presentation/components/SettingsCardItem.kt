@@ -30,8 +30,15 @@ fun SettingsCardItem(
         modifier = Modifier
             .fillMaxWidth()
             .height(50.dp)
-            .background(color = MaterialTheme.colorScheme.surfaceVariant, shape = RoundedCornerShape(30))
-            .border(width = 1.dp, color = MaterialTheme.colorScheme.inverseSurface, shape = RoundedCornerShape(30))
+            .background(
+                color = MaterialTheme.colorScheme.surfaceVariant,
+                shape = RoundedCornerShape(30)
+            )
+            .border(
+                width = 1.dp,
+                color = MaterialTheme.colorScheme.inverseSurface,
+                shape = RoundedCornerShape(30)
+            )
             .clickable { onClick() },
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically

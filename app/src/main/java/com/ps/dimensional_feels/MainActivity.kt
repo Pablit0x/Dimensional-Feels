@@ -54,7 +54,7 @@ class MainActivity : ComponentActivity() {
         FirebaseApp.initializeApp(applicationContext)
         setContent {
             DimensionalFeelsTheme {
-                val drawerState  = rememberDrawerState(initialValue = DrawerValue.Closed)
+                val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
                 val navController = rememberNavController()
                 NavGraph(startDestinationRoute = getStartDestination(),
                     navController = navController,

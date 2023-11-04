@@ -70,10 +70,12 @@ fun AuthenticationContent(
             Column(
                 modifier = Modifier.weight(3f), verticalArrangement = Arrangement.Bottom
             ) {
-                SignInButton(primaryText = stringResource(id = R.string.sign_in_with_google),
+                SignInButton(
+                    primaryText = stringResource(id = R.string.sign_in_with_google),
                     iconRes = R.drawable.google_logo,
                     isLoading = isGoogleLoading,
-                    onClick = onSignInWithGoogleButtonClicked)
+                    onClick = onSignInWithGoogleButtonClicked
+                )
             }
         }
     }

@@ -321,7 +321,8 @@ fun NavGraphBuilder.settingsRoute(
 
 
 
-        SettingsScreen(drawerState = drawerState,
+        SettingsScreen(
+            drawerState = drawerState,
             onClearDiaryClicked = { isDeleteAllDialogOpen = true },
             onSignOutClicked = { isSignOutDialogOpen = true },
             onDeleteAccountClicked = {},

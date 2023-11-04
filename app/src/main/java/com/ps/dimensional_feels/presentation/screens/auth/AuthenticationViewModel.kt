@@ -39,11 +39,11 @@ class AuthenticationViewModel @Inject constructor(
         viewModelScope.launch {
             try {
                 val result = withContext(Dispatchers.IO) {
-                        app.login(
-                            credentials = Credentials.google(
-                                token = tokenId, type = GoogleAuthType.ID_TOKEN
-                            )
-                        ).loggedIn
+                    app.login(
+                        credentials = Credentials.google(
+                            token = tokenId, type = GoogleAuthType.ID_TOKEN
+                        )
+                    ).loggedIn
                 }
                 withContext(Dispatchers.Main) {
                     if (result) {

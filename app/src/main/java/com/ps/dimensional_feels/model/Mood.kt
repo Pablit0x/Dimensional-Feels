@@ -12,9 +12,10 @@ sealed class Mood(
     val onContainerColor: Color, val containerColor: Color, val icon: Int, val name: String,
 ) {
 
-    companion object{
-        const val MOOD_COUNT : Int = 6;
+    companion object {
+        const val MOOD_COUNT: Int = 6;
     }
+
     class Happy(character: RickAndMortyCharacters) : Mood(
         icon = when (character) {
             RickAndMortyCharacters.Rick -> MoodIcon.HappyRick.icon

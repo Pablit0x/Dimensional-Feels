@@ -60,7 +60,9 @@ fun SettingsScreen(
                     onSignOutClicked = onSignOutClicked,
                     onClearDiaryClicked = onClearDiaryClicked,
                     onDeleteAccountClicked = onDeleteAccountClicked,
-                    modifier = Modifier.padding(16.dp).fillMaxSize()
+                    modifier = Modifier
+                        .padding(16.dp)
+                        .fillMaxSize()
                 )
             }
         }

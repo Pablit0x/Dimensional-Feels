@@ -78,7 +78,7 @@ dependencies {
 
 
     // Compose Navigation
-    implementation("androidx.navigation:navigation-compose:2.7.4")
+    implementation("androidx.navigation:navigation-compose:2.7.5")
 
     // Firebase
     implementation("com.google.firebase:firebase-auth-ktx:22.2.0")
@@ -102,7 +102,7 @@ dependencies {
     // Dagger Hilt
     implementation("com.google.dagger:hilt-android:2.48")
     ksp("com.google.dagger:hilt-compiler:2.48")
-    implementation("androidx.hilt:hilt-navigation-compose:1.0.0")
+    implementation("androidx.hilt:hilt-navigation-compose:1.1.0")
 
     // Coil
     implementation("io.coil-kt:coil-compose:2.3.0")

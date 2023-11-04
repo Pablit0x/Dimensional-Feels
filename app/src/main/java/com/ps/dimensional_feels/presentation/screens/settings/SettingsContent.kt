@@ -16,6 +16,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.DeleteForever
+import androidx.compose.material.icons.filled.ExitToApp
 import androidx.compose.material.icons.filled.KeyboardArrowRight
 import androidx.compose.material.icons.filled.Logout
 import androidx.compose.material.icons.filled.Remove
@@ -41,6 +42,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.ps.dimensional_feels.R
+import com.ps.dimensional_feels.presentation.components.SettingsCardItem
 
 @Composable
 fun SettingsContent(
@@ -74,86 +76,14 @@ fun SettingsContent(
 
         Spacer(modifier = Modifier.height(6.dp))
 
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(50.dp)
-                .background(color = MaterialTheme.colorScheme.surfaceVariant, shape = RoundedCornerShape(30))
-                .border(width = 1.dp, color = MaterialTheme.colorScheme.inverseSurface, shape = RoundedCornerShape(30))
-                .clickable { onDeleteAccountClicked() },
-            horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Row(
-                modifier = Modifier.padding(4.dp),
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.spacedBy(12.dp)
-            ) {
-                Icon(imageVector = Icons.Outlined.Close, contentDescription = null)
-                Text(
-                    text = stringResource(id = R.string.delete_account),
-                    style = MaterialTheme.typography.bodyLarge,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant
-                )
-            }
-
-            Icon(imageVector = Icons.Default.KeyboardArrowRight, contentDescription = null)
-        }
+        SettingsCardItem(optionText = stringResource(id = R.string.delete_account), optionIcon = Icons.Default.Close, onClick = onDeleteAccountClicked)
 
         Spacer(modifier = Modifier.height(6.dp))
 
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(50.dp)
-                .background(color = MaterialTheme.colorScheme.surfaceVariant, shape = RoundedCornerShape(30))
-                .border(width = 1.dp, color = MaterialTheme.colorScheme.inverseSurface, shape = RoundedCornerShape(30))
-                .clickable { onSignOutClicked() },
-            horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Row(
-                modifier = Modifier.padding(4.dp),
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.spacedBy(12.dp)
-            ) {
-                Icon(imageVector = Icons.Outlined.ExitToApp, contentDescription = null)
-                Text(
-                    text = stringResource(id = R.string.google_sign_out),
-                    style = MaterialTheme.typography.bodyLarge,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant
-                )
-            }
-
-            Icon(imageVector = Icons.Default.KeyboardArrowRight, contentDescription = null)
-        }
+        SettingsCardItem(optionText = stringResource(id = R.string.sign_out_message), optionIcon = Icons.Default.ExitToApp, onClick = onSignOutClicked)
 
         Spacer(modifier = Modifier.height(6.dp))
 
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(50.dp)
-                .background(color = MaterialTheme.colorScheme.surfaceVariant, shape = RoundedCornerShape(30))
-                .border(width = 1.dp, color = MaterialTheme.colorScheme.inverseSurface, shape = RoundedCornerShape(30))
-                .clickable { onClearDiaryClicked() },
-            horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Row(
-                modifier = Modifier.padding(4.dp),
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.spacedBy(12.dp)
-            ) {
-                Icon(imageVector = Icons.Outlined.Delete, contentDescription = null)
-                Text(
-                    text = stringResource(id = R.string.clear_diary),
-                    style = MaterialTheme.typography.bodyLarge,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant
-                )
-            }
-
-            Icon(imageVector = Icons.Default.KeyboardArrowRight, contentDescription = null)
-        }
+        SettingsCardItem(optionText = stringResource(id = R.string.clear_diary), optionIcon = Icons.Default.Delete, onClick = onClearDiaryClicked)
     }
 }

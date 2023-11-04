@@ -198,6 +198,7 @@ fun NavGraphBuilder.homeRoute(
             onCloseDialog = { isSignOutDialogOpen = false },
             onConfirmClicked = {
                 viewModel.logOut(navigateToAuth = { navigateAuth() })
+                scope.launch { drawerState.close() }
             })
     }
 }
@@ -335,6 +336,7 @@ fun NavGraphBuilder.settingsRoute(
             onCloseDialog = { isSignOutDialogOpen = false },
             onConfirmClicked = {
                 viewModel.logOut(navigateToAuth = navigateAuth)
+                scope.launch { drawerState.close() }
             })
 
         CustomAlertDialog(title = stringResource(id = R.string.delete_all_diaries),

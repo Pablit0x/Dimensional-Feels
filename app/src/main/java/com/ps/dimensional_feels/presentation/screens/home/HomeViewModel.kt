@@ -31,14 +31,11 @@ import javax.inject.Inject
 class HomeViewModel @Inject constructor(
     private val user: User?,
     private val mongoRepository: MongoRepository,
-    private val imageToDeleteDao: ImageToDeleteDao,
-    private val connectivityObserver: NetworkConnectivityObserver,
     private val firebaseAuth: FirebaseAuth,
     val firebaseStorage: FirebaseStorage
 ) : ViewModel() {
 
     var diaries: MutableState<Diaries> = mutableStateOf(RequestState.Idle)
-    private var network by mutableStateOf(ConnectivityObserver.Status.Unavailable)
 
     private lateinit var allDiariesJob: Job
     private lateinit var dateFilteredDiariesJob: Job
@@ -50,15 +47,6 @@ class HomeViewModel @Inject constructor(
 
     init {
         getDiaries()
-        observeConnectivityObserver()
-    }
-
-    private fun observeConnectivityObserver() {
-        viewModelScope.launch {
-            connectivityObserver.observe().collectLatest {
-                network = it
-            }
-        }
     }
 
     fun getDiaries(zonedDateTime: ZonedDateTime? = null, searchText: String? = null) {
@@ -113,42 +101,6 @@ class HomeViewModel @Inject constructor(
             mongoRepository.getAllDiaries().collect { result ->
                 diaries.value = result
             }
-        }
-    }
-
-    fun deleteAllDiaries(
-        onSuccess: () -> Unit, onError: (Throwable) -> Unit
-    ) {
-        if (network == ConnectivityObserver.Status.Available) {
-            val firebaseUserId = FirebaseAuth.getInstance().currentUser?.uid
-            val imagesDirectory = "images/${firebaseUserId}"
-            val storage = FirebaseStorage.getInstance().reference
-            storage.child(imagesDirectory).listAll().addOnSuccessListener {
-                it.items.forEach { ref ->
-                    val imagePath = "images/${firebaseUserId}/${ref.name}"
-                    storage.child(imagePath).delete().addOnFailureListener {
-                        viewModelScope.launch(Dispatchers.IO) {
-                            imageToDeleteDao.addImageToDelete(ImageToDelete(remoteImagePath = imagePath))
-                        }
-                    }
-                }
-                viewModelScope.launch(Dispatchers.IO) {
-                    val result = mongoRepository.deleteAllDiaries()
-                    if (result is RequestState.Success) {
-                        withContext(Dispatchers.Main) {
-                            onSuccess()
-                        }
-                    } else if (result is RequestState.Error) {
-                        withContext(Dispatchers.Main) {
-                            onError(result.error)
-                        }
-                    }
-                }
-            }.addOnFailureListener { e ->
-                onError(e)
-            }
-        } else {
-            onError(NoInternetConnectionException())
         }
     }
 

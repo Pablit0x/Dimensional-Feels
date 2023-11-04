@@ -5,8 +5,6 @@ import android.widget.Toast
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.material3.DrawerState
-import androidx.compose.material3.DrawerValue
-import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.derivedStateOf
@@ -38,6 +36,7 @@ import com.ps.dimensional_feels.presentation.screens.draw.DrawScreen
 import com.ps.dimensional_feels.presentation.screens.home.HomeScreen
 import com.ps.dimensional_feels.presentation.screens.home.HomeViewModel
 import com.ps.dimensional_feels.presentation.screens.settings.SettingsScreen
+import com.ps.dimensional_feels.presentation.screens.settings.SettingsViewModel
 import com.ps.dimensional_feels.presentation.screens.write.WriteScreen
 import com.ps.dimensional_feels.presentation.screens.write.WriteViewModel
 import com.ps.dimensional_feels.util.RequestState
@@ -58,19 +57,19 @@ fun NavGraph(
             navController.popBackStack()
             navController.navigate(Screen.Home.route)
         }, onDataLoaded = onDataLoaded)
-        homeRoute(onNavigateToWriteWithArgs = {
+        homeRoute(navigateToWriteWithArgs = {
             navController.navigate(Screen.Write.passDiaryId(it))
         },
-            onNavigateToWrite = {
+            navigateToWrite = {
                 navController.navigate(Screen.Write.route)
             },
-            navigateToAuth = {
+            navigateAuth = {
                 navController.popBackStack()
                 navController.navigate(Screen.Authentication.route)
             },
             onDataLoaded = onDataLoaded,
             drawerState = drawerState,
-            navigateToSettings = { navController.navigate(Screen.Settings.route) })
+            navigateSettings = { navController.navigate(Screen.Settings.route) })
         writeRoute(onNavigateHome = {
             navController.navigate(Screen.Home.route)
         }, onBackPressed = {
@@ -91,9 +90,10 @@ fun NavGraph(
             }
             navController.popBackStack()
         })
-        settingsRoute(
-            onNavigateHome = { navController.navigate(Screen.Home.route) },
-            drawerState = drawerState
+        settingsRoute(navigateHome = { navController.navigate(Screen.Home.route) }, navigateAuth = {
+            navController.popBackStack()
+            navController.navigate(Screen.Authentication.route)
+        }, drawerState = drawerState
         )
     }
 
@@ -145,10 +145,10 @@ fun NavGraphBuilder.authenticationRoute(navigateHome: () -> Unit, onDataLoaded: 
 }
 
 fun NavGraphBuilder.homeRoute(
-    onNavigateToWriteWithArgs: (String) -> Unit,
-    onNavigateToWrite: () -> Unit,
-    navigateToAuth: () -> Unit,
-    navigateToSettings: () -> Unit,
+    navigateToWriteWithArgs: (String) -> Unit,
+    navigateToWrite: () -> Unit,
+    navigateAuth: () -> Unit,
+    navigateSettings: () -> Unit,
     onDataLoaded: () -> Unit,
     drawerState: DrawerState
 ) {
@@ -172,10 +172,10 @@ fun NavGraphBuilder.homeRoute(
             drawerState = drawerState,
             onDeleteAllClicked = { isDeleteAllDialogOpen = true },
             onSignOutClicked = { isSignOutDialogOpen = true },
-            onSettingsClicked = navigateToSettings,
+            onSettingsClicked = navigateSettings,
             onMenuClicked = { scope.launch { drawerState.open() } },
-            onNavigateToWriteWithArgs = onNavigateToWriteWithArgs,
-            onNavigateToWrite = onNavigateToWrite,
+            onNavigateToWriteWithArgs = navigateToWriteWithArgs,
+            onNavigateToWrite = navigateToWrite,
             dateIsSelected = viewModel.dateIsSelected,
             onDateSelected = {
                 viewModel.getDiaries(zonedDateTime = it)
@@ -190,30 +190,6 @@ fun NavGraphBuilder.homeRoute(
                 viewModel.getDiaries()
             })
 
-        CustomAlertDialog(title = stringResource(id = R.string.delete_all_diaries),
-            message = stringResource(
-                id = R.string.delete_all_diaries_message
-            ),
-            isOpen = isDeleteAllDialogOpen,
-            onCloseDialog = { isDeleteAllDialogOpen = false },
-            onConfirmClicked = {
-                viewModel.deleteAllDiaries(onSuccess = {
-                    Toast.makeText(
-                        context, context.getString(R.string.all_diaries_deleted), Toast.LENGTH_SHORT
-                    ).show()
-                    scope.launch {
-                        drawerState.close()
-                    }
-                }, onError = {
-                    Toast.makeText(
-                        context,
-                        it.message ?: context.getString(R.string.unknown_error),
-                        Toast.LENGTH_SHORT
-                    ).show()
-                })
-            })
-
-
         CustomAlertDialog(title = stringResource(id = R.string.google_sign_out),
             message = stringResource(
                 id = R.string.sign_out_message
@@ -221,7 +197,7 @@ fun NavGraphBuilder.homeRoute(
             isOpen = isSignOutDialogOpen,
             onCloseDialog = { isSignOutDialogOpen = false },
             onConfirmClicked = {
-                viewModel.logOut(navigateToAuth = { navigateToAuth() })
+                viewModel.logOut(navigateToAuth = { navigateAuth() })
             })
     }
 }
@@ -332,12 +308,56 @@ fun NavGraphBuilder.drawRoute(onBackPressed: () -> Unit, onNavigateBackAndPassUr
 }
 
 fun NavGraphBuilder.settingsRoute(
-    onNavigateHome: () -> Unit, drawerState: DrawerState
+    navigateAuth: () -> Unit, navigateHome: () -> Unit, drawerState: DrawerState
 ) {
     composable(route = Screen.Settings.route) {
+
+        val viewModel = hiltViewModel<SettingsViewModel>()
+        val context = LocalContext.current
+        val scope = rememberCoroutineScope()
+        var isSignOutDialogOpen by remember { mutableStateOf(false) }
+        var isDeleteAllDialogOpen by remember { mutableStateOf(false) }
+
+
+
         SettingsScreen(drawerState = drawerState,
             onDeleteAllClicked = { /*TODO*/ },
-            onSignOutClicked = {},
-            onHomeClicked = onNavigateHome)
+            onSignOutClicked = { isSignOutDialogOpen = true },
+            onHomeClicked = navigateHome
+        )
+
+
+        CustomAlertDialog(title = stringResource(id = R.string.google_sign_out),
+            message = stringResource(
+                id = R.string.sign_out_message
+            ),
+            isOpen = isSignOutDialogOpen,
+            onCloseDialog = { isSignOutDialogOpen = false },
+            onConfirmClicked = {
+                viewModel.logOut(navigateToAuth = navigateAuth)
+            })
+
+        CustomAlertDialog(title = stringResource(id = R.string.delete_all_diaries),
+            message = stringResource(
+                id = R.string.delete_all_diaries_message
+            ),
+            isOpen = isDeleteAllDialogOpen,
+            onCloseDialog = { isDeleteAllDialogOpen = false },
+            onConfirmClicked = {
+                viewModel.deleteAllDiaries(onSuccess = {
+                    Toast.makeText(
+                        context, context.getString(R.string.all_diaries_deleted), Toast.LENGTH_SHORT
+                    ).show()
+                    scope.launch {
+                        drawerState.close()
+                    }
+                }, onError = {
+                    Toast.makeText(
+                        context,
+                        it.message ?: context.getString(R.string.unknown_error),
+                        Toast.LENGTH_SHORT
+                    ).show()
+                })
+            })
     }
 }

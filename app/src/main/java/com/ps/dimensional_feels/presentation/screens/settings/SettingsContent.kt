@@ -29,10 +29,12 @@ import com.ps.dimensional_feels.presentation.components.SettingsCardItem
 import com.ps.dimensional_feels.presentation.components.TimePickerDialog
 import com.ps.dimensional_feels.util.Constants
 import com.ps.dimensional_feels.util.PreferencesManager
+import java.time.LocalDateTime
 import java.time.LocalTime
 import java.time.ZoneId
 import java.time.ZoneOffset
 import java.time.ZonedDateTime
+import java.time.format.DateTimeFormatter
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -72,11 +74,14 @@ fun SettingsContent(
         )
     }
 
-    val dailyReminderTime by remember { derivedStateOf {("$dailyReminderHour:$dailyReminderMinute")} }
+    val formattedTime = remember(dailyReminderHour, dailyReminderMinute) {
+        val localDateTime = LocalTime.of(dailyReminderHour, dailyReminderMinute)
+        DateTimeFormatter.ofPattern(Constants.TIME_PATTERN).format(localDateTime).uppercase()
+    }
 
     Column(modifier = modifier) {
 
-        DailyReminderAlarmCard(alarmTime = dailyReminderTime,
+        DailyReminderAlarmCard(alarmTime = formattedTime,
             onDailyReminderSwitchChange = {
                 isDailyReminderEnabled = it
                 preferencesManager.saveBoolean(Constants.IS_DAILY_REMINDER_ENABLED_KEY, it)

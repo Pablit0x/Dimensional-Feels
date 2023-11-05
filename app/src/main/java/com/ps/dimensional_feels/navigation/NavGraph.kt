@@ -153,7 +153,6 @@ fun NavGraphBuilder.homeRoute(
     drawerState: DrawerState
 ) {
     composable(route = Screen.Home.route) {
-        val context = LocalContext.current
         val viewModel = hiltViewModel<HomeViewModel>()
         val diaries by viewModel.diaries
         val firebaseStorage = viewModel.firebaseStorage
@@ -177,14 +176,14 @@ fun NavGraphBuilder.homeRoute(
             onNavigateToWriteWithArgs = navigateToWriteWithArgs,
             onNavigateToWrite = navigateToWrite,
             dateIsSelected = viewModel.dateIsSelected,
-            onDateSelected = {
-                viewModel.getDiaries(zonedDateTime = it)
+            onDateSelected = { selectedTime ->
+                viewModel.getDiaries(zonedDateTime = selectedTime)
             },
             onDateReset = {
                 viewModel.getDiaries()
             },
-            onSearch = {
-                viewModel.getDiaries(searchText = it)
+            onSearch = {searchTerm ->
+                viewModel.getDiaries(searchText = searchTerm)
             },
             onSearchReset = {
                 viewModel.getDiaries()
@@ -279,19 +278,21 @@ fun NavGraphBuilder.writeRoute(
                     onNavigateHome()
                 }, onError = { isLoading = false })
             },
-            onDateTimeUpdated = {
-                viewModel.updateDateTime(zonedDateTime = it)
+            onDateTimeUpdated = { selectedTime ->
+                viewModel.updateDateTime(zonedDateTime = selectedTime)
             },
-            onImageSelected = {
-                val type = context.contentResolver.getType(it)?.split("/")?.last() ?: "jpg"
+            onImageSelected = { imageUri ->
+                val type = context.contentResolver.getType(imageUri)?.split("/")?.last() ?: "jpg"
                 viewModel.addImage(
-                    image = it, imageType = type
+                    image = imageUri, imageType = type
                 )
             },
-            onImageDeleteClicked = {
-                galleryState.removeImage(image = it)
+            onImageDeleteClicked = { galleryImage ->
+                galleryState.removeImage(image = galleryImage)
             },
-            onCharacterChange = { viewModel.setCharacter(it) },
+            onCharacterChange = { selectedCharacter ->
+                viewModel.setCharacter(selectedCharacter)
+            },
             onNavigateToDraw = onNavigateToDraw
         )
     }
@@ -321,8 +322,7 @@ fun NavGraphBuilder.settingsRoute(
 
 
 
-        SettingsScreen(
-            drawerState = drawerState,
+        SettingsScreen(drawerState = drawerState,
             onClearDiaryClicked = { isDeleteAllDialogOpen = true },
             onSignOutClicked = { isSignOutDialogOpen = true },
             onDeleteAccountClicked = {},

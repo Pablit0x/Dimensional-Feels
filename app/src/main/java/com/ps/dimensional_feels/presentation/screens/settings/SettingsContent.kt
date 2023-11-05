@@ -56,13 +56,6 @@ fun SettingsContent(
             style = MaterialTheme.typography.headlineMedium
         )
 
-        Spacer(modifier = Modifier.height(6.dp))
-
-        SettingsCardItem(
-            optionText = stringResource(id = R.string.delete_account),
-            optionIcon = Icons.Default.Close,
-            onClick = onDeleteAccountClicked
-        )
 
         Spacer(modifier = Modifier.height(6.dp))
 
@@ -77,7 +70,20 @@ fun SettingsContent(
         SettingsCardItem(
             optionText = stringResource(id = R.string.clear_diary),
             optionIcon = Icons.Default.Delete,
-            onClick = onClearDiaryClicked
+            onClick = onClearDiaryClicked,
+            backgroundColor = MaterialTheme.colorScheme.error,
+            onBackgroundColor = MaterialTheme.colorScheme.onError
         )
+
+        Spacer(modifier = Modifier.height(6.dp))
+
+        SettingsCardItem(
+            optionText = stringResource(id = R.string.delete_account),
+            optionIcon = Icons.Default.Close,
+            onClick = onDeleteAccountClicked,
+            backgroundColor = MaterialTheme.colorScheme.error,
+            onBackgroundColor = MaterialTheme.colorScheme.onError
+        )
+
     }
 }

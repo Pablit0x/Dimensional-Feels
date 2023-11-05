@@ -17,6 +17,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.unit.dp
 
@@ -24,6 +25,8 @@ import androidx.compose.ui.unit.dp
 fun SettingsCardItem(
     optionText: String,
     optionIcon: ImageVector,
+    backgroundColor: Color = MaterialTheme.colorScheme.secondary,
+    onBackgroundColor: Color = MaterialTheme.colorScheme.onSecondary,
     onClick: () -> Unit
 ) {
     Row(
@@ -31,13 +34,10 @@ fun SettingsCardItem(
             .fillMaxWidth()
             .height(50.dp)
             .background(
-                color = MaterialTheme.colorScheme.surfaceVariant,
-                shape = RoundedCornerShape(30)
+                color = backgroundColor, shape = RoundedCornerShape(30)
             )
             .border(
-                width = 1.dp,
-                color = MaterialTheme.colorScheme.inverseSurface,
-                shape = RoundedCornerShape(30)
+                width = 1.dp, color = onBackgroundColor, shape = RoundedCornerShape(30)
             )
             .clickable { onClick() },
         horizontalArrangement = Arrangement.SpaceBetween,
@@ -48,14 +48,18 @@ fun SettingsCardItem(
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.spacedBy(12.dp)
         ) {
-            Icon(imageVector = optionIcon, contentDescription = null)
+            Icon(imageVector = optionIcon, contentDescription = null, tint = onBackgroundColor)
             Text(
                 text = optionText,
                 style = MaterialTheme.typography.bodyLarge,
-                color = MaterialTheme.colorScheme.onSurfaceVariant
+                color = onBackgroundColor
             )
         }
 
-        Icon(imageVector = Icons.Default.KeyboardArrowRight, contentDescription = null)
+        Icon(
+            imageVector = Icons.Default.KeyboardArrowRight,
+            contentDescription = null,
+            tint = MaterialTheme.colorScheme.surface
+        )
     }
 }

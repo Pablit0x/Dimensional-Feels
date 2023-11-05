@@ -182,7 +182,7 @@ fun NavGraphBuilder.homeRoute(
             onDateReset = {
                 viewModel.getDiaries()
             },
-            onSearch = {searchTerm ->
+            onSearch = { searchTerm ->
                 viewModel.getDiaries(searchText = searchTerm)
             },
             onSearchReset = {
@@ -322,7 +322,8 @@ fun NavGraphBuilder.settingsRoute(
 
 
 
-        SettingsScreen(drawerState = drawerState,
+        SettingsScreen(
+            drawerState = drawerState,
             onClearDiaryClicked = { isDeleteAllDialogOpen = true },
             onSignOutClicked = { isSignOutDialogOpen = true },
             onDeleteAccountClicked = {},

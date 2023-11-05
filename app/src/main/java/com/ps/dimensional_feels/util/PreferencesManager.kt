@@ -17,6 +17,16 @@ class PreferencesManager(context: Context) {
         return sharedPreferences.getString(key, defaultValue) ?: defaultValue
     }
 
+    fun getInt(key: String, defaultValue: Int) : Int {
+        return sharedPreferences.getInt(key, defaultValue)
+    }
+
+    fun saveInt(key:String, value: Int) {
+        val editor = sharedPreferences.edit()
+        editor.putInt(key, value)
+        editor.apply()
+    }
+
     fun saveBoolean(key: String, value: Boolean) {
         val editor = sharedPreferences.edit()
         editor.putBoolean(key, value)

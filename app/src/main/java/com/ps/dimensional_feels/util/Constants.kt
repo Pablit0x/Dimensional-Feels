@@ -11,5 +11,7 @@ object Constants {
     const val IMAGE_TO_DELETE_TABLE = "image_to_delete_table"
     const val PREFERENCES = "DIMENSIONAL_FEELS_PREFS"
     const val IS_DAILY_REMINDER_ENABLED_KEY = "DAILY_REMINDER_ENABLED"
+    const val DAILY_REMINDER_HOUR_KEY = "DAILY_REMINDER_HOUR"
+    const val DAILY_REMINDER_MINUTE_KEY = "DAILY_REMINDER_MINUTE"
 
 }

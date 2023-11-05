@@ -40,7 +40,8 @@
     <string name="image">Image</string>
     <string name="clear_diary">Clear Diary</string>
     <string name="delete_account">Delete Account</string>
-    <string name="daily_reminder">Daily Reminder</string>
+    <string name="reminder_on">Reminder On</string>
+    <string name="reminder_off">Reminder Off</string>
     <string name="account_settings">Account Settings</string>
     <string name="all_diaries_deleted">Deleted all diaries</string>
     <string name="unknown_error">Ops, unknown error occurred</string>

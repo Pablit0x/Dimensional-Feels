@@ -44,11 +44,11 @@ fun SettingsCardItem(
         verticalAlignment = Alignment.CenterVertically
     ) {
         Row(
-            modifier = Modifier.padding(4.dp),
+            modifier = Modifier.padding(8.dp),
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.spacedBy(12.dp)
         ) {
-            Icon(imageVector = optionIcon, contentDescription = null, tint = onBackgroundColor)
+            Icon(imageVector = optionIcon, contentDescription = null, tint = Color.Black)
             Text(
                 text = optionText,
                 style = MaterialTheme.typography.bodyLarge,

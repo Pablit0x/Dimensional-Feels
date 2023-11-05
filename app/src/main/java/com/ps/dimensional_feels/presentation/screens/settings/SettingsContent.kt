@@ -1,33 +1,25 @@
 package com.ps.dimensional_feels.presentation.screens.settings
 
-import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Close
-import androidx.compose.material.icons.filled.Delete
-import androidx.compose.material.icons.filled.ExitToApp
-import androidx.compose.material3.Divider
+import androidx.compose.material.icons.outlined.Close
+import androidx.compose.material.icons.outlined.DeleteOutline
+import androidx.compose.material.icons.outlined.ExitToApp
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedButton
-import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.ps.dimensional_feels.R
+import com.ps.dimensional_feels.presentation.components.DailyReminderAlarmCard
 import com.ps.dimensional_feels.presentation.components.SettingsCardItem
 import com.ps.dimensional_feels.util.Constants
 import com.ps.dimensional_feels.util.PreferencesManager
@@ -54,30 +46,13 @@ fun SettingsContent(
 
     Column(modifier = modifier) {
 
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically,
-        ) {
-            Text(text = stringResource(id = R.string.daily_reminder))
-            Switch(checked = isDailyReminderEnabled,
-                onCheckedChange = {
-                    isDailyReminderEnabled = it
-                    preferencesManager.saveBoolean(Constants.IS_DAILY_REMINDER_ENABLED_KEY, it)
-                })
-        }
-
-        AnimatedVisibility(visible = isDailyReminderEnabled) {
-            Box(modifier = Modifier.fillMaxWidth(), contentAlignment = Alignment.CenterStart) {
-                OutlinedButton(onClick = { /*TODO*/ }) {
-                    Text(text = "12:30")
-                }
-            }
-        }
-
-        Spacer(modifier = Modifier.height(8.dp))
-
-        Divider()
+        DailyReminderAlarmCard(alarmTime = "12:30",
+            onDailyReminderSwitchChange = {
+                isDailyReminderEnabled = it
+                preferencesManager.saveBoolean(Constants.IS_DAILY_REMINDER_ENABLED_KEY, it)
+            },
+            isDailyReminderEnabled = isDailyReminderEnabled,
+            onClick = { /*TODO*/ })
 
         Spacer(modifier = Modifier.height(8.dp))
 
@@ -91,7 +66,7 @@ fun SettingsContent(
 
         SettingsCardItem(
             optionText = stringResource(id = R.string.google_sign_out),
-            optionIcon = Icons.Default.ExitToApp,
+            optionIcon = Icons.Outlined.ExitToApp,
             onClick = onSignOutClicked
         )
 
@@ -99,7 +74,7 @@ fun SettingsContent(
 
         SettingsCardItem(
             optionText = stringResource(id = R.string.clear_diary),
-            optionIcon = Icons.Default.Delete,
+            optionIcon = Icons.Outlined.DeleteOutline,
             onClick = onClearDiaryClicked,
             backgroundColor = MaterialTheme.colorScheme.error,
             onBackgroundColor = MaterialTheme.colorScheme.onError
@@ -109,7 +84,7 @@ fun SettingsContent(
 
         SettingsCardItem(
             optionText = stringResource(id = R.string.delete_account),
-            optionIcon = Icons.Default.Close,
+            optionIcon = Icons.Outlined.Close,
             onClick = onDeleteAccountClicked,
             backgroundColor = MaterialTheme.colorScheme.error,
             onBackgroundColor = MaterialTheme.colorScheme.onError

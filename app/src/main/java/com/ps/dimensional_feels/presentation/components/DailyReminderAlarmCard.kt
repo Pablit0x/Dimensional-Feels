@@ -21,6 +21,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
@@ -38,6 +39,8 @@ fun DailyReminderAlarmCard(
 ) {
 
 
+    val color = if(isDailyReminderEnabled) MaterialTheme.colorScheme.onBackground else MaterialTheme.colorScheme.outline
+
     OutlinedCard(modifier = modifier, onClick = onClick) {
         Row(
             modifier = Modifier
@@ -52,11 +55,13 @@ fun DailyReminderAlarmCard(
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis,
                     style = MaterialTheme.typography.titleLarge,
-                    fontWeight = FontWeight.Medium
+                    fontWeight = FontWeight.Medium,
+                    color = color
                 )
                 Spacer(modifier = Modifier.height(4.dp))
                 ShortReminderDescriptionWithIconRow(
-                    isReminderEnabled = isDailyReminderEnabled
+                    isReminderEnabled = isDailyReminderEnabled,
+                    color = color
                 )
             }
             Switch(checked = isDailyReminderEnabled, onCheckedChange = {
@@ -68,7 +73,7 @@ fun DailyReminderAlarmCard(
 
 @Composable
 private fun ShortReminderDescriptionWithIconRow(
-    isReminderEnabled: Boolean, modifier: Modifier = Modifier
+    isReminderEnabled: Boolean, color: Color, modifier: Modifier = Modifier
 ) {
     val icon = if (isReminderEnabled) Icons.Outlined.AlarmOn else Icons.Outlined.AlarmOff
     val description =
@@ -82,13 +87,15 @@ private fun ShortReminderDescriptionWithIconRow(
             modifier = Modifier.size(24.dp),
             imageVector = icon,
             contentDescription = null,
+            tint = color
         )
         Spacer(modifier = Modifier.width(4.dp))
         Text(
             text = description,
             maxLines = 1,
             style = MaterialTheme.typography.labelMedium,
-            fontWeight = FontWeight.Normal
+            fontWeight = FontWeight.Normal,
+            color = color
         )
     }
 }

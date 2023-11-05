@@ -81,6 +81,13 @@ fun SettingsContent(
 
     Column(modifier = modifier) {
 
+        Text(
+            text = stringResource(id = R.string.reminder_settings),
+            style = MaterialTheme.typography.headlineMedium
+        )
+        
+        Spacer(modifier = Modifier.height(8.dp))
+        
         DailyReminderAlarmCard(alarmTime = formattedTime,
             onDailyReminderSwitchChange = {
                 isDailyReminderEnabled = it
@@ -97,7 +104,7 @@ fun SettingsContent(
         )
 
 
-        Spacer(modifier = Modifier.height(6.dp))
+        Spacer(modifier = Modifier.height(8.dp))
 
         SettingsCardItem(
             optionText = stringResource(id = R.string.google_sign_out),

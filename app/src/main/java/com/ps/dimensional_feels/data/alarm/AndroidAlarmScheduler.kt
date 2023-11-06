@@ -5,11 +5,9 @@ import android.app.AlarmManager
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
-import android.util.Log
-import androidx.core.content.ContextCompat.getSystemService
 import com.ps.dimensional_feels.alarm.AlarmScheduler
 import com.ps.dimensional_feels.util.Constants
-import java.time.ZoneId
+import java.time.LocalTime
 import java.util.Calendar
 
 class AndroidAlarmScheduler(
@@ -19,28 +17,23 @@ class AndroidAlarmScheduler(
     private val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
     private lateinit var pendingIntent: PendingIntent
     @SuppressLint("MissingPermission")
-    override fun schedule(item: AlarmItem) {
-        // in Extras here I will have to put all the data needed by for the notification
-
-        cancelPreviousAlarm()
-
+    override fun schedule(time: LocalTime) {
         val intent = Intent(context, AlarmReceiver::class.java).apply {
-            putExtra(Constants.EXTRA_ALARM_MESSAGE, item.message)
-            putExtra("HOUR", item.time.hour)
-            putExtra("MINUTE", item.time.minute)
+            action = Constants.ALARM_ACTION
         }
 
         pendingIntent = PendingIntent.getBroadcast(
             context,
-            item.hashCode(),
+            Constants.ALARM_CODE,
             intent,
             PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
         )
 
         val calendar = Calendar.getInstance().apply {
             timeInMillis = System.currentTimeMillis()
-            set(Calendar.HOUR_OF_DAY, item.time.hour)
-            set(Calendar.MINUTE, item.time.minute)
+            set(Calendar.HOUR_OF_DAY, time.hour)
+            set(Calendar.MINUTE, time.minute)
+            set(Calendar.SECOND, 0)
         }
 
         alarmManager.setInexactRepeating(
@@ -49,21 +42,13 @@ class AndroidAlarmScheduler(
             AlarmManager.INTERVAL_DAY,
             pendingIntent
         )
-
-        Log.d("lolipop","alarm scheduled for : $calendar" )
     }
 
-    private fun cancelPreviousAlarm(){
-        if (::pendingIntent.isInitialized) {
-            alarmManager.cancel(pendingIntent)
-        }
-    }
-
-    override fun cancelAlarm(item: AlarmItem) {
+    override fun cancelAlarm() {
         alarmManager.cancel(
             PendingIntent.getBroadcast(
                 context,
-                item.hashCode(),
+                Constants.ALARM_CODE,
                 Intent(context, AlarmReceiver::class.java),
                 PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
             )

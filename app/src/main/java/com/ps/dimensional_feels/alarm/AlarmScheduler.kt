@@ -1,9 +1,7 @@
 package com.ps.dimensional_feels.alarm
-
-import com.ps.dimensional_feels.data.alarm.AlarmItem
+import java.time.LocalTime
 
 interface AlarmScheduler {
-    fun schedule(item: AlarmItem)
-
-    fun cancelAlarm(item: AlarmItem)
+    fun schedule(time: LocalTime)
+    fun cancelAlarm()
 }

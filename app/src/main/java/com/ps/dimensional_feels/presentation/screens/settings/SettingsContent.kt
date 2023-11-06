@@ -1,5 +1,9 @@
 package com.ps.dimensional_feels.presentation.screens.settings
 
+import android.content.pm.PackageManager
+import android.os.Build
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
@@ -23,19 +27,15 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.core.content.ContextCompat
 import com.ps.dimensional_feels.R
 import com.ps.dimensional_feels.alarm.AlarmScheduler
-import com.ps.dimensional_feels.data.alarm.AlarmItem
 import com.ps.dimensional_feels.presentation.components.DailyReminderAlarmCard
 import com.ps.dimensional_feels.presentation.components.SettingsCardItem
 import com.ps.dimensional_feels.presentation.components.TimePickerDialog
 import com.ps.dimensional_feels.util.Constants
 import com.ps.dimensional_feels.util.PreferencesManager
-import java.time.LocalDateTime
 import java.time.LocalTime
-import java.time.ZoneId
-import java.time.ZoneOffset
-import java.time.ZonedDateTime
 import java.time.format.DateTimeFormatter
 
 
@@ -50,6 +50,22 @@ fun SettingsContent(
     alarmScheduler: AlarmScheduler
 ) {
     var showTimePickerDialog by remember { mutableStateOf(false) }
+    val context = LocalContext.current
+    var hasNotificationPermission by remember {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            mutableStateOf(
+                ContextCompat.checkSelfPermission(
+                    context, android.Manifest.permission.POST_NOTIFICATIONS
+                ) == PackageManager.PERMISSION_GRANTED
+            )
+        } else {
+            mutableStateOf(true)
+        }
+    }
+
+    val permissionLauncher = rememberLauncherForActivityResult(contract = ActivityResultContracts.RequestPermission()) { isGranted ->
+        hasNotificationPermission = isGranted
+    }
 
     var isDailyReminderEnabled by remember {
         mutableStateOf(
@@ -86,21 +102,29 @@ fun SettingsContent(
             text = stringResource(id = R.string.reminder_settings),
             style = MaterialTheme.typography.headlineMedium
         )
-        
+
         Spacer(modifier = Modifier.height(8.dp))
-        
+
         DailyReminderAlarmCard(alarmTime = formattedTime,
-            onDailyReminderSwitchChange = {
-                isDailyReminderEnabled = it
-                preferencesManager.saveBoolean(Constants.IS_DAILY_REMINDER_ENABLED_KEY, it)
-                if(!it){
-                    alarmScheduler.cancelAlarm(AlarmItem(LocalTime.of(dailyReminderHour, dailyReminderMinute), "XD"))
+            onDailyReminderSwitchChange = { isReminderEnabled ->
+                if(hasNotificationPermission){
+                    isDailyReminderEnabled = isReminderEnabled
+                    preferencesManager.saveBoolean(
+                        Constants.IS_DAILY_REMINDER_ENABLED_KEY, isReminderEnabled
+                    )
+                    if (isReminderEnabled) {
+                        alarmScheduler.schedule(LocalTime.of(dailyReminderHour, dailyReminderMinute))
+                    } else {
+                        alarmScheduler.cancelAlarm()
+                    }
                 } else {
-                    alarmScheduler.schedule(AlarmItem(LocalTime.of(dailyReminderHour, dailyReminderMinute), "XD"))
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                        permissionLauncher.launch(android.Manifest.permission.POST_NOTIFICATIONS)
+                    }
                 }
             },
             isDailyReminderEnabled = isDailyReminderEnabled,
-            onClick = { if(isDailyReminderEnabled) showTimePickerDialog = true })
+            onClick = { if (isDailyReminderEnabled) showTimePickerDialog = true })
 
         Spacer(modifier = Modifier.height(8.dp))
 
@@ -151,7 +175,7 @@ fun SettingsContent(
             dailyReminderMinute = timePickerState.minute
             preferencesManager.saveInt(Constants.DAILY_REMINDER_HOUR_KEY, dailyReminderHour)
             preferencesManager.saveInt(Constants.DAILY_REMINDER_MINUTE_KEY, dailyReminderMinute)
-            alarmScheduler.schedule(AlarmItem(time = LocalTime.of(dailyReminderHour, dailyReminderMinute), "XD"))
+            alarmScheduler.schedule(time = LocalTime.of(dailyReminderHour, dailyReminderMinute))
             showTimePickerDialog = false
         }) {
             TimePicker(state = timePickerState)

@@ -24,6 +24,8 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.ps.dimensional_feels.R
+import com.ps.dimensional_feels.alarm.AlarmScheduler
+import com.ps.dimensional_feels.data.alarm.AlarmItem
 import com.ps.dimensional_feels.presentation.components.DailyReminderAlarmCard
 import com.ps.dimensional_feels.presentation.components.SettingsCardItem
 import com.ps.dimensional_feels.presentation.components.TimePickerDialog
@@ -43,11 +45,10 @@ fun SettingsContent(
     onSignOutClicked: () -> Unit,
     onClearDiaryClicked: () -> Unit,
     onDeleteAccountClicked: () -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    preferencesManager: PreferencesManager,
+    alarmScheduler: AlarmScheduler
 ) {
-
-    val context = LocalContext.current
-    val preferencesManager = remember { PreferencesManager(context) }
     var showTimePickerDialog by remember { mutableStateOf(false) }
 
     var isDailyReminderEnabled by remember {
@@ -92,9 +93,14 @@ fun SettingsContent(
             onDailyReminderSwitchChange = {
                 isDailyReminderEnabled = it
                 preferencesManager.saveBoolean(Constants.IS_DAILY_REMINDER_ENABLED_KEY, it)
+                if(!it){
+                    alarmScheduler.cancelAlarm(AlarmItem(LocalTime.of(dailyReminderHour, dailyReminderMinute), "XD"))
+                } else {
+                    alarmScheduler.schedule(AlarmItem(LocalTime.of(dailyReminderHour, dailyReminderMinute), "XD"))
+                }
             },
             isDailyReminderEnabled = isDailyReminderEnabled,
-            onClick = { showTimePickerDialog = true })
+            onClick = { if(isDailyReminderEnabled) showTimePickerDialog = true })
 
         Spacer(modifier = Modifier.height(8.dp))
 
@@ -145,6 +151,7 @@ fun SettingsContent(
             dailyReminderMinute = timePickerState.minute
             preferencesManager.saveInt(Constants.DAILY_REMINDER_HOUR_KEY, dailyReminderHour)
             preferencesManager.saveInt(Constants.DAILY_REMINDER_MINUTE_KEY, dailyReminderMinute)
+            alarmScheduler.schedule(AlarmItem(time = LocalTime.of(dailyReminderHour, dailyReminderMinute), "XD"))
             showTimePickerDialog = false
         }) {
             TimePicker(state = timePickerState)

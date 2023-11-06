@@ -19,8 +19,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.ps.dimensional_feels.R
+import com.ps.dimensional_feels.alarm.AlarmScheduler
 import com.ps.dimensional_feels.navigation.Screen
 import com.ps.dimensional_feels.presentation.components.NavigationDrawer
+import com.ps.dimensional_feels.util.PreferencesManager
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -30,7 +32,9 @@ fun SettingsScreen(
     onClearDiaryClicked: () -> Unit,
     onSignOutClicked: () -> Unit,
     onDeleteAccountClicked: () -> Unit,
-    onHomeClicked: () -> Unit
+    onHomeClicked: () -> Unit,
+    preferencesManager: PreferencesManager,
+    alarmScheduler: AlarmScheduler
 ) {
 
     val scope = rememberCoroutineScope()
@@ -62,7 +66,9 @@ fun SettingsScreen(
                     onDeleteAccountClicked = onDeleteAccountClicked,
                     modifier = Modifier
                         .padding(16.dp)
-                        .fillMaxSize()
+                        .fillMaxSize(),
+                    alarmScheduler = alarmScheduler,
+                    preferencesManager = preferencesManager
                 )
             }
         }

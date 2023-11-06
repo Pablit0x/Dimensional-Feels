@@ -319,6 +319,8 @@ fun NavGraphBuilder.settingsRoute(
         val scope = rememberCoroutineScope()
         var isSignOutDialogOpen by remember { mutableStateOf(false) }
         var isDeleteAllDialogOpen by remember { mutableStateOf(false) }
+        val alarmScheduler = viewModel.alarmScheduler
+        val prefs = viewModel.preferencesManager
 
 
 
@@ -327,7 +329,9 @@ fun NavGraphBuilder.settingsRoute(
             onClearDiaryClicked = { isDeleteAllDialogOpen = true },
             onSignOutClicked = { isSignOutDialogOpen = true },
             onDeleteAccountClicked = {},
-            onHomeClicked = navigateHome
+            onHomeClicked = navigateHome,
+            alarmScheduler = alarmScheduler,
+            preferencesManager = prefs
         )
 
 

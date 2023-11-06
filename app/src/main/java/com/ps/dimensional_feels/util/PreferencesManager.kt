@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.SharedPreferences
 
 class PreferencesManager(context: Context) {
+
     private val sharedPreferences: SharedPreferences =
         context.getSharedPreferences(Constants.PREFERENCES, Context.MODE_PRIVATE)
 

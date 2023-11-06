@@ -7,11 +7,14 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.storage.FirebaseStorage
+import com.ps.dimensional_feels.alarm.AlarmScheduler
 import com.ps.dimensional_feels.connectivity.ConnectivityObserver
 import com.ps.dimensional_feels.connectivity.NetworkConnectivityObserver
+import com.ps.dimensional_feels.data.alarm.AndroidAlarmScheduler
 import com.ps.dimensional_feels.data.database.ImageToDeleteDao
 import com.ps.dimensional_feels.data.database.entity.ImageToDelete
 import com.ps.dimensional_feels.data.repository.MongoRepository
+import com.ps.dimensional_feels.util.PreferencesManager
 import com.ps.dimensional_feels.util.RequestState
 import com.ps.dimensional_feels.util.exceptions.NoInternetConnectionException
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -28,7 +31,9 @@ class SettingsViewModel @Inject constructor(
     private val mongoRepository: MongoRepository,
     private val imageToDeleteDao: ImageToDeleteDao,
     private val connectivityObserver: NetworkConnectivityObserver,
-    private val user: User?
+    private val user: User?,
+    val preferencesManager: PreferencesManager,
+    val alarmScheduler: AlarmScheduler
 ) : ViewModel() {
 
     private var network by mutableStateOf(ConnectivityObserver.Status.Unavailable)

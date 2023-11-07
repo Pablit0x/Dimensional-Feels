@@ -25,5 +25,9 @@ Dimensional Feels utilizes a range of technologies and libraries in the Android 
 - MongoDB for data storage
 - Firebase Cloud Storage for photo storage
 - Firebase Authentication for secure user access
-- Stevdza-San's MessageBarCompose and OneTapCompose for enhanced UI messaging.
+- DrawBox API
+- Google Fonts API
+- Notification Manager
+- Alarm Manager
+- Work Manager
 - Lottie for beautiful animations

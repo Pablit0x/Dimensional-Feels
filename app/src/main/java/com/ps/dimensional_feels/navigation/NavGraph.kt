@@ -319,8 +319,8 @@ fun NavGraphBuilder.settingsRoute(
         val scope = rememberCoroutineScope()
         var isSignOutDialogOpen by remember { mutableStateOf(false) }
         var isDeleteAllDialogOpen by remember { mutableStateOf(false) }
-        val alarmScheduler = viewModel.alarmScheduler
-        val prefs = viewModel.preferencesManager
+        val isDailyReminderEnabled = viewModel.isDailyReminderEnabled
+        val dailyReminderTime = viewModel.dailyReminderTime
 
 
 
@@ -330,8 +330,12 @@ fun NavGraphBuilder.settingsRoute(
             onSignOutClicked = { isSignOutDialogOpen = true },
             onDeleteAccountClicked = {},
             onHomeClicked = navigateHome,
-            alarmScheduler = alarmScheduler,
-            preferencesManager = prefs
+            onAlarmCanceled = viewModel::cancelAlarm,
+            onAlarmScheduled = viewModel::scheduleAlarm,
+            onUpdateReminderStatusPrefs = viewModel::updateReminderStatusPrefs,
+            onUpdateReminderTimePrefs = viewModel::updateReminderTimePrefs,
+            isDailyReminderEnabled = isDailyReminderEnabled,
+            dailyReminderTime = dailyReminderTime,
         )
 
 

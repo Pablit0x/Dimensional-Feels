@@ -14,6 +14,7 @@ import com.ps.dimensional_feels.data.alarm.AndroidAlarmScheduler
 import com.ps.dimensional_feels.data.database.ImageToDeleteDao
 import com.ps.dimensional_feels.data.database.entity.ImageToDelete
 import com.ps.dimensional_feels.data.repository.MongoRepository
+import com.ps.dimensional_feels.util.Constants
 import com.ps.dimensional_feels.util.PreferencesManager
 import com.ps.dimensional_feels.util.RequestState
 import com.ps.dimensional_feels.util.exceptions.NoInternetConnectionException
@@ -23,6 +24,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import java.time.LocalTime
 import javax.inject.Inject
 
 @HiltViewModel
@@ -32,11 +34,26 @@ class SettingsViewModel @Inject constructor(
     private val imageToDeleteDao: ImageToDeleteDao,
     private val connectivityObserver: NetworkConnectivityObserver,
     private val user: User?,
-    val preferencesManager: PreferencesManager,
-    val alarmScheduler: AlarmScheduler
+    private val preferencesManager: PreferencesManager,
+    private val alarmScheduler: AlarmScheduler
 ) : ViewModel() {
 
     private var network by mutableStateOf(ConnectivityObserver.Status.Unavailable)
+
+    var isDailyReminderEnabled by mutableStateOf(
+        preferencesManager.getBoolean(
+            Constants.IS_DAILY_REMINDER_ENABLED_KEY, false
+        )
+    )
+        private set
+
+    var dailyReminderTime: LocalTime by mutableStateOf(
+        LocalTime.of(
+            preferencesManager.getInt(Constants.DAILY_REMINDER_HOUR_KEY, 20),
+            preferencesManager.getInt(Constants.DAILY_REMINDER_MINUTE_KEY, 0)
+        )
+    )
+        private set
 
     init {
         observeConnectivityObserver()
@@ -97,5 +114,26 @@ class SettingsViewModel @Inject constructor(
             onError(NoInternetConnectionException())
         }
     }
+
+
+    fun scheduleAlarm(time: LocalTime) {
+        alarmScheduler.schedule(time)
+    }
+
+    fun cancelAlarm() {
+        alarmScheduler.cancelAlarm()
+    }
+
+    fun updateReminderStatusPrefs(isReminderEnabled: Boolean) {
+        preferencesManager.saveBoolean(Constants.IS_DAILY_REMINDER_ENABLED_KEY, isReminderEnabled)
+        isDailyReminderEnabled = isReminderEnabled
+    }
+
+    fun updateReminderTimePrefs(alarmTime: LocalTime) {
+        preferencesManager.saveInt(Constants.DAILY_REMINDER_HOUR_KEY, alarmTime.hour)
+        preferencesManager.saveInt(Constants.DAILY_REMINDER_MINUTE_KEY, alarmTime.minute)
+        dailyReminderTime = alarmTime
+    }
+
 
 }

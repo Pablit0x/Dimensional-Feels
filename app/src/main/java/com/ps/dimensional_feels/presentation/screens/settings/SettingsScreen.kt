@@ -24,6 +24,7 @@ import com.ps.dimensional_feels.navigation.Screen
 import com.ps.dimensional_feels.presentation.components.NavigationDrawer
 import com.ps.dimensional_feels.util.PreferencesManager
 import kotlinx.coroutines.launch
+import java.time.LocalTime
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -33,8 +34,12 @@ fun SettingsScreen(
     onSignOutClicked: () -> Unit,
     onDeleteAccountClicked: () -> Unit,
     onHomeClicked: () -> Unit,
-    preferencesManager: PreferencesManager,
-    alarmScheduler: AlarmScheduler
+    onAlarmCanceled : () -> Unit,
+    onAlarmScheduled : (LocalTime) -> Unit,
+    onUpdateReminderStatusPrefs : (Boolean) -> Unit,
+    onUpdateReminderTimePrefs : (LocalTime) -> Unit,
+    isDailyReminderEnabled : Boolean,
+    dailyReminderTime : LocalTime,
 ) {
 
     val scope = rememberCoroutineScope()
@@ -67,8 +72,12 @@ fun SettingsScreen(
                     modifier = Modifier
                         .padding(16.dp)
                         .fillMaxSize(),
-                    alarmScheduler = alarmScheduler,
-                    preferencesManager = preferencesManager
+                    onAlarmCanceled = onAlarmCanceled,
+                    onAlarmScheduled = onAlarmScheduled,
+                    onUpdateReminderStatusPrefs = onUpdateReminderStatusPrefs,
+                    onUpdateReminderTimePrefs = onUpdateReminderTimePrefs,
+                    isDailyReminderEnabled = isDailyReminderEnabled,
+                    dailyReminderTime = dailyReminderTime,
                 )
             }
         }

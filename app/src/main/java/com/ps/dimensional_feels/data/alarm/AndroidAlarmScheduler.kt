@@ -16,6 +16,7 @@ class AndroidAlarmScheduler(
 
     private val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
     private lateinit var pendingIntent: PendingIntent
+
     @SuppressLint("MissingPermission")
     override fun schedule(time: LocalTime) {
         val intent = Intent(context, AlarmReceiver::class.java).apply {

@@ -45,12 +45,17 @@ fun SettingsContent(
     onSignOutClicked: () -> Unit,
     onClearDiaryClicked: () -> Unit,
     onDeleteAccountClicked: () -> Unit,
+    onAlarmCanceled: () -> Unit,
+    onAlarmScheduled: (LocalTime) -> Unit,
+    onUpdateReminderStatusPrefs : (Boolean) -> Unit,
+    onUpdateReminderTimePrefs : (LocalTime) -> Unit,
     modifier: Modifier = Modifier,
-    preferencesManager: PreferencesManager,
-    alarmScheduler: AlarmScheduler
+    isDailyReminderEnabled: Boolean,
+    dailyReminderTime: LocalTime
 ) {
     var showTimePickerDialog by remember { mutableStateOf(false) }
     val context = LocalContext.current
+
     var hasNotificationPermission by remember {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             mutableStateOf(
@@ -67,32 +72,8 @@ fun SettingsContent(
         hasNotificationPermission = isGranted
     }
 
-    var isDailyReminderEnabled by remember {
-        mutableStateOf(
-            preferencesManager.getBoolean(
-                Constants.IS_DAILY_REMINDER_ENABLED_KEY, false
-            )
-        )
-    }
-
-    var dailyReminderHour by remember {
-        mutableIntStateOf(
-            preferencesManager.getInt(
-                Constants.DAILY_REMINDER_HOUR_KEY, 20
-            )
-        )
-    }
-
-    var dailyReminderMinute by remember {
-        mutableIntStateOf(
-            preferencesManager.getInt(
-                Constants.DAILY_REMINDER_MINUTE_KEY, 0
-            )
-        )
-    }
-
-    val formattedTime = remember(dailyReminderHour, dailyReminderMinute) {
-        val localDateTime = LocalTime.of(dailyReminderHour, dailyReminderMinute)
+    val formattedTime = remember(dailyReminderTime) {
+        val localDateTime = LocalTime.of(dailyReminderTime.hour, dailyReminderTime.minute)
         DateTimeFormatter.ofPattern(Constants.TIME_PATTERN).format(localDateTime).uppercase()
     }
 
@@ -106,21 +87,20 @@ fun SettingsContent(
         Spacer(modifier = Modifier.height(8.dp))
 
         DailyReminderAlarmCard(alarmTime = formattedTime,
-            onDailyReminderSwitchChange = { isReminderEnabled ->
-                if(hasNotificationPermission){
-                    isDailyReminderEnabled = isReminderEnabled
-                    preferencesManager.saveBoolean(
-                        Constants.IS_DAILY_REMINDER_ENABLED_KEY, isReminderEnabled
-                    )
-                    if (isReminderEnabled) {
-                        alarmScheduler.schedule(LocalTime.of(dailyReminderHour, dailyReminderMinute))
+            onDailyReminderSwitchChange = { isEnabled ->
+                if(isEnabled){
+                    if(hasNotificationPermission){
+                        onUpdateReminderStatusPrefs(true)
+                        onUpdateReminderTimePrefs(dailyReminderTime)
+                        onAlarmScheduled(dailyReminderTime)
                     } else {
-                        alarmScheduler.cancelAlarm()
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                            permissionLauncher.launch(android.Manifest.permission.POST_NOTIFICATIONS)
+                        }
                     }
                 } else {
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-                        permissionLauncher.launch(android.Manifest.permission.POST_NOTIFICATIONS)
-                    }
+                    onUpdateReminderStatusPrefs(false)
+                    onAlarmCanceled()
                 }
             },
             isDailyReminderEnabled = isDailyReminderEnabled,
@@ -164,18 +144,13 @@ fun SettingsContent(
     }
 
     if (showTimePickerDialog) {
-
         val timePickerState = rememberTimePickerState(
-            initialHour = dailyReminderHour, initialMinute = dailyReminderMinute
+            initialHour = dailyReminderTime.hour, initialMinute = dailyReminderTime.minute
         )
-
-
         TimePickerDialog(onCancel = { showTimePickerDialog = false }, onConfirm = {
-            dailyReminderHour = timePickerState.hour
-            dailyReminderMinute = timePickerState.minute
-            preferencesManager.saveInt(Constants.DAILY_REMINDER_HOUR_KEY, dailyReminderHour)
-            preferencesManager.saveInt(Constants.DAILY_REMINDER_MINUTE_KEY, dailyReminderMinute)
-            alarmScheduler.schedule(time = LocalTime.of(dailyReminderHour, dailyReminderMinute))
+            val updatedTime = LocalTime.of(timePickerState.hour, timePickerState.minute)
+            onUpdateReminderTimePrefs(updatedTime)
+            onAlarmScheduled(updatedTime)
             showTimePickerDialog = false
         }) {
             TimePicker(state = timePickerState)

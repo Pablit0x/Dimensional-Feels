@@ -2,9 +2,13 @@ package com.ps.dimensional_feels.di
 
 import android.app.NotificationChannel
 import android.app.NotificationManager
+import android.app.PendingIntent
 import android.content.Context
+import android.content.Intent
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
+import com.ps.dimensional_feels.MainActivity
+import com.ps.dimensional_feels.R
 import com.ps.dimensional_feels.util.Constants
 import dagger.Module
 import dagger.Provides
@@ -22,7 +26,20 @@ object NotificationModule {
     fun provideNotificationBuilder(
         @ApplicationContext context: Context
     ): NotificationCompat.Builder {
+
+        val activityIntent = Intent(context, MainActivity::class.java)
+
+        val activityPendingIntent = PendingIntent.getActivity(
+            context,
+            Constants.NOTIFICATION_STATUS_CODE,
+            activityIntent,
+            PendingIntent.FLAG_IMMUTABLE
+        )
+
         return NotificationCompat.Builder(context, Constants.DAILY_REMINDER_CHANNEL_ID)
+            .setContentIntent(activityPendingIntent)
+            .setSmallIcon(R.drawable.happy_rick)
+            .setAutoCancel(true)
             .setPriority(NotificationCompat.PRIORITY_HIGH)
     }
 

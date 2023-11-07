@@ -24,5 +24,6 @@ object Constants {
     const val DAILY_REMINDER_CHANNEL_NAME = "Daily Reminder"
     const val DAILY_REMINDER_NOTIFICATION_ID = 1
     const val NOTIFICATION_PERMISSION_CODE = 1
+    const val NOTIFICATION_STATUS_CODE = 1
 
 }

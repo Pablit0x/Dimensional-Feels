@@ -29,7 +29,6 @@ class AlarmReceiver : BroadcastReceiver() {
     ) {
         notificationBuilder.setContentTitle(notificationTitle)
         notificationBuilder.setContentText(notificationDescription)
-        notificationBuilder.setSmallIcon(R.drawable.happy_rick)
         notificationManager.notify(
             Constants.DAILY_REMINDER_NOTIFICATION_ID, notificationBuilder.build()
         )

@@ -39,7 +39,8 @@ fun DailyReminderAlarmCard(
 ) {
 
 
-    val color = if(isDailyReminderEnabled) MaterialTheme.colorScheme.onBackground else MaterialTheme.colorScheme.outline
+    val color =
+        if (isDailyReminderEnabled) MaterialTheme.colorScheme.onBackground else MaterialTheme.colorScheme.outline
 
     OutlinedCard(modifier = modifier, onClick = onClick) {
         Row(

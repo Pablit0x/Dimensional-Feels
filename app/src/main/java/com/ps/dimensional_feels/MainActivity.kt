@@ -15,7 +15,6 @@ import androidx.navigation.compose.rememberNavController
 import com.google.firebase.FirebaseApp
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.ktx.storageMetadata
-import com.ps.dimensional_feels.data.alarm.AlarmReceiver
 import com.ps.dimensional_feels.data.database.ImageToDeleteDao
 import com.ps.dimensional_feels.data.database.ImageToUploadDao
 import com.ps.dimensional_feels.data.database.entity.ImageToDelete

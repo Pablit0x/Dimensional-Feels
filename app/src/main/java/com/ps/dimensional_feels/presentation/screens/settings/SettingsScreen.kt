@@ -19,10 +19,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.ps.dimensional_feels.R
-import com.ps.dimensional_feels.alarm.AlarmScheduler
 import com.ps.dimensional_feels.navigation.Screen
 import com.ps.dimensional_feels.presentation.components.NavigationDrawer
-import com.ps.dimensional_feels.util.PreferencesManager
 import kotlinx.coroutines.launch
 import java.time.LocalTime
 import java.util.Calendar
@@ -35,12 +33,12 @@ fun SettingsScreen(
     onSignOutClicked: () -> Unit,
     onDeleteAccountClicked: () -> Unit,
     onHomeClicked: () -> Unit,
-    onAlarmCanceled : () -> Unit,
-    onAlarmScheduled : (Calendar) -> Unit,
-    onUpdateReminderStatusPrefs : (Boolean) -> Unit,
-    onUpdateReminderTimePrefs : (LocalTime) -> Unit,
-    isDailyReminderEnabled : Boolean,
-    dailyReminderTime : LocalTime,
+    onAlarmCanceled: () -> Unit,
+    onAlarmScheduled: (Calendar) -> Unit,
+    onUpdateReminderStatusPrefs: (Boolean) -> Unit,
+    onUpdateReminderTimePrefs: (LocalTime) -> Unit,
+    isDailyReminderEnabled: Boolean,
+    dailyReminderTime: LocalTime,
 ) {
 
     val scope = rememberCoroutineScope()

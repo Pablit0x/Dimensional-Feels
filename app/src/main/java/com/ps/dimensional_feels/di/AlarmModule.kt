@@ -18,7 +18,7 @@ object AlarmModule {
     @Singleton
     fun provideAlarmScheduler(
         @ApplicationContext context: Context
-    ) : AlarmScheduler {
+    ): AlarmScheduler {
         return AndroidAlarmScheduler(context = context)
     }
 }

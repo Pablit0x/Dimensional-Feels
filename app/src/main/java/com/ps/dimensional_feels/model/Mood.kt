@@ -13,7 +13,7 @@ sealed class Mood(
 ) {
 
     companion object {
-        const val MOOD_COUNT: Int = 6;
+        const val MOOD_COUNT: Int = 6
     }
 
     class Happy(character: RickAndMortyCharacters) : Mood(

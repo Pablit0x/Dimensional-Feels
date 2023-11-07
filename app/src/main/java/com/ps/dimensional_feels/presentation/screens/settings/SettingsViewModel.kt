@@ -10,7 +10,6 @@ import com.google.firebase.storage.FirebaseStorage
 import com.ps.dimensional_feels.alarm.AlarmScheduler
 import com.ps.dimensional_feels.connectivity.ConnectivityObserver
 import com.ps.dimensional_feels.connectivity.NetworkConnectivityObserver
-import com.ps.dimensional_feels.data.alarm.AndroidAlarmScheduler
 import com.ps.dimensional_feels.data.database.ImageToDeleteDao
 import com.ps.dimensional_feels.data.database.entity.ImageToDelete
 import com.ps.dimensional_feels.data.repository.MongoRepository

@@ -11,10 +11,9 @@ https://github.com/Pablit0x/Dimensional-Feels/assets/76017191/e2b00067-39ae-466a
 
 ## Tech Stack
 
-Dimensional Feels utilizes a range of technologies and libraries in the Android ecosystem, including:
-
+- Kotlin
 - Jetpack Compose
-- Coroutines and Kotlin Flow
+- Kotlin Coroutines and Kotlin Flows
 - Material Design 3
 - Compose Navigation
 - Google Accompanist Libraries

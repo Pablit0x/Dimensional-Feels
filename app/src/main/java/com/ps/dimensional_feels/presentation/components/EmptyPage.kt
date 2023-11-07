@@ -22,8 +22,7 @@ import com.ps.dimensional_feels.R
 fun EmptyPage(
     modifier: Modifier = Modifier,
     showLoading: Boolean = false,
-    title: String = stringResource(id = R.string.empty_diary_title),
-    description: String = stringResource(id = R.string.empty_diary_description)
+    title: String = stringResource(id = R.string.empty_diary_title)
 ) {
     Column(
         modifier = modifier.fillMaxSize(),
@@ -35,17 +34,10 @@ fun EmptyPage(
             CircularProgressIndicator()
         }
 
-        Text(
-            text = title, style = TextStyle.Default.copy(
-                fontSize = MaterialTheme.typography.titleMedium.fontSize,
-                fontWeight = FontWeight.Medium
-            )
-        )
-
         Spacer(modifier = Modifier.height(8.dp))
 
         Text(
-            text = description, style = TextStyle.Default.copy(
+            text = title, style = TextStyle.Default.copy(
                 fontSize = MaterialTheme.typography.titleMedium.fontSize,
                 fontWeight = FontWeight.Medium
             )

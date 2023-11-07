@@ -94,8 +94,7 @@ fun HomeScreen(
                 is RequestState.Error -> {
                     EmptyPage(
                         modifier = Modifier.padding(padding),
-                        title = stringResource(id = R.string.error_diary_title),
-                        description = "${diaries.error.message}"
+                        title = stringResource(id = R.string.error_diary_title)
                     )
                 }
 

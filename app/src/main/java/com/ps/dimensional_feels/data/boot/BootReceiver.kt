@@ -18,10 +18,12 @@ class BootReceiver : BroadcastReceiver() {
 
 
     override fun onReceive(context: Context, intent: Intent) {
-        if(intent.action == Intent.ACTION_BOOT_COMPLETED){
-            if(preferencesManager.getBoolean(Constants.IS_DAILY_REMINDER_ENABLED_KEY, false)){
-                val scheduledAlarmHour = preferencesManager.getInt(Constants.DAILY_REMINDER_HOUR_KEY, 20)
-                val scheduledAlarmMinute = preferencesManager.getInt(Constants.DAILY_REMINDER_MINUTE_KEY, 0)
+        if (intent.action == Intent.ACTION_BOOT_COMPLETED) {
+            if (preferencesManager.getBoolean(Constants.IS_DAILY_REMINDER_ENABLED_KEY, false)) {
+                val scheduledAlarmHour =
+                    preferencesManager.getInt(Constants.DAILY_REMINDER_HOUR_KEY, 20)
+                val scheduledAlarmMinute =
+                    preferencesManager.getInt(Constants.DAILY_REMINDER_MINUTE_KEY, 0)
                 val calendar = Calendar.getInstance().apply {
                     timeInMillis = System.currentTimeMillis()
                     set(Calendar.HOUR_OF_DAY, scheduledAlarmHour)

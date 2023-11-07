@@ -7,6 +7,7 @@ import android.content.Intent
 import android.os.Build
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
+import com.ps.dimensional_feels.alarm.AlarmScheduler
 import com.ps.dimensional_feels.util.Constants
 import dagger.hilt.android.AndroidEntryPoint
 import java.util.Calendar
@@ -20,6 +21,9 @@ class AlarmReceiver : BroadcastReceiver() {
 
     @Inject
     lateinit var notificationManager: NotificationManagerCompat
+
+    @Inject
+    lateinit var alarmScheduler: AlarmScheduler
 
     @SuppressLint("MissingPermission")
     fun showNotification(
@@ -40,7 +44,6 @@ class AlarmReceiver : BroadcastReceiver() {
                     intent.getParcelableExtra(Constants.ALARM_TIME_EXTRA, Calendar::class.java)
                 calendar?.let { scheduledAlarm ->
                     showNotification()
-                    val alarmScheduler = AndroidAlarmScheduler(context)
                     val alarmForNextDay = scheduledAlarm.apply { add(Calendar.DATE, 1) }
                     alarmScheduler.schedule(alarmForNextDay)
                 }

@@ -25,7 +25,6 @@ object NotificationModule {
         @ApplicationContext context: Context
     ): NotificationCompat.Builder {
         return NotificationCompat.Builder(context, Constants.DAILY_REMINDER_CHANNEL_ID)
-            .setSmallIcon(R.drawable.app_logo_foreground)
             .setPriority(NotificationCompat.PRIORITY_HIGH)
     }
 

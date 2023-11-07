@@ -25,6 +25,7 @@ import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.time.LocalTime
+import java.util.Calendar
 import javax.inject.Inject
 
 @HiltViewModel
@@ -116,8 +117,8 @@ class SettingsViewModel @Inject constructor(
     }
 
 
-    fun scheduleAlarm(time: LocalTime) {
-        alarmScheduler.schedule(time)
+    fun scheduleAlarm(calendar: Calendar) {
+        alarmScheduler.schedule(calendar)
     }
 
     fun cancelAlarm() {

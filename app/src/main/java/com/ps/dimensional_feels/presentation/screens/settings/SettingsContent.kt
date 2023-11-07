@@ -34,9 +34,9 @@ import com.ps.dimensional_feels.presentation.components.DailyReminderAlarmCard
 import com.ps.dimensional_feels.presentation.components.SettingsCardItem
 import com.ps.dimensional_feels.presentation.components.TimePickerDialog
 import com.ps.dimensional_feels.util.Constants
-import com.ps.dimensional_feels.util.PreferencesManager
 import java.time.LocalTime
 import java.time.format.DateTimeFormatter
+import java.util.Calendar
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -46,15 +46,23 @@ fun SettingsContent(
     onClearDiaryClicked: () -> Unit,
     onDeleteAccountClicked: () -> Unit,
     onAlarmCanceled: () -> Unit,
-    onAlarmScheduled: (LocalTime) -> Unit,
-    onUpdateReminderStatusPrefs : (Boolean) -> Unit,
-    onUpdateReminderTimePrefs : (LocalTime) -> Unit,
+    onAlarmScheduled: (Calendar) -> Unit,
+    onUpdateReminderStatusPrefs: (Boolean) -> Unit,
+    onUpdateReminderTimePrefs: (LocalTime) -> Unit,
     modifier: Modifier = Modifier,
     isDailyReminderEnabled: Boolean,
     dailyReminderTime: LocalTime
 ) {
     var showTimePickerDialog by remember { mutableStateOf(false) }
     val context = LocalContext.current
+
+    val calendar = remember(dailyReminderTime) {
+        Calendar.getInstance().apply {
+            timeInMillis = System.currentTimeMillis()
+            set(Calendar.SECOND, 0)
+        }
+    }
+
 
     var hasNotificationPermission by remember {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
@@ -68,9 +76,10 @@ fun SettingsContent(
         }
     }
 
-    val permissionLauncher = rememberLauncherForActivityResult(contract = ActivityResultContracts.RequestPermission()) { isGranted ->
-        hasNotificationPermission = isGranted
-    }
+    val permissionLauncher =
+        rememberLauncherForActivityResult(contract = ActivityResultContracts.RequestPermission()) { isGranted ->
+            hasNotificationPermission = isGranted
+        }
 
     val formattedTime = remember(dailyReminderTime) {
         val localDateTime = LocalTime.of(dailyReminderTime.hour, dailyReminderTime.minute)
@@ -88,11 +97,14 @@ fun SettingsContent(
 
         DailyReminderAlarmCard(alarmTime = formattedTime,
             onDailyReminderSwitchChange = { isEnabled ->
-                if(isEnabled){
-                    if(hasNotificationPermission){
+                if (isEnabled) {
+                    if (hasNotificationPermission) {
                         onUpdateReminderStatusPrefs(true)
                         onUpdateReminderTimePrefs(dailyReminderTime)
-                        onAlarmScheduled(dailyReminderTime)
+                        onAlarmScheduled(calendar.apply {
+                            set(Calendar.HOUR_OF_DAY, dailyReminderTime.hour)
+                            set(Calendar.MINUTE, dailyReminderTime.minute)
+                        })
                     } else {
                         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
                             permissionLauncher.launch(android.Manifest.permission.POST_NOTIFICATIONS)
@@ -150,7 +162,10 @@ fun SettingsContent(
         TimePickerDialog(onCancel = { showTimePickerDialog = false }, onConfirm = {
             val updatedTime = LocalTime.of(timePickerState.hour, timePickerState.minute)
             onUpdateReminderTimePrefs(updatedTime)
-            onAlarmScheduled(updatedTime)
+            onAlarmScheduled(calendar.apply {
+                set(Calendar.HOUR_OF_DAY, updatedTime.hour)
+                set(Calendar.MINUTE, updatedTime.minute)
+            })
             showTimePickerDialog = false
         }) {
             TimePicker(state = timePickerState)

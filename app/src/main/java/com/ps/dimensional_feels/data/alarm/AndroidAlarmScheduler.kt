@@ -7,10 +7,10 @@ import android.content.Context
 import android.content.Intent
 import com.ps.dimensional_feels.alarm.AlarmScheduler
 import com.ps.dimensional_feels.util.Constants
-import java.time.LocalTime
 import java.util.Calendar
+import javax.inject.Inject
 
-class AndroidAlarmScheduler(
+class AndroidAlarmScheduler @Inject constructor(
     private val context: Context
 ) : AlarmScheduler {
 
@@ -18,9 +18,10 @@ class AndroidAlarmScheduler(
     private lateinit var pendingIntent: PendingIntent
 
     @SuppressLint("MissingPermission")
-    override fun schedule(time: LocalTime) {
+    override fun schedule(calendar: Calendar) {
         val intent = Intent(context, AlarmReceiver::class.java).apply {
             action = Constants.ALARM_ACTION
+            putExtra(Constants.ALARM_TIME_EXTRA, calendar)
         }
 
         pendingIntent = PendingIntent.getBroadcast(
@@ -30,17 +31,9 @@ class AndroidAlarmScheduler(
             PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
         )
 
-        val calendar = Calendar.getInstance().apply {
-            timeInMillis = System.currentTimeMillis()
-            set(Calendar.HOUR_OF_DAY, time.hour)
-            set(Calendar.MINUTE, time.minute)
-            set(Calendar.SECOND, 0)
-        }
-
-        alarmManager.setInexactRepeating(
+        alarmManager.setExact(
             AlarmManager.RTC_WAKEUP,
             calendar.timeInMillis,
-            AlarmManager.INTERVAL_DAY,
             pendingIntent
         )
     }

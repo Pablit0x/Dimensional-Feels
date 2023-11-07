@@ -25,6 +25,7 @@ import com.ps.dimensional_feels.presentation.components.NavigationDrawer
 import com.ps.dimensional_feels.util.PreferencesManager
 import kotlinx.coroutines.launch
 import java.time.LocalTime
+import java.util.Calendar
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -35,7 +36,7 @@ fun SettingsScreen(
     onDeleteAccountClicked: () -> Unit,
     onHomeClicked: () -> Unit,
     onAlarmCanceled : () -> Unit,
-    onAlarmScheduled : (LocalTime) -> Unit,
+    onAlarmScheduled : (Calendar) -> Unit,
     onUpdateReminderStatusPrefs : (Boolean) -> Unit,
     onUpdateReminderTimePrefs : (LocalTime) -> Unit,
     isDailyReminderEnabled : Boolean,

@@ -94,7 +94,7 @@ dependencies {
     implementation("androidx.core:core-splashscreen:1.0.1")
 
     // Mongo DB Realm
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.7.2")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.7.3")
     implementation("io.realm.kotlin:library-sync:1.10.0")
 
     // Dagger Hilt
@@ -103,7 +103,7 @@ dependencies {
     implementation("androidx.hilt:hilt-navigation-compose:1.1.0")
 
     // Coil
-    implementation("io.coil-kt:coil-compose:2.3.0")
+    implementation("io.coil-kt:coil-compose:2.5.0")
 
     // Message Bar Compose
     implementation("com.github.stevdza-san:MessageBarCompose:1.0.5")

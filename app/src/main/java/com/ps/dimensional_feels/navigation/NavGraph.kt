@@ -318,7 +318,8 @@ fun NavGraphBuilder.settingsRoute(
         val context = LocalContext.current
         val scope = rememberCoroutineScope()
         var isSignOutDialogOpen by remember { mutableStateOf(false) }
-        var isDeleteAllDialogOpen by remember { mutableStateOf(false) }
+        var isClearDiaryDialogOpen by remember { mutableStateOf(false) }
+        var isDeleteAccountDialogOpen by remember{ mutableStateOf(false) }
         val isDailyReminderEnabled = viewModel.isDailyReminderEnabled
         val dailyReminderTime = viewModel.dailyReminderTime
 
@@ -326,9 +327,9 @@ fun NavGraphBuilder.settingsRoute(
 
         SettingsScreen(
             drawerState = drawerState,
-            onClearDiaryClicked = { isDeleteAllDialogOpen = true },
+            onClearDiaryClicked = { isClearDiaryDialogOpen = true },
             onSignOutClicked = { isSignOutDialogOpen = true },
-            onDeleteAccountClicked = {},
+            onDeleteAccountClicked = {isDeleteAccountDialogOpen = true},
             onHomeClicked = navigateHome,
             onAlarmCanceled = viewModel::cancelAlarm,
             onAlarmScheduled = viewModel::scheduleAlarm,
@@ -350,12 +351,23 @@ fun NavGraphBuilder.settingsRoute(
                 scope.launch { drawerState.close() }
             })
 
+        CustomAlertDialog(title = stringResource(id = R.string.delete_account),
+            message = stringResource(
+                id = R.string.delete_account_message
+            ),
+            isOpen = isDeleteAccountDialogOpen,
+            onCloseDialog = { isDeleteAccountDialogOpen = false },
+            onConfirmClicked = {
+                // TODO
+            })
+
+
         CustomAlertDialog(title = stringResource(id = R.string.clear_diary),
             message = stringResource(
                 id = R.string.delete_all_diaries_message
             ),
-            isOpen = isDeleteAllDialogOpen,
-            onCloseDialog = { isDeleteAllDialogOpen = false },
+            isOpen = isClearDiaryDialogOpen,
+            onCloseDialog = { isClearDiaryDialogOpen = false },
             onConfirmClicked = {
                 viewModel.deleteAllDiaries(onSuccess = {
                     Toast.makeText(

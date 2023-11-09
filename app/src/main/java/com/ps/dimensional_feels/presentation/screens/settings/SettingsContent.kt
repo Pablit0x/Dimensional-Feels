@@ -77,6 +77,9 @@ fun SettingsContent(
     val permissionLauncher =
         rememberLauncherForActivityResult(contract = ActivityResultContracts.RequestPermission()) { isGranted ->
             hasNotificationPermission = isGranted
+            if(isGranted){
+                onUpdateReminderStatusPrefs(true)
+            }
         }
 
     val formattedTime = remember(dailyReminderTime) {

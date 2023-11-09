@@ -13,11 +13,24 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import coil.compose.AsyncImage
+import com.airbnb.lottie.compose.LottieAnimation
+import com.airbnb.lottie.compose.LottieCompositionSpec
+import com.airbnb.lottie.compose.animateLottieCompositionAsState
+import com.airbnb.lottie.compose.rememberLottieComposition
 import com.ps.dimensional_feels.R
 import com.ps.dimensional_feels.presentation.components.AnimatedBorderCard
 import com.ps.dimensional_feels.presentation.components.SignInButton
@@ -28,6 +41,7 @@ fun AuthenticationContent(
     onSignInWithGoogleButtonClicked: () -> Unit,
     modifier: Modifier = Modifier
 ) {
+
     Column(
         modifier = modifier.fillMaxSize(),
         verticalArrangement = Arrangement.Center,
@@ -42,28 +56,37 @@ fun AuthenticationContent(
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             AnimatedBorderCard(
-                modifier = Modifier.weight(10f),
-                shape = RoundedCornerShape(15)
+                modifier = Modifier.weight(10f), shape = RoundedCornerShape(15),
+                borderWidth = 3.dp,
+                brush = Brush.sweepGradient(
+                    listOf(
+                        Color(68, 0, 86),
+                        Color(0, 255, 0)
+                    )
+                )
             ) {
                 Column(
+                    modifier = Modifier.padding(8.dp),
                     verticalArrangement = Arrangement.Center,
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
-                    Icon(
-                        modifier = Modifier.size(140.dp),
-                        painter = painterResource(id = R.drawable.dimensional_feels),
-                        contentDescription = stringResource(id = R.string.app_name),
-                        tint = MaterialTheme.colorScheme.onSurface
+                    AsyncImage(
+                        model = R.drawable.rick_and_morty,
+                        contentDescription = null,
+                        modifier = Modifier.size(180.dp)
                     )
                     Spacer(modifier = Modifier.height(20.dp))
                     Text(
                         text = stringResource(id = R.string.welcome_back),
-                        fontSize = MaterialTheme.typography.titleLarge.fontSize
+                        fontSize = MaterialTheme.typography.titleLarge.fontSize,
+                        textAlign = TextAlign.Center
                     )
+                    Spacer(modifier = Modifier.height(8.dp))
                     Text(
                         text = stringResource(id = R.string.please_sign_in_to_continue),
                         fontSize = MaterialTheme.typography.bodyMedium.fontSize,
-                        color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.40f)
+                        color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.40f),
+                        textAlign = TextAlign.Center
                     )
                 }
             }

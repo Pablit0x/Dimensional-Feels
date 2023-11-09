@@ -9,6 +9,7 @@ import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import com.ps.dimensional_feels.alarm.AlarmScheduler
 import com.ps.dimensional_feels.util.Constants
+import com.ps.dimensional_feels.util.PreferencesManager
 import dagger.hilt.android.AndroidEntryPoint
 import java.util.Calendar
 import javax.inject.Inject
@@ -25,6 +26,9 @@ class AlarmReceiver : BroadcastReceiver() {
     @Inject
     lateinit var alarmScheduler: AlarmScheduler
 
+    @Inject
+    lateinit var preferencesManager: PreferencesManager
+
     @SuppressLint("MissingPermission")
     fun showNotification(
         notificationTitle: String = "Rick's Reminder 🌀",
@@ -39,13 +43,16 @@ class AlarmReceiver : BroadcastReceiver() {
 
     override fun onReceive(context: Context, intent: Intent) {
         if (intent.action == Constants.ALARM_ACTION) {
+            val isReminderStillEnabled = preferencesManager.getBoolean(Constants.IS_DAILY_REMINDER_ENABLED_KEY, false)
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
                 val calendar =
                     intent.getParcelableExtra(Constants.ALARM_TIME_EXTRA, Calendar::class.java)
                 calendar?.let { scheduledAlarm ->
-                    showNotification()
-                    val alarmForNextDay = scheduledAlarm.apply { add(Calendar.DATE, 1) }
-                    alarmScheduler.schedule(alarmForNextDay)
+                    if(isReminderStillEnabled){
+                        showNotification()
+                        val alarmForNextDay = scheduledAlarm.apply { add(Calendar.DATE, 1) }
+                        alarmScheduler.schedule(alarmForNextDay)
+                    }
                 }
             }
         }

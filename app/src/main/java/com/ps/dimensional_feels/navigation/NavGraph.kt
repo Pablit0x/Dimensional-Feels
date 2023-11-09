@@ -358,7 +358,16 @@ fun NavGraphBuilder.settingsRoute(
             isOpen = isDeleteAccountDialogOpen,
             onCloseDialog = { isDeleteAccountDialogOpen = false },
             onConfirmClicked = {
-                // TODO
+                viewModel.deleteAccount(onSuccess = {
+                    Toast.makeText(context, context.getString(R.string.account_deleted_successfully), Toast.LENGTH_SHORT).show()
+                    navigateAuth()
+                }, onError = {
+                    Toast.makeText(
+                        context,
+                        it.message ?: context.getString(R.string.unknown_error),
+                        Toast.LENGTH_SHORT
+                    ).show()
+                })
             })
 
 

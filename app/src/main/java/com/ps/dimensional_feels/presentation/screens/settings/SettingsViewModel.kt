@@ -22,6 +22,7 @@ import io.realm.kotlin.mongodb.User
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.tasks.await
 import kotlinx.coroutines.withContext
 import java.time.LocalTime
 import java.util.Calendar
@@ -79,11 +80,27 @@ class SettingsViewModel @Inject constructor(
         }
     }
 
+    fun deleteAccount(onSuccess: () -> Unit, onError: (Throwable) -> Unit){
+        viewModelScope.launch(Dispatchers.IO) {
+            deleteAllDiaries(onSuccess = {
+                firebaseAuth.currentUser?.delete()?.addOnCompleteListener { result ->
+                 if(result.isSuccessful){
+                     updateReminderStatusPrefs(isReminderEnabled = false)
+                     cancelAlarm()
+                     onSuccess()
+                 } else {
+                     result.exception?.cause?.let { onError(it) }
+                 }
+                }
+            }, onError = onError)
+        }
+    }
+
     fun deleteAllDiaries(
         onSuccess: () -> Unit, onError: (Throwable) -> Unit
     ) {
         if (network == ConnectivityObserver.Status.Available) {
-            val firebaseUserId = FirebaseAuth.getInstance().currentUser?.uid
+            val firebaseUserId = firebaseAuth.currentUser?.uid
             val imagesDirectory = "images/${firebaseUserId}"
             val storage = FirebaseStorage.getInstance().reference
             storage.child(imagesDirectory).listAll().addOnSuccessListener {
@@ -114,7 +131,6 @@ class SettingsViewModel @Inject constructor(
             onError(NoInternetConnectionException())
         }
     }
-
 
     fun scheduleAlarm(calendar: Calendar) {
         alarmScheduler.schedule(calendar)

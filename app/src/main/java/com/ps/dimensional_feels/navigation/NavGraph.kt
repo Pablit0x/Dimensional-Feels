@@ -223,13 +223,17 @@ fun NavGraphBuilder.writeRoute(
         val galleryState = viewModel.galleryState
 
         // Page count reflects number of moods
+        val pageCount = Int.MAX_VALUE
         val pagerState = rememberPagerState(
-            pageCount = { Mood.MOOD_COUNT },
+            pageCount = { pageCount },
+            initialPage = pageCount / 2
         )
+
         val uiState = viewModel.uiState
+
         val pageNumber by remember {
             derivedStateOf {
-                pagerState.currentPage
+                pagerState.currentPage % Mood.MOOD_COUNT
             }
         }
 
@@ -245,6 +249,7 @@ fun NavGraphBuilder.writeRoute(
             uiState = uiState,
             galleryState = galleryState,
             pagerState = pagerState,
+            pageNumber = pageNumber,
             onBackPressed = onBackPressed,
             onDeleteConfirmed = {
                 viewModel.deleteDiary(onSuccess = {

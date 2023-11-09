@@ -54,6 +54,7 @@ import com.ps.dimensional_feels.R
 import com.ps.dimensional_feels.model.Diary
 import com.ps.dimensional_feels.model.GalleryImage
 import com.ps.dimensional_feels.model.GalleryState
+import com.ps.dimensional_feels.model.Mood
 import com.ps.dimensional_feels.model.RickAndMortyCharacters
 import com.ps.dimensional_feels.model.getMoodByPosition
 import com.ps.dimensional_feels.presentation.components.GalleryUploader
@@ -66,6 +67,7 @@ fun WriteContent(
     galleryState: GalleryState,
     paddingValues: PaddingValues,
     pagerState: PagerState,
+    pageNumber: Int,
     onTitleChanged: (String) -> Unit,
     onDescriptionChanged: (String) -> Unit,
     onSavedClicked: (Diary) -> Unit,
@@ -108,7 +110,7 @@ fun WriteContent(
                         modifier = Modifier.size(120.dp),
                         model = ImageRequest.Builder(context).data(
                             getMoodByPosition(
-                                character = uiState.characters, position = page
+                                character = uiState.characters, position = pageNumber
                             ).icon
                         ).crossfade(true).build(),
                         contentDescription = stringResource(id = R.string.mood_icon)

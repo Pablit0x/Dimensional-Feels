@@ -85,6 +85,7 @@ fun HomeScreen(
                         diariesNotes = diaries.data,
                         onClick = onNavigateToWriteWithArgs,
                         isSearchOpen = isSearchOpen,
+                        isDateSelected = dateIsSelected,
                         onSearch = { onSearch(it) },
                         onSearchReset = onSearchReset,
                         firebaseStorage = firebaseStorage

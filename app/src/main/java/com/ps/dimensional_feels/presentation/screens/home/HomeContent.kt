@@ -39,7 +39,7 @@ import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.delay
 import java.time.LocalDate
 
-@OptIn(ExperimentalFoundationApi::class, FlowPreview::class)
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun HomeContent(
     paddingValues: PaddingValues,
@@ -47,6 +47,7 @@ fun HomeContent(
     firebaseStorage: FirebaseStorage,
     onClick: (String) -> Unit,
     isSearchOpen: Boolean,
+    isDateSelected: Boolean,
     onSearch: (String) -> Unit,
     onSearchReset: () -> Unit
 ) {
@@ -130,7 +131,7 @@ fun HomeContent(
             }
         } else {
             EmptyPage(
-                isFiltering = !searchQuery.isNullOrBlank()
+                isFiltering = !searchQuery.isNullOrBlank() || isDateSelected
             )
         }
     }

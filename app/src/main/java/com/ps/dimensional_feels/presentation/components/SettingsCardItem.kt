@@ -4,62 +4,83 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ExitToApp
 import androidx.compose.material.icons.filled.KeyboardArrowRight
+import androidx.compose.material.icons.outlined.AlarmOff
+import androidx.compose.material.icons.outlined.AlarmOn
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedCard
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.ps.dimensional_feels.R
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SettingsCardItem(
-    optionText: String,
-    optionIcon: ImageVector,
-    backgroundColor: Color = MaterialTheme.colorScheme.secondary,
-    onBackgroundColor: Color = MaterialTheme.colorScheme.onSecondary,
-    onClick: () -> Unit
+    optionText: String, optionIcon: ImageVector, modifier: Modifier = Modifier, onClick: () -> Unit
 ) {
-    Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .height(50.dp)
-            .background(
-                color = backgroundColor, shape = RoundedCornerShape(30)
-            )
-            .border(
-                width = 1.dp, color = onBackgroundColor, shape = RoundedCornerShape(30)
-            )
-            .clickable { onClick() },
-        horizontalArrangement = Arrangement.SpaceBetween,
-        verticalAlignment = Alignment.CenterVertically
-    ) {
+
+    OutlinedCard(modifier = modifier, onClick = onClick) {
         Row(
-            modifier = Modifier.padding(8.dp),
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.spacedBy(12.dp)
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(16.dp),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically
         ) {
-            Icon(imageVector = optionIcon, contentDescription = null, tint = Color.Black)
-            Text(
-                text = optionText,
-                style = MaterialTheme.typography.bodyLarge,
-                color = onBackgroundColor
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.spacedBy(12.dp)
+            ) {
+                Icon(imageVector = optionIcon, contentDescription = null)
+                Text(
+                    text = optionText,
+                    style = MaterialTheme.typography.bodyLarge,
+                )
+            }
+
+            Icon(
+                imageVector = Icons.Default.KeyboardArrowRight, contentDescription = null
             )
         }
+    }
+}
 
-        Icon(
-            imageVector = Icons.Default.KeyboardArrowRight,
-            contentDescription = null,
-            tint = MaterialTheme.colorScheme.surface
+
+@Preview
+@Composable
+fun SettingCardItemPrev() {
+    Column(
+        modifier = Modifier.fillMaxHeight(),
+        verticalArrangement = Arrangement.Center,
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        SettingsCardItem(
+            optionText = "Exit App",
+            optionIcon = Icons.Default.ExitToApp,
+            onClick = {},
         )
     }
 }

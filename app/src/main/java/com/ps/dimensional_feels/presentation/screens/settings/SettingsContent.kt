@@ -24,6 +24,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat
 import com.ps.dimensional_feels.R
@@ -87,7 +88,10 @@ fun SettingsContent(
 
         Text(
             text = stringResource(id = R.string.reminder_settings),
-            style = MaterialTheme.typography.headlineMedium
+            style = MaterialTheme.typography.titleSmall.copy(
+                fontWeight = FontWeight.Bold
+            ),
+            color = MaterialTheme.colorScheme.onSurfaceVariant
         )
 
         Spacer(modifier = Modifier.height(8.dp))
@@ -115,11 +119,14 @@ fun SettingsContent(
             isDailyReminderEnabled = isDailyReminderEnabled,
             onClick = { if (isDailyReminderEnabled) showTimePickerDialog = true })
 
-        Spacer(modifier = Modifier.height(8.dp))
+        Spacer(modifier = Modifier.height(16.dp))
 
         Text(
             text = stringResource(id = R.string.account_settings),
-            style = MaterialTheme.typography.headlineMedium
+            style = MaterialTheme.typography.titleSmall.copy(
+                fontWeight = FontWeight.Bold
+            ),
+            color = MaterialTheme.colorScheme.onSurfaceVariant
         )
 
 
@@ -131,24 +138,20 @@ fun SettingsContent(
             onClick = onSignOutClicked
         )
 
-        Spacer(modifier = Modifier.height(6.dp))
+        Spacer(modifier = Modifier.height(8.dp))
 
         SettingsCardItem(
             optionText = stringResource(id = R.string.clear_diary),
             optionIcon = Icons.Outlined.DeleteOutline,
-            onClick = onClearDiaryClicked,
-            backgroundColor = MaterialTheme.colorScheme.error,
-            onBackgroundColor = MaterialTheme.colorScheme.onError
+            onClick = onClearDiaryClicked
         )
 
-        Spacer(modifier = Modifier.height(6.dp))
+        Spacer(modifier = Modifier.height(8.dp))
 
         SettingsCardItem(
             optionText = stringResource(id = R.string.delete_account),
             optionIcon = Icons.Outlined.Close,
-            onClick = onDeleteAccountClicked,
-            backgroundColor = MaterialTheme.colorScheme.error,
-            onBackgroundColor = MaterialTheme.colorScheme.onError
+            onClick = onDeleteAccountClicked
         )
     }
 

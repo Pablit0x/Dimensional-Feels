@@ -351,7 +351,7 @@ fun NavGraphBuilder.settingsRoute(
                 scope.launch { drawerState.close() }
             })
 
-        CustomAlertDialog(title = stringResource(id = R.string.delete_account),
+        CustomAlertDialog(title = stringResource(id = R.string.delete_account) + " ⚠️",
             message = stringResource(
                 id = R.string.delete_account_message
             ),

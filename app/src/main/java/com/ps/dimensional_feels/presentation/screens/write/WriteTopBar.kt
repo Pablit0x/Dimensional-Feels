@@ -180,7 +180,9 @@ fun WriteTopBar(
         )
 
 
-        TimePickerDialog(onCancel = { showTimePickerDialog = false }, onConfirm = {
+        TimePickerDialog(
+            title = stringResource(id = R.string.select_time),
+            onCancel = { showTimePickerDialog = false }, onConfirm = {
             currentTime = LocalTime.of(timePickerState.hour, timePickerState.minute)
             isDateTimeUpdated = true
             onDateTimeUpdated(

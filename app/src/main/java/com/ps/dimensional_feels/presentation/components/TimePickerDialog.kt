@@ -29,6 +29,7 @@ import com.ps.dimensional_feels.R
 
 @Composable
 fun TimePickerDialog(
+    title: String,
     onCancel: () -> Unit,
     onConfirm: () -> Unit,
     content: @Composable () -> Unit,
@@ -58,7 +59,7 @@ fun TimePickerDialog(
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(bottom = 20.dp),
-                    text = stringResource(id = R.string.select_time),
+                    text = title,
                     style = MaterialTheme.typography.labelMedium
                 )
                 content()

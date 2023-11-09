@@ -159,7 +159,9 @@ fun SettingsContent(
         val timePickerState = rememberTimePickerState(
             initialHour = dailyReminderTime.hour, initialMinute = dailyReminderTime.minute
         )
-        TimePickerDialog(onCancel = { showTimePickerDialog = false }, onConfirm = {
+        TimePickerDialog(
+            title = stringResource(id = R.string.set_reminder_time),
+            onCancel = { showTimePickerDialog = false }, onConfirm = {
             val updatedTime = LocalTime.of(timePickerState.hour, timePickerState.minute)
             onUpdateReminderTimePrefs(updatedTime)
             onAlarmScheduled(calendar.apply {

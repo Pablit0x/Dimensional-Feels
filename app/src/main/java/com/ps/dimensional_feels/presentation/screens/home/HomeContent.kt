@@ -129,7 +129,9 @@ fun HomeContent(
                 }
             }
         } else {
-            EmptyPage()
+            EmptyPage(
+                isFiltering = !searchQuery.isNullOrBlank()
+            )
         }
     }
 }

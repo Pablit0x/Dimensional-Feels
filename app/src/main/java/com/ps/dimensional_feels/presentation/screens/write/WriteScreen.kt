@@ -102,9 +102,7 @@ fun WriteScreen(
 
         if (isLoading) {
             EmptyPage(
-                modifier = Modifier.padding(padding),
-                showLoading = true,
-                title = stringResource(id = R.string.saving)
+                showLoading = true
             )
         } else {
             AnimatedVisibility(

@@ -54,9 +54,6 @@ fun NavigationDrawer(
         composition = composition, isPlaying = isPlaying
     )
 
-    val homeIcon = if (currentScreen == Screen.Home) Icons.Filled.Home else Icons.Outlined.Home
-    val settingsIcon =
-        if (currentScreen == Screen.Settings) Icons.Filled.Settings else Icons.Outlined.Settings
 
     LaunchedEffect(key1 = progress) {
         if (progress == 0f) {
@@ -66,6 +63,11 @@ fun NavigationDrawer(
             isPlaying = false
         }
     }
+
+
+    val homeIcon = if (currentScreen == Screen.Home) Icons.Filled.Home else Icons.Outlined.Home
+    val settingsIcon =
+        if (currentScreen == Screen.Settings) Icons.Filled.Settings else Icons.Outlined.Settings
 
     ModalNavigationDrawer(drawerState = drawerState, drawerContent = {
         ModalDrawerSheet {

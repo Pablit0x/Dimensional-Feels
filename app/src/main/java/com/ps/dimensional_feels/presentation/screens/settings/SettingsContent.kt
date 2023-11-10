@@ -18,12 +18,14 @@ import androidx.compose.material3.TimePicker
 import androidx.compose.material3.TimePickerDefaults
 import androidx.compose.material3.TimePickerLayoutType
 import androidx.compose.material3.rememberTimePickerState
+import androidx.compose.material3.surfaceColorAtElevation
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -179,17 +181,17 @@ fun SettingsContent(
                 state = timePickerState,
                 layoutType = TimePickerLayoutType.Vertical,
                 colors = TimePickerDefaults.colors(
-                    clockDialColor = MaterialTheme.colorScheme.surfaceVariant,
+                    clockDialColor = MaterialTheme.colorScheme.surfaceColorAtElevation(1.dp),
                     clockDialSelectedContentColor = MaterialTheme.colorScheme.onPrimary,
                     clockDialUnselectedContentColor = MaterialTheme.colorScheme.outline,
                     selectorColor = MaterialTheme.colorScheme.primary,
                     periodSelectorBorderColor = MaterialTheme.colorScheme.inverseOnSurface,
-                    periodSelectorUnselectedContainerColor = MaterialTheme.colorScheme.surfaceVariant,
+                    periodSelectorUnselectedContainerColor = MaterialTheme.colorScheme.surfaceColorAtElevation(1.dp),
                     periodSelectorSelectedContainerColor = MaterialTheme.colorScheme.primary,
                     periodSelectorSelectedContentColor = MaterialTheme.colorScheme.onPrimary,
                     periodSelectorUnselectedContentColor = MaterialTheme.colorScheme.onSurfaceVariant,
                     timeSelectorSelectedContainerColor = MaterialTheme.colorScheme.primary,
-                    timeSelectorUnselectedContainerColor = MaterialTheme.colorScheme.surfaceVariant,
+                    timeSelectorUnselectedContainerColor = MaterialTheme.colorScheme.surfaceColorAtElevation(1.dp),
                     timeSelectorSelectedContentColor = MaterialTheme.colorScheme.onPrimary,
                     timeSelectorUnselectedContentColor = MaterialTheme.colorScheme.onSurfaceVariant,
                 )

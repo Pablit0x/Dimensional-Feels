@@ -1,15 +1,22 @@
 package com.ps.dimensional_feels.presentation.components
 
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.wrapContentHeight
+import androidx.compose.foundation.relocation.BringIntoViewRequester
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.CalendarMonth
 import androidx.compose.material.icons.filled.Chat
 import androidx.compose.material.icons.filled.Create
 import androidx.compose.material.icons.filled.Search
@@ -24,6 +31,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -42,13 +50,15 @@ import com.ps.dimensional_feels.R
 fun EmptyPage(
     modifier: Modifier = Modifier,
     showLoading: Boolean = false,
-    isFiltering: Boolean = false,
+    isFilteringByQuery: Boolean = false,
+    isFilteringByDate: Boolean = false,
     onCreateButtonClicked: () -> Unit = {},
     title: String = stringResource(id = R.string.empty_diary_title)
 ) {
     Column(
         modifier = modifier
             .fillMaxSize()
+            .imePadding()
             .padding(16.dp),
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
@@ -59,15 +69,53 @@ fun EmptyPage(
         }
 
         if (!showLoading) {
-            if (!isFiltering) {
+            if (isFilteringByQuery) {
                     Text(
-                        text = title, style = TextStyle.Default.copy(
+                        text = stringResource(id = R.string.no_match_search),
+                        style = TextStyle.Default.copy(
                             fontSize = MaterialTheme.typography.titleMedium.fontSize,
                             fontWeight = FontWeight.Medium,
+                            textAlign = TextAlign.Center,
                             color = MaterialTheme.colorScheme.outline,
-                            textAlign = TextAlign.Center
                         )
                     )
+
+                    Spacer(modifier = Modifier.height(16.dp))
+
+                    Icon(
+                        imageVector = Icons.Default.SearchOff,
+                        contentDescription = null,
+                        tint = MaterialTheme.colorScheme.outline,
+                        modifier = Modifier.size(46.dp)
+                    )
+            } else if (isFilteringByDate) {
+                Text(
+                    text = stringResource(id = R.string.no_match_date_search),
+                    style = TextStyle.Default.copy(
+                        fontSize = MaterialTheme.typography.titleMedium.fontSize,
+                        fontWeight = FontWeight.Medium,
+                        textAlign = TextAlign.Center,
+                        color = MaterialTheme.colorScheme.outline,
+                    )
+                )
+
+                Spacer(modifier = Modifier.height(16.dp))
+
+                Icon(
+                    imageVector = Icons.Default.CalendarMonth,
+                    contentDescription = null,
+                    tint = MaterialTheme.colorScheme.outline,
+                    modifier = Modifier.size(46.dp)
+                )
+            } else {
+                Text(
+                    text = title, style = TextStyle.Default.copy(
+                        fontSize = MaterialTheme.typography.titleMedium.fontSize,
+                        fontWeight = FontWeight.Medium,
+                        color = MaterialTheme.colorScheme.outline,
+                        textAlign = TextAlign.Center
+                    )
+                )
 
                 Spacer(modifier = Modifier.height(8.dp))
 
@@ -81,27 +129,6 @@ fun EmptyPage(
                     Spacer(modifier = Modifier.width(8.dp))
                     Text(stringResource(id = R.string.create_diary))
                 }
-
-
-            } else {
-                Text(
-                    text = stringResource(id = R.string.no_match_search),
-                    style = TextStyle.Default.copy(
-                        fontSize = MaterialTheme.typography.titleMedium.fontSize,
-                        fontWeight = FontWeight.Medium,
-                        textAlign = TextAlign.Center,
-                        color = MaterialTheme.colorScheme.outline,
-                    )
-                )
-
-                Spacer(modifier = Modifier.height(16.dp))
-
-                Icon(
-                    imageVector = Icons.Default.SearchOff,
-                    contentDescription = null,
-                    tint = MaterialTheme.colorScheme.outline,
-                    modifier = Modifier.size(46.dp)
-                )
             }
         }
 

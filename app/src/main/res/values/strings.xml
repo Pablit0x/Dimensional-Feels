@@ -25,6 +25,7 @@
     <string name="hide_gallery">Hide Gallery</string>
     <string name="create_diary">Create Diary</string>
     <string name="empty_diary_title">Empty diary dimension…\nTime to document some memories!</string>
+    <string name="no_match_date_search">Oh jeez, no matches!\nAdjust your time-travel settings and try again, Morty!</string>
     <string name="empty_diary_description">Write something, Morty… or not.</string>
     <string name="canvas">Canvas</string>
     <string name="adjust_stroke_size">Adjust Portal Gun Power</string>

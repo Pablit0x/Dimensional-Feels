@@ -130,7 +130,8 @@ fun HomeContent(
             }
         } else {
             EmptyPage(
-                isFiltering = !searchQuery.isNullOrBlank() || isDateSelected,
+                isFilteringByQuery = !searchQuery.isNullOrBlank(),
+                isFilteringByDate = isDateSelected,
                 onCreateButtonClicked = navigateToWrite
             )
         }

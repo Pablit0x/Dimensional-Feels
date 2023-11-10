@@ -2,6 +2,10 @@ package com.ps.dimensional_feels.presentation.screens.write
 
 import android.net.Uri
 import android.widget.Toast
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.EnterTransition
+import androidx.compose.animation.ExitTransition
+import androidx.compose.animation.slideInHorizontally
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
@@ -11,9 +15,11 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.ime
 import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -37,12 +43,16 @@ import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusDirection
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
@@ -77,9 +87,15 @@ fun WriteContent(
     val scrollState = rememberScrollState()
     val context = LocalContext.current
     val focusManager = LocalFocusManager.current
+    var showGalleryUploader by remember{ mutableStateOf(true) }
 
     LaunchedEffect(key1 = uiState.description) {
         scrollState.scrollTo(scrollState.maxValue)
+    }
+
+    val isVisible = WindowInsets.ime.getBottom(LocalDensity.current) > 0
+    LaunchedEffect(key1 = isVisible) {
+        showGalleryUploader = !isVisible
     }
 
     Column(
@@ -245,12 +261,17 @@ fun WriteContent(
         }
         Column(verticalArrangement = Arrangement.Bottom) {
             Spacer(modifier = Modifier.height(12.dp))
-            GalleryUploader(galleryState = galleryState,
-                onAddClicked = { focusManager.clearFocus() },
-                onImageSelected = onImageSelected,
-                onImageClicked = { galleryImage, index ->
-                    onImageClicked(galleryImage, index)
-                })
+
+            AnimatedVisibility(visible = showGalleryUploader, enter = slideInHorizontally(), exit = ExitTransition.None ) {
+
+                GalleryUploader(galleryState = galleryState,
+                    onAddClicked = { focusManager.clearFocus() },
+                    onImageSelected = onImageSelected,
+                    onImageClicked = { galleryImage, index ->
+                        onImageClicked(galleryImage, index)
+                    })
+            }
+
             Spacer(modifier = Modifier.height(12.dp))
 
             Button(

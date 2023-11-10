@@ -1,6 +1,5 @@
 package com.ps.dimensional_feels.presentation.screens.write
 
-import android.content.res.Configuration
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -21,7 +20,6 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
 import androidx.compose.material3.TimePicker
-import androidx.compose.material3.TimePickerColors
 import androidx.compose.material3.TimePickerDefaults
 import androidx.compose.material3.TimePickerLayoutType
 import androidx.compose.material3.rememberDatePickerState
@@ -32,20 +30,15 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.tooling.preview.UiMode
 import androidx.compose.ui.unit.dp
 import com.ps.dimensional_feels.R
 import com.ps.dimensional_feels.model.Diary
 import com.ps.dimensional_feels.presentation.components.DeleteDiaryDropDownMenu
 import com.ps.dimensional_feels.presentation.components.TimePickerDialog
-import com.ps.dimensional_feels.presentation.theme.DimensionalFeelsTheme
-import com.ps.dimensional_feels.presentation.theme.PortalGreen
 import com.ps.dimensional_feels.util.Constants.DATE_TIME_PATTERN
 import com.ps.dimensional_feels.util.toInstant
 import com.ps.dimensional_feels.util.toLocalDate
@@ -192,15 +185,15 @@ fun WriteTopBar(
         TimePickerDialog(
             title = stringResource(id = R.string.select_time),
             onCancel = { showTimePickerDialog = false }, onConfirm = {
-            currentTime = LocalTime.of(timePickerState.hour, timePickerState.minute)
-            isDateTimeUpdated = true
-            onDateTimeUpdated(
-                ZonedDateTime.of(
-                    currentDate, currentTime, ZoneId.systemDefault()
+                currentTime = LocalTime.of(timePickerState.hour, timePickerState.minute)
+                isDateTimeUpdated = true
+                onDateTimeUpdated(
+                    ZonedDateTime.of(
+                        currentDate, currentTime, ZoneId.systemDefault()
+                    )
                 )
-            )
-            showTimePickerDialog = false
-        }) {
+                showTimePickerDialog = false
+            }) {
             TimePicker(
                 state = timePickerState,
                 layoutType = TimePickerLayoutType.Vertical,

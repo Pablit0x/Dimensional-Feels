@@ -43,12 +43,13 @@ class AlarmReceiver : BroadcastReceiver() {
 
     override fun onReceive(context: Context, intent: Intent) {
         if (intent.action == Constants.ALARM_ACTION) {
-            val isReminderStillEnabled = preferencesManager.getBoolean(Constants.IS_DAILY_REMINDER_ENABLED_KEY, false)
+            val isReminderStillEnabled =
+                preferencesManager.getBoolean(Constants.IS_DAILY_REMINDER_ENABLED_KEY, false)
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
                 val calendar =
                     intent.getParcelableExtra(Constants.ALARM_TIME_EXTRA, Calendar::class.java)
                 calendar?.let { scheduledAlarm ->
-                    if(isReminderStillEnabled){
+                    if (isReminderStillEnabled) {
                         showNotification()
                         val alarmForNextDay = scheduledAlarm.apply { add(Calendar.DATE, 1) }
                         alarmScheduler.schedule(alarmForNextDay)

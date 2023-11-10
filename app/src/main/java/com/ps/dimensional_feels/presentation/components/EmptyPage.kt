@@ -72,7 +72,7 @@ fun EmptyPage(
                     modifier = Modifier.fillMaxSize(),
                     horizontalAlignment = Alignment.CenterHorizontally,
                     verticalArrangement = Arrangement.Center
-                ){
+                ) {
                     Text(
                         text = title, style = TextStyle.Default.copy(
                             fontSize = MaterialTheme.typography.titleMedium.fontSize,

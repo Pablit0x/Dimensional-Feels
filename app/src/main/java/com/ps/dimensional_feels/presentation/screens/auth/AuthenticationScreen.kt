@@ -11,7 +11,6 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.GoogleAuthProvider
-import com.ps.dimensional_feels.presentation.theme.PortalGreen
 import com.ps.dimensional_feels.presentation.theme.PortalPurple
 import com.ps.dimensional_feels.util.Constants.CLIENT_ID
 import com.stevdzasan.messagebar.ContentWithMessageBar
@@ -63,12 +62,12 @@ fun AuthenticationScreen(
         onTokenIdReceived = { tokenId ->
             val credential = GoogleAuthProvider.getCredential(tokenId, null)
             firebaseAuth.signInWithCredential(credential).addOnCompleteListener { result ->
-                    if (result.isSuccessful) {
-                        onSuccessfulFirebaseSignIn(tokenId)
-                    } else {
-                        result.exception?.let(onFailedFirebaseSignIn)
-                    }
+                if (result.isSuccessful) {
+                    onSuccessfulFirebaseSignIn(tokenId)
+                } else {
+                    result.exception?.let(onFailedFirebaseSignIn)
                 }
+            }
         },
         onDialogDismissed = { message ->
             onDialogDismissed(message)

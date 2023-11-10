@@ -54,7 +54,6 @@ import com.ps.dimensional_feels.R
 import com.ps.dimensional_feels.model.Diary
 import com.ps.dimensional_feels.model.GalleryImage
 import com.ps.dimensional_feels.model.GalleryState
-import com.ps.dimensional_feels.model.Mood
 import com.ps.dimensional_feels.model.RickAndMortyCharacters
 import com.ps.dimensional_feels.model.getMoodByPosition
 import com.ps.dimensional_feels.presentation.components.GalleryUploader

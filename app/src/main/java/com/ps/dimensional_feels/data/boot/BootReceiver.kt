@@ -4,7 +4,6 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import com.ps.dimensional_feels.alarm.AlarmScheduler
-import com.ps.dimensional_feels.data.alarm.AndroidAlarmScheduler
 import com.ps.dimensional_feels.util.Constants
 import com.ps.dimensional_feels.util.PreferencesManager
 import dagger.hilt.android.AndroidEntryPoint

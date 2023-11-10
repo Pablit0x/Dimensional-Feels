@@ -22,7 +22,6 @@ import io.realm.kotlin.mongodb.User
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.tasks.await
 import kotlinx.coroutines.withContext
 import java.time.LocalTime
 import java.util.Calendar
@@ -80,17 +79,17 @@ class SettingsViewModel @Inject constructor(
         }
     }
 
-    fun deleteAccount(onSuccess: () -> Unit, onError: (Throwable) -> Unit){
+    fun deleteAccount(onSuccess: () -> Unit, onError: (Throwable) -> Unit) {
         viewModelScope.launch(Dispatchers.IO) {
             deleteAllDiaries(onSuccess = {
                 firebaseAuth.currentUser?.delete()?.addOnCompleteListener { result ->
-                 if(result.isSuccessful){
-                     updateReminderStatusPrefs(isReminderEnabled = false)
-                     cancelAlarm()
-                     onSuccess()
-                 } else {
-                     result.exception?.cause?.let { onError(it) }
-                 }
+                    if (result.isSuccessful) {
+                        updateReminderStatusPrefs(isReminderEnabled = false)
+                        cancelAlarm()
+                        onSuccess()
+                    } else {
+                        result.exception?.cause?.let { onError(it) }
+                    }
                 }
             }, onError = onError)
         }

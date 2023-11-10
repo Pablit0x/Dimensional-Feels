@@ -324,7 +324,7 @@ fun NavGraphBuilder.settingsRoute(
         val scope = rememberCoroutineScope()
         var isSignOutDialogOpen by remember { mutableStateOf(false) }
         var isClearDiaryDialogOpen by remember { mutableStateOf(false) }
-        var isDeleteAccountDialogOpen by remember{ mutableStateOf(false) }
+        var isDeleteAccountDialogOpen by remember { mutableStateOf(false) }
         val isDailyReminderEnabled = viewModel.isDailyReminderEnabled
         val dailyReminderTime = viewModel.dailyReminderTime
 
@@ -334,7 +334,7 @@ fun NavGraphBuilder.settingsRoute(
             drawerState = drawerState,
             onClearDiaryClicked = { isClearDiaryDialogOpen = true },
             onSignOutClicked = { isSignOutDialogOpen = true },
-            onDeleteAccountClicked = {isDeleteAccountDialogOpen = true},
+            onDeleteAccountClicked = { isDeleteAccountDialogOpen = true },
             onHomeClicked = navigateHome,
             onAlarmCanceled = viewModel::cancelAlarm,
             onAlarmScheduled = viewModel::scheduleAlarm,
@@ -364,7 +364,11 @@ fun NavGraphBuilder.settingsRoute(
             onCloseDialog = { isDeleteAccountDialogOpen = false },
             onConfirmClicked = {
                 viewModel.deleteAccount(onSuccess = {
-                    Toast.makeText(context, context.getString(R.string.account_deleted_successfully), Toast.LENGTH_SHORT).show()
+                    Toast.makeText(
+                        context,
+                        context.getString(R.string.account_deleted_successfully),
+                        Toast.LENGTH_SHORT
+                    ).show()
                     navigateAuth()
                 }, onError = {
                     Toast.makeText(

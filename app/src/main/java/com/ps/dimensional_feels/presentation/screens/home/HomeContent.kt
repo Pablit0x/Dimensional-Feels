@@ -76,7 +76,9 @@ fun HomeContent(
     ) {
         AnimatedVisibility(visible = isSearchOpen) {
             Row(
-                modifier = Modifier.fillMaxWidth().padding(16.dp),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(16.dp),
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 AnimatedVisibility(visible = searchQuery?.isNotEmpty() == true) {

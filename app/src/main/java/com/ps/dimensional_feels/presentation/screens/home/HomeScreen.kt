@@ -52,7 +52,7 @@ fun HomeScreen(
 ) {
     val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior()
     var isSearchOpen by rememberSaveable { mutableStateOf(false) }
-    var diariesData : Map<LocalDate, List<Diary>> = emptyMap()
+    var diariesData: Map<LocalDate, List<Diary>> = emptyMap()
 
     NavigationDrawer(
         drawerState = drawerState,
@@ -74,7 +74,7 @@ fun HomeScreen(
                 searchActive = isSearchOpen
             )
         }, floatingActionButton = {
-            if(diariesData.isNotEmpty()){
+            if (diariesData.isNotEmpty()) {
                 FloatingActionButton(onClick = onNavigateToWrite) {
                     Icon(
                         imageVector = Icons.Default.Edit,

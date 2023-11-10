@@ -7,9 +7,15 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Chat
+import androidx.compose.material.icons.filled.Create
 import androidx.compose.material.icons.filled.Search
+import androidx.compose.material.icons.filled.SearchOff
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.ElevatedButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -37,28 +43,14 @@ fun EmptyPage(
     modifier: Modifier = Modifier,
     showLoading: Boolean = false,
     isFiltering: Boolean = false,
+    onCreateButtonClicked: () -> Unit = {},
     title: String = stringResource(id = R.string.empty_diary_title)
 ) {
-    val composition by rememberLottieComposition(spec = LottieCompositionSpec.RawRes(R.raw.crying_morty))
-    var isPlaying by remember { mutableStateOf(true) }
-    val progress by animateLottieCompositionAsState(
-        composition = composition, isPlaying = isPlaying
-    )
-
-    LaunchedEffect(key1 = progress) {
-        if (progress == 0f) {
-            isPlaying = true
-        }
-        if (progress == 1f) {
-            isPlaying = false
-        }
-    }
-
     Column(
         modifier = modifier
             .fillMaxSize()
             .padding(16.dp),
-        verticalArrangement = Arrangement.Top,
+        verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
 
@@ -68,45 +60,47 @@ fun EmptyPage(
 
         if (!showLoading) {
             if (!isFiltering) {
-                Column(
-                    modifier = Modifier.fillMaxSize(),
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                    verticalArrangement = Arrangement.Center
-                ) {
                     Text(
                         text = title, style = TextStyle.Default.copy(
                             fontSize = MaterialTheme.typography.titleMedium.fontSize,
                             fontWeight = FontWeight.Medium,
+                            color = MaterialTheme.colorScheme.outline,
                             textAlign = TextAlign.Center
                         )
                     )
 
-                    LottieAnimation(
-                        composition = composition,
-                        modifier = Modifier.fillMaxSize(0.4f),
-                        progress = {
-                            if (progress == 1f) {
-                                isPlaying = true
-                            }
-                            progress
-                        })
+                Spacer(modifier = Modifier.height(8.dp))
+
+
+                ElevatedButton(onClick = onCreateButtonClicked) {
+                    Icon(
+                        imageVector = Icons.Default.Create,
+                        contentDescription = null,
+                        modifier = Modifier.size(18.dp)
+                    )
+                    Spacer(modifier = Modifier.width(8.dp))
+                    Text(stringResource(id = R.string.create_diary))
                 }
+
+
             } else {
                 Text(
                     text = stringResource(id = R.string.no_match_search),
                     style = TextStyle.Default.copy(
                         fontSize = MaterialTheme.typography.titleMedium.fontSize,
                         fontWeight = FontWeight.Medium,
-                        textAlign = TextAlign.Center
+                        textAlign = TextAlign.Center,
+                        color = MaterialTheme.colorScheme.outline,
                     )
                 )
 
                 Spacer(modifier = Modifier.height(16.dp))
 
                 Icon(
-                    imageVector = Icons.Default.Search,
+                    imageVector = Icons.Default.SearchOff,
                     contentDescription = null,
-                    modifier = Modifier.fillMaxSize(0.2f)
+                    tint = MaterialTheme.colorScheme.outline,
+                    modifier = Modifier.size(46.dp)
                 )
             }
         }

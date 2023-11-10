@@ -24,10 +24,12 @@ import androidx.compose.ui.res.stringResource
 import com.google.firebase.storage.FirebaseStorage
 import com.ps.dimensional_feels.R
 import com.ps.dimensional_feels.data.repository.Diaries
+import com.ps.dimensional_feels.model.Diary
 import com.ps.dimensional_feels.navigation.Screen
 import com.ps.dimensional_feels.presentation.components.EmptyPage
 import com.ps.dimensional_feels.presentation.components.NavigationDrawer
 import com.ps.dimensional_feels.util.RequestState
+import java.time.LocalDate
 import java.time.ZonedDateTime
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -50,6 +52,7 @@ fun HomeScreen(
 ) {
     val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior()
     var isSearchOpen by rememberSaveable { mutableStateOf(false) }
+    var diariesData : Map<LocalDate, List<Diary>> = emptyMap()
 
     NavigationDrawer(
         drawerState = drawerState,
@@ -71,19 +74,23 @@ fun HomeScreen(
                 searchActive = isSearchOpen
             )
         }, floatingActionButton = {
-            FloatingActionButton(onClick = onNavigateToWrite) {
-                Icon(
-                    imageVector = Icons.Default.Edit,
-                    contentDescription = stringResource(id = R.string.add_new_diary_icon)
-                )
+            if(diariesData.isNotEmpty()){
+                FloatingActionButton(onClick = onNavigateToWrite) {
+                    Icon(
+                        imageVector = Icons.Default.Edit,
+                        contentDescription = stringResource(id = R.string.add_new_diary_icon)
+                    )
+                }
             }
         }, content = { padding ->
             when (diaries) {
                 is RequestState.Success -> {
+                    diariesData = diaries.data
                     HomeContent(
                         paddingValues = padding,
                         diariesNotes = diaries.data,
                         onClick = onNavigateToWriteWithArgs,
+                        navigateToWrite = onNavigateToWrite,
                         isSearchOpen = isSearchOpen,
                         isDateSelected = dateIsSelected,
                         onSearch = { onSearch(it) },

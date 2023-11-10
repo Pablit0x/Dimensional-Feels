@@ -20,9 +20,10 @@
     <string name="dismiss">Dismiss</string>
     <string name="next">Next</string>
     <string name="select_time">Choose Time</string>
-    <string name="no_match_search">No matches!\nTweak your filters and try again, Morty!</string>
+    <string name="no_match_search">Ops, No matches…\nTweak your filters and try again, Morty!</string>
     <string name="show_gallery">Show Gallery</string>
     <string name="hide_gallery">Hide Gallery</string>
+    <string name="create_diary">Create Diary</string>
     <string name="empty_diary_title">Empty diary dimension…\nTime to document some memories!</string>
     <string name="empty_diary_description">Write something, Morty… or not.</string>
     <string name="canvas">Canvas</string>

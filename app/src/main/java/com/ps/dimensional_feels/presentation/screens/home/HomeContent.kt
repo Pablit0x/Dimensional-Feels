@@ -45,6 +45,7 @@ fun HomeContent(
     diariesNotes: Map<LocalDate, List<Diary>>,
     firebaseStorage: FirebaseStorage,
     onClick: (String) -> Unit,
+    navigateToWrite: () -> Unit,
     isSearchOpen: Boolean,
     isDateSelected: Boolean,
     onSearch: (String) -> Unit,
@@ -75,7 +76,7 @@ fun HomeContent(
     ) {
         AnimatedVisibility(visible = isSearchOpen) {
             Row(
-                modifier = Modifier.fillMaxWidth(),
+                modifier = Modifier.fillMaxWidth().padding(16.dp),
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 AnimatedVisibility(visible = searchQuery?.isNotEmpty() == true) {
@@ -107,7 +108,6 @@ fun HomeContent(
                     shape = RoundedCornerShape(40),
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(16.dp)
                 )
             }
         }
@@ -130,7 +130,8 @@ fun HomeContent(
             }
         } else {
             EmptyPage(
-                isFiltering = !searchQuery.isNullOrBlank() || isDateSelected
+                isFiltering = !searchQuery.isNullOrBlank() || isDateSelected,
+                onCreateButtonClicked = navigateToWrite
             )
         }
     }

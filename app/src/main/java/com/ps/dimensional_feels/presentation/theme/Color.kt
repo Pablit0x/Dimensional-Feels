@@ -75,3 +75,6 @@ val ConfusedColor = Color(0xFFFFA300)
 val AngryColor = Color(0xFFFF5733)
 val DrunkColor = Color(0xFF70B62D)
 val DepressedColor = Color(0xFFBDBDBD)
+
+val PortalGreen =  Color(0, 255, 0)
+val PortalPurple =  Color(68, 0, 86)

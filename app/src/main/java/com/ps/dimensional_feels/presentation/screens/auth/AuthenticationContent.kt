@@ -34,6 +34,8 @@ import com.airbnb.lottie.compose.rememberLottieComposition
 import com.ps.dimensional_feels.R
 import com.ps.dimensional_feels.presentation.components.AnimatedBorderCard
 import com.ps.dimensional_feels.presentation.components.SignInButton
+import com.ps.dimensional_feels.presentation.theme.PortalGreen
+import com.ps.dimensional_feels.presentation.theme.PortalPurple
 
 @Composable
 fun AuthenticationContent(
@@ -60,8 +62,8 @@ fun AuthenticationContent(
                 borderWidth = 3.dp,
                 brush = Brush.sweepGradient(
                     listOf(
-                        Color(68, 0, 86),
-                        Color(0, 255, 0)
+                       PortalPurple,
+                        PortalGreen
                     )
                 )
             ) {

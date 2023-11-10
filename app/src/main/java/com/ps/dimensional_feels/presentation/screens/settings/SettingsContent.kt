@@ -15,6 +15,8 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TimePicker
+import androidx.compose.material3.TimePickerDefaults
+import androidx.compose.material3.TimePickerLayoutType
 import androidx.compose.material3.rememberTimePickerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -77,7 +79,7 @@ fun SettingsContent(
     val permissionLauncher =
         rememberLauncherForActivityResult(contract = ActivityResultContracts.RequestPermission()) { isGranted ->
             hasNotificationPermission = isGranted
-            if(isGranted){
+            if (isGranted) {
                 onUpdateReminderStatusPrefs(true)
             }
         }
@@ -162,18 +164,36 @@ fun SettingsContent(
         val timePickerState = rememberTimePickerState(
             initialHour = dailyReminderTime.hour, initialMinute = dailyReminderTime.minute
         )
-        TimePickerDialog(
-            title = stringResource(id = R.string.set_reminder_time),
-            onCancel = { showTimePickerDialog = false }, onConfirm = {
-            val updatedTime = LocalTime.of(timePickerState.hour, timePickerState.minute)
-            onUpdateReminderTimePrefs(updatedTime)
-            onAlarmScheduled(calendar.apply {
-                set(Calendar.HOUR_OF_DAY, updatedTime.hour)
-                set(Calendar.MINUTE, updatedTime.minute)
-            })
-            showTimePickerDialog = false
-        }) {
-            TimePicker(state = timePickerState)
+        TimePickerDialog(title = stringResource(id = R.string.set_reminder_time),
+            onCancel = { showTimePickerDialog = false },
+            onConfirm = {
+                val updatedTime = LocalTime.of(timePickerState.hour, timePickerState.minute)
+                onUpdateReminderTimePrefs(updatedTime)
+                onAlarmScheduled(calendar.apply {
+                    set(Calendar.HOUR_OF_DAY, updatedTime.hour)
+                    set(Calendar.MINUTE, updatedTime.minute)
+                })
+                showTimePickerDialog = false
+            }) {
+            TimePicker(
+                state = timePickerState,
+                layoutType = TimePickerLayoutType.Vertical,
+                colors = TimePickerDefaults.colors(
+                    clockDialColor = MaterialTheme.colorScheme.surfaceVariant,
+                    clockDialSelectedContentColor = MaterialTheme.colorScheme.onPrimary,
+                    clockDialUnselectedContentColor = MaterialTheme.colorScheme.outline,
+                    selectorColor = MaterialTheme.colorScheme.primary,
+                    periodSelectorBorderColor = MaterialTheme.colorScheme.inverseOnSurface,
+                    periodSelectorUnselectedContainerColor = MaterialTheme.colorScheme.surfaceVariant,
+                    periodSelectorSelectedContainerColor = MaterialTheme.colorScheme.primary,
+                    periodSelectorSelectedContentColor = MaterialTheme.colorScheme.onPrimary,
+                    periodSelectorUnselectedContentColor = MaterialTheme.colorScheme.onSurfaceVariant,
+                    timeSelectorSelectedContainerColor = MaterialTheme.colorScheme.primary,
+                    timeSelectorUnselectedContainerColor = MaterialTheme.colorScheme.surfaceVariant,
+                    timeSelectorSelectedContentColor = MaterialTheme.colorScheme.onPrimary,
+                    timeSelectorUnselectedContentColor = MaterialTheme.colorScheme.onSurfaceVariant,
+                )
+            )
         }
     }
 }

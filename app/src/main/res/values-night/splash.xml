@@ -2,8 +2,10 @@
 <resources>
 
     <style name="Theme.DimensionalFeels.Splash" parent="Theme.SplashScreen">
-        <item name="windowSplashScreenBackground">#191C1C</item>
-        <item name="windowSplashScreenAnimatedIcon">@drawable/splash_screen_logo</item>
+        <item name="windowSplashScreenBackground">#121212</item>
+        <item name="windowSplashScreenAnimatedIcon">@drawable/avd_logo</item>
+        <item name="windowSplashScreenAnimationDuration">1000</item>
         <item name="postSplashScreenTheme">@style/DimensionalFeels</item>
     </style>
+
 </resources>

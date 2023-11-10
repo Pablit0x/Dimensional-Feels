@@ -3,7 +3,6 @@ package com.ps.dimensional_feels.presentation.screens.write
 import android.net.Uri
 import android.widget.Toast
 import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.EnterTransition
 import androidx.compose.animation.ExitTransition
 import androidx.compose.animation.slideInHorizontally
 import androidx.compose.foundation.ExperimentalFoundationApi
@@ -87,7 +86,7 @@ fun WriteContent(
     val scrollState = rememberScrollState()
     val context = LocalContext.current
     val focusManager = LocalFocusManager.current
-    var showGalleryUploader by remember{ mutableStateOf(true) }
+    var showGalleryUploader by remember { mutableStateOf(true) }
 
     LaunchedEffect(key1 = uiState.description) {
         scrollState.scrollTo(scrollState.maxValue)
@@ -262,7 +261,11 @@ fun WriteContent(
         Column(verticalArrangement = Arrangement.Bottom) {
             Spacer(modifier = Modifier.height(12.dp))
 
-            AnimatedVisibility(visible = showGalleryUploader, enter = slideInHorizontally(), exit = ExitTransition.None ) {
+            AnimatedVisibility(
+                visible = showGalleryUploader,
+                enter = slideInHorizontally(),
+                exit = ExitTransition.None
+            ) {
 
                 GalleryUploader(galleryState = galleryState,
                     onAddClicked = { focusManager.clearFocus() },

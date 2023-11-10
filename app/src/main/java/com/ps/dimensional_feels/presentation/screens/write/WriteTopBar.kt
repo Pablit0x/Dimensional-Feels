@@ -204,12 +204,16 @@ fun WriteTopBar(
                     clockDialUnselectedContentColor = MaterialTheme.colorScheme.outline,
                     selectorColor = MaterialTheme.colorScheme.primary,
                     periodSelectorBorderColor = MaterialTheme.colorScheme.inverseOnSurface,
-                    periodSelectorUnselectedContainerColor = MaterialTheme.colorScheme.surfaceColorAtElevation(1.dp),
+                    periodSelectorUnselectedContainerColor = MaterialTheme.colorScheme.surfaceColorAtElevation(
+                        1.dp
+                    ),
                     periodSelectorSelectedContainerColor = MaterialTheme.colorScheme.primary,
                     periodSelectorSelectedContentColor = MaterialTheme.colorScheme.onPrimary,
                     periodSelectorUnselectedContentColor = MaterialTheme.colorScheme.onSurfaceVariant,
                     timeSelectorSelectedContainerColor = MaterialTheme.colorScheme.primary,
-                    timeSelectorUnselectedContainerColor = MaterialTheme.colorScheme.surfaceColorAtElevation(1.dp),
+                    timeSelectorUnselectedContainerColor = MaterialTheme.colorScheme.surfaceColorAtElevation(
+                        1.dp
+                    ),
                     timeSelectorSelectedContentColor = MaterialTheme.colorScheme.onPrimary,
                     timeSelectorUnselectedContentColor = MaterialTheme.colorScheme.onSurfaceVariant,
                 )

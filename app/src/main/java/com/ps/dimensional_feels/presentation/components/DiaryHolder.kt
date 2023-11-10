@@ -3,8 +3,10 @@ package com.ps.dimensional_feels.presentation.components
 import android.net.Uri
 import android.widget.Toast
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.core.LinearOutSlowInEasing
 import androidx.compose.animation.core.Spring
 import androidx.compose.animation.core.spring
+import androidx.compose.animation.core.tween
 import androidx.compose.animation.expandVertically
 import androidx.compose.animation.fadeIn
 import androidx.compose.foundation.clickable
@@ -43,37 +45,25 @@ import com.ps.dimensional_feels.model.toRickAndMortyCharacter
 import com.ps.dimensional_feels.presentation.theme.Elevation
 import com.ps.dimensional_feels.util.fetchImagesFromFirebase
 import com.ps.dimensional_feels.util.toInstant
+import kotlinx.coroutines.delay
 
 @Composable
 fun DiaryHolder(
     diary: Diary, onClick: (String) -> Unit, firebaseStorage: FirebaseStorage
 ) {
     val localDensity = LocalDensity.current
-    val context = LocalContext.current
     var componentHeight by remember { mutableStateOf(0.dp) }
-    var showGallery by remember { mutableStateOf(true) }
-    var galleryLoading by remember { mutableStateOf(false) }
     val downloadedImages = remember { mutableStateListOf<Uri>() }
 
-    LaunchedEffect(key1 = showGallery) {
-        if (showGallery && downloadedImages.isEmpty()) {
-            galleryLoading = true
-            fetchImagesFromFirebase(firebaseStorage = firebaseStorage,
-                remoteImagePaths = diary.images,
-                onImageDownload = { imageUri ->
-                    downloadedImages.add(imageUri)
-                },
-                onImageDownloadFailed = { e ->
-                    Toast.makeText(
-                        context, e.message ?: "Unknown error occurred...", Toast.LENGTH_SHORT
-                    ).show()
-                    galleryLoading = false
-                    showGallery = false
-                },
-                onReadyToDisplay = {
-                    galleryLoading = false
-                })
-        }
+    LaunchedEffect(Unit) {
+        delay(300)
+        fetchImagesFromFirebase(firebaseStorage = firebaseStorage,
+            remoteImagePaths = diary.images,
+            onImageDownload = { imageUri ->
+                downloadedImages.add(imageUri)
+            },
+            onImageDownloadFailed = {},
+            onReadyToDisplay = {})
     }
 
     val interactionSource = remember { MutableInteractionSource() }
@@ -113,18 +103,14 @@ fun DiaryHolder(
                 )
                 AnimatedVisibility(
                     visible = downloadedImages.isNotEmpty(), enter = fadeIn() + expandVertically(
-                        animationSpec = spring(
-                            dampingRatio = Spring.DampingRatioMediumBouncy,
-                            stiffness = Spring.StiffnessLow
-                        )
+                        animationSpec = tween(
+                            durationMillis = 1000,
+                            easing = LinearOutSlowInEasing
+                        ),
                     )
                 ) {
                     Column(modifier = Modifier.padding(all = 14.dp)) {
-                        if (galleryLoading) {
-                            Text(text = stringResource(id = R.string.loading))
-                        } else {
                             Gallery(images = downloadedImages)
-                        }
                     }
                 }
             }

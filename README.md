@@ -13,15 +13,14 @@ https://github.com/Pablit0x/Dimensional-Feels/assets/76017191/e2b00067-39ae-466a
 <img src="https://github.com/Pablit0x/Dimensional-Feels/assets/76017191/3b3f04fc-9374-4ba3-8b16-ee3409b30536" width="240">
 <img src="https://github.com/Pablit0x/Dimensional-Feels/assets/76017191/ea76c94a-c56b-4bcb-be98-18dc334d1678" width="240">
 <img src="https://github.com/Pablit0x/Dimensional-Feels/assets/76017191/1ed71ad3-23e9-42c1-9add-bae3f9690826" width="240">
+
 <img src="https://github.com/Pablit0x/Dimensional-Feels/assets/76017191/85c2764c-12e3-4153-8ca1-9b63966ecbbb" width="240">
+<img src="https://github.com/Pablit0x/Dimensional-Feels/assets/76017191/9e49740d-b4fb-4a58-955d-feb2a99c2d58" width="240">
+<img src="https://github.com/Pablit0x/Dimensional-Feels/assets/76017191/986c93b2-c58f-45d7-a5b2-0560f5a822bd" width="240">
 
-
-<img src="https://github.com/Pablit0x/Dimensional-Feels/assets/76017191/9e49740d-b4fb-4a58-955d-feb2a99c2d58" width="192">
-<img src="https://github.com/Pablit0x/Dimensional-Feels/assets/76017191/986c93b2-c58f-45d7-a5b2-0560f5a822bd" width="192">
-<img src="https://github.com/Pablit0x/Dimensional-Feels/assets/76017191/2bd7eefd-a214-459b-933e-d39228f16609" width="192">
-
-<img src="https://github.com/Pablit0x/Dimensional-Feels/assets/76017191/79dcc71f-4285-4101-8866-e0cbebecf97a" width="192">
-<img src="https://github.com/Pablit0x/Dimensional-Feels/assets/76017191/4ee8c5d3-60cb-491c-a591-65eab15928ad" width="192">
+<img src="https://github.com/Pablit0x/Dimensional-Feels/assets/76017191/2bd7eefd-a214-459b-933e-d39228f16609" width="240">
+<img src="https://github.com/Pablit0x/Dimensional-Feels/assets/76017191/79dcc71f-4285-4101-8866-e0cbebecf97a" width="240">
+<img src="https://github.com/Pablit0x/Dimensional-Feels/assets/76017191/4ee8c5d3-60cb-491c-a591-65eab15928ad" width="240">
 
 
 

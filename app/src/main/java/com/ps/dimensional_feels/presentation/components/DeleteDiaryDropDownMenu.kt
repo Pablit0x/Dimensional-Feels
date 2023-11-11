@@ -57,7 +57,7 @@ fun DeleteDiaryDropDownMenu(
         })
     }
     CustomAlertDialog(title = stringResource(id = R.string.delete),
-        message = "${stringResource(id = R.string.delete_diary_message)}: ${selectedDiary?.title}?",
+        message = stringResource(id = R.string.delete_diary_message),
         isOpen = openDialog,
         onCloseDialog = { openDialog = false },
         onConfirmClicked = { onDeleteConfirmed() })

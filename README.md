@@ -4,7 +4,7 @@ Unleash your inner Rick and document your daily misadventures with our Rick and 
 
 
 ## Demo
-https://github.com/Pablit0x/Dimensional-Feels/assets/76017191/e2b00067-39ae-466a-b799-b502239ad2b5
+https://github.com/Pablit0x/Dimensional-Feels/assets/76017191/e54e7aae-0363-45db-b044-926aa3676392
 
 ## Screen Shots
 <img src="https://github.com/Pablit0x/Dimensional-Feels/assets/76017191/3b3f04fc-9374-4ba3-8b16-ee3409b30536" width="240">

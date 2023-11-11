@@ -29,6 +29,7 @@ import com.ps.dimensional_feels.util.fetchImagesFromFirebase
 import com.ps.dimensional_feels.util.toRealmInstant
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -191,6 +192,16 @@ class WriteViewModel @Inject constructor(
     private fun uploadImagesToFirebase(onComplete: () -> Unit) {
         val storage = firebaseStorage.reference
         var uploadCount by mutableIntStateOf(0)
+        var isCompleteCalled by mutableStateOf(false)
+
+        // Coroutine to ensure onComplete is called after 3 seconds
+        viewModelScope.launch {
+            delay(4000)
+            if (!isCompleteCalled) {
+                isCompleteCalled = true
+                onComplete()
+            }
+        }
 
         galleryState.images.forEach { galleryImage ->
             val imagePath = storage.child(galleryImage.remoteImagePath)
@@ -208,7 +219,8 @@ class WriteViewModel @Inject constructor(
                     }
                 }
             }.addOnCompleteListener {
-                if (++uploadCount == galleryState.images.size - 1) {
+                if (++uploadCount == galleryState.images.size - 1 && !isCompleteCalled) {
+                    isCompleteCalled = true
                     onComplete()
                 }
             }

@@ -45,7 +45,6 @@ class MainActivity : ComponentActivity() {
     @Inject
     lateinit var imageToDeleteDao: ImageToDeleteDao
 
-    @RequiresApi(Build.VERSION_CODES.TIRAMISU)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 

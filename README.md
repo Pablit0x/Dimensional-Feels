@@ -20,6 +20,11 @@ https://github.com/Pablit0x/Dimensional-Feels/assets/76017191/e2b00067-39ae-466a
 <img src="https://github.com/Pablit0x/Dimensional-Feels/assets/76017191/4ee8c5d3-60cb-491c-a591-65eab15928ad" width="240">
 
 
+<img src="https://github.com/Pablit0x/Dimensional-Feels/assets/76017191/95d5e1ac-74c9-478c-ab6b-39be7abccca5" width="240">
+<img src="https://github.com/Pablit0x/Dimensional-Feels/assets/76017191/61d32eb0-dfbc-45f9-b380-8c5c9b3e59b1" width="240">
+<img src="https://github.com/Pablit0x/Dimensional-Feels/assets/76017191/a3c3be37-e3c5-4546-9011-818a722e8f6f" width="240">
+
+
 ## Tech Stack
 
 - Kotlin

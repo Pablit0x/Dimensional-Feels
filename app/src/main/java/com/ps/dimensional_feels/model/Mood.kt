@@ -1,7 +1,7 @@
 package com.ps.dimensional_feels.model
 
 import androidx.compose.ui.graphics.Color
-import com.ps.dimensional_feels.presentation.theme.AmorousColor
+import com.ps.dimensional_feels.presentation.theme.LovingColor
 import com.ps.dimensional_feels.presentation.theme.AngryColor
 import com.ps.dimensional_feels.presentation.theme.ConfusedColor
 import com.ps.dimensional_feels.presentation.theme.DepressedColor
@@ -77,22 +77,22 @@ sealed class Mood(
         }
     }
 
-    data class Amorous(val character: RickAndMortyCharacters) : Mood(
+    data class Loving(val character: RickAndMortyCharacters) : Mood(
         icon = when (character) {
             RickAndMortyCharacters.Rick -> MoodIcon.AmorousRick.icon
             RickAndMortyCharacters.Morty -> MoodIcon.AmorousMorty.icon
             RickAndMortyCharacters.Beth -> MoodIcon.AmorousBeth.icon
             RickAndMortyCharacters.Jerry -> MoodIcon.AmorousJerry.icon
             RickAndMortyCharacters.Summer -> MoodIcon.AmorousSummer.icon
-        }, onContainerColor = Color.White, containerColor = AmorousColor, name = name
+        }, onContainerColor = Color.White, containerColor = LovingColor, name = name
     ) {
         companion object {
-            const val name: String = "Amorous"
+            const val name: String = "Loving"
             const val position = 4
         }
     }
 
-    data class Drunk(val character: RickAndMortyCharacters) : Mood(
+    data class Tipsy(val character: RickAndMortyCharacters) : Mood(
         icon = when (character) {
             RickAndMortyCharacters.Rick -> MoodIcon.DrunkRick.icon
             RickAndMortyCharacters.Morty -> MoodIcon.DrunkMorty.icon
@@ -102,7 +102,7 @@ sealed class Mood(
         }, onContainerColor = Color.White, containerColor = DrunkColor, name = name
     ) {
         companion object {
-            const val name: String = "Drunk"
+            const val name: String = "Tipsy"
             const val position = 5
         }
     }
@@ -116,8 +116,8 @@ fun getMoodByName(
         Mood.Angry.name -> Mood.Angry(character = character)
         Mood.Confused.name -> Mood.Confused(character = character)
         Mood.Depressed.name -> Mood.Depressed(character = character)
-        Mood.Amorous.name -> Mood.Amorous(character = character)
-        Mood.Drunk.name -> Mood.Drunk(character = character)
+        Mood.Loving.name -> Mood.Loving(character = character)
+        Mood.Tipsy.name -> Mood.Tipsy(character = character)
         else -> Mood.Happy(character = character)
     }
 }
@@ -127,8 +127,8 @@ fun getMoodByPosition(character: RickAndMortyCharacters, position: Int): Mood {
         Mood.Happy.position -> Mood.Happy(character = character)
         Mood.Angry.position -> Mood.Angry(character = character)
         Mood.Confused.position -> Mood.Confused(character = character)
-        Mood.Amorous.position -> Mood.Amorous(character = character)
-        Mood.Drunk.position -> Mood.Drunk(character = character)
+        Mood.Loving.position -> Mood.Loving(character = character)
+        Mood.Tipsy.position -> Mood.Tipsy(character = character)
         Mood.Depressed.position -> Mood.Depressed(character = character)
         else -> Mood.Happy(character = character)
     }
@@ -139,8 +139,8 @@ fun getPositionByMood(mood: Mood): Int {
         is Mood.Happy -> Mood.Happy.position
         is Mood.Angry -> Mood.Angry.position
         is Mood.Confused -> Mood.Confused.position
-        is Mood.Amorous -> Mood.Amorous.position
-        is Mood.Drunk -> Mood.Drunk.position
+        is Mood.Loving -> Mood.Loving.position
+        is Mood.Tipsy -> Mood.Tipsy.position
         is Mood.Depressed -> Mood.Depressed.position
         else -> Mood.Happy.position
     }

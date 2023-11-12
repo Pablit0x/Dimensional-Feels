@@ -69,7 +69,7 @@ val md_theme_dark_scrim = Color(0xFF000000)
 
 
 val HappyColor = Color(0xFF9966CC)
-val AmorousColor = Color(0xFFFF0099)
+val LovingColor = Color(0xFFFF0099)
 val ConfusedColor = Color(0xFFFFA300)
 val AngryColor = Color(0xFFFF5733)
 val DrunkColor = Color(0xFF70B62D)

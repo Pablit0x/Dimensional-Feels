@@ -24,8 +24,10 @@ fun AuthenticationScreen(
     oneTapSignInState: OneTapSignInState,
     messageBarState: MessageBarState,
     isGoogleLoading: Boolean,
+    isAnonymousLoading: Boolean,
     authenticated: Boolean,
     onGoogleSignInClicked: () -> Unit,
+    onAnonymousSignIn: () -> Unit,
     onSuccessfulFirebaseSignIn: (String) -> Unit,
     onFailedFirebaseSignIn: (Exception) -> Unit,
     onDialogDismissed: (String) -> Unit,
@@ -47,6 +49,8 @@ fun AuthenticationScreen(
                 AuthenticationContent(
                     isGoogleLoading = isGoogleLoading,
                     onSignInWithGoogleButtonClicked = onGoogleSignInClicked,
+                    isAnonymousLoading = isAnonymousLoading,
+                    onAnonymousSignIn = onAnonymousSignIn,
                     modifier = Modifier.padding(padding)
                 )
             }

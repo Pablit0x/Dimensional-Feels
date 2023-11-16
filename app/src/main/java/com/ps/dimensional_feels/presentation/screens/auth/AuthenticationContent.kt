@@ -9,6 +9,8 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.outlined.Person3
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -29,6 +31,8 @@ import com.ps.dimensional_feels.presentation.theme.PortalPurple
 fun AuthenticationContent(
     isGoogleLoading: Boolean,
     onSignInWithGoogleButtonClicked: () -> Unit,
+    isAnonymousLoading: Boolean,
+    onAnonymousSignIn: () -> Unit,
     modifier: Modifier = Modifier
 ) {
 
@@ -83,6 +87,15 @@ fun AuthenticationContent(
             Column(
                 modifier = Modifier.weight(3f), verticalArrangement = Arrangement.Bottom
             ) {
+
+                SignInButton(
+                    primaryText = stringResource(id = R.string.sign_in_with_google),
+                    iconRes = Icons.Outlined.Person3,
+                    onClick = onAnonymousSignIn,
+                    isLoading = isAnonymousLoading
+                    )
+
+                Spacer(modifier = Modifier.height(12.dp))
                 SignInButton(
                     primaryText = stringResource(id = R.string.sign_in_with_google),
                     iconRes = R.drawable.google_logo,

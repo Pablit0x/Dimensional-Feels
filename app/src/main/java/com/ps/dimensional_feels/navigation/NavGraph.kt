@@ -44,6 +44,7 @@ import com.ps.dimensional_feels.util.saveImage
 import com.stevdzasan.messagebar.rememberMessageBarState
 import com.stevdzasan.onetap.rememberOneTapSignInState
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.tasks.await
 
 @Composable
 fun NavGraph(
@@ -105,10 +106,12 @@ fun NavGraphBuilder.authenticationRoute(navigateHome: () -> Unit, onDataLoaded: 
         val context = LocalContext.current
         val viewModel = hiltViewModel<AuthenticationViewModel>()
         val googleLoadingState by viewModel.googleLoadingState
+        val anonymousLoadingState by viewModel.anonymousLoadingState
         val authenticated by viewModel.authenticated
         val firebaseAuth = viewModel.firebaseAuth
         val oneTapSignInState = rememberOneTapSignInState()
         val messageBarState = rememberMessageBarState()
+        val scope = rememberCoroutineScope()
 
         LaunchedEffect(key1 = Unit) {
             onDataLoaded()
@@ -119,10 +122,23 @@ fun NavGraphBuilder.authenticationRoute(navigateHome: () -> Unit, onDataLoaded: 
             oneTapSignInState = oneTapSignInState,
             messageBarState = messageBarState,
             isGoogleLoading = googleLoadingState,
+            isAnonymousLoading = anonymousLoadingState,
             authenticated = authenticated,
             onGoogleSignInClicked = {
                 oneTapSignInState.open()
                 viewModel.setGoogleLoading(isLoading = true)
+            },
+            onAnonymousSignIn = {
+                viewModel.setAnonymousLoading(isLoading = true)
+                firebaseAuth.signInAnonymously().addOnCompleteListener { result ->
+                    if (result.isSuccessful) {
+                        viewModel.signInAnonymouslyWithMongoAtlas(onSuccess = {
+                            messageBarState.addSuccess(message = context.getString(R.string.success))
+                        }, onError = {
+                            messageBarState.addError(it)
+                        })
+                    }
+                }
             },
             onSuccessfulFirebaseSignIn = { tokenId ->
                 viewModel.signInWithMongoAtlas(tokenId = tokenId, onSuccess = {
@@ -225,8 +241,7 @@ fun NavGraphBuilder.writeRoute(
         // Page count reflects number of moods
         val pageCount = Int.MAX_VALUE
         val pagerState = rememberPagerState(
-            pageCount = { pageCount },
-            initialPage = pageCount / 2
+            pageCount = { pageCount }, initialPage = pageCount / 2
         )
 
         val uiState = viewModel.uiState

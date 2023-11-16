@@ -22,6 +22,9 @@ class AuthenticationViewModel @Inject constructor(
     var googleLoadingState = mutableStateOf(false)
         private set
 
+    var anonymousLoadingState = mutableStateOf(false)
+        private set
+
     var authenticated = mutableStateOf(false)
         private set
 
@@ -29,8 +32,37 @@ class AuthenticationViewModel @Inject constructor(
         googleLoadingState.value = isLoading
     }
 
+    fun setAnonymousLoading(isLoading: Boolean){
+        anonymousLoadingState.value = isLoading
+    }
+
     private fun setAuthentication(isAuthenticated: Boolean) {
         authenticated.value = isAuthenticated
+    }
+
+    fun signInAnonymouslyWithMongoAtlas(onSuccess: () -> Unit, onError: (Exception) -> Unit) {
+        viewModelScope.launch {
+            try {
+                val result = withContext(Dispatchers.IO) {
+                    app.login(
+                        credentials = Credentials.anonymous(reuseExisting = true)
+                    ).loggedIn
+                }
+                withContext(Dispatchers.Main) {
+                    if (result) {
+                        onSuccess()
+                        delay(600)
+                        setAuthentication(true)
+                    }
+                }
+            } catch (e: Exception) {
+                withContext(Dispatchers.Main) {
+                    onError(e)
+                }
+            } finally {
+                setAnonymousLoading(false)
+            }
+        }
     }
 
     fun signInWithMongoAtlas(

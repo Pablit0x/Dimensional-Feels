@@ -89,7 +89,7 @@ fun AuthenticationContent(
             ) {
 
                 SignInButton(
-                    primaryText = stringResource(id = R.string.sign_in_with_google),
+                    primaryText = stringResource(id = R.string.sign_in_anonymously),
                     iconRes = Icons.Outlined.Person3,
                     onClick = onAnonymousSignIn,
                     isLoading = isAnonymousLoading

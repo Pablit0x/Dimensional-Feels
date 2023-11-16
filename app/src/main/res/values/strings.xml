@@ -1,6 +1,7 @@
 <resources>
     <string name="app_name">Dimensional Feels</string>
     <string name="sign_in_with_google">Sign in with Google</string>
+    <string name="sign_in_anonymously">Sign in Anonymously</string>
     <string name="search">Scour the Multiverse…</string>
     <string name="home">Home</string>
     <string name="settings">Settings</string>

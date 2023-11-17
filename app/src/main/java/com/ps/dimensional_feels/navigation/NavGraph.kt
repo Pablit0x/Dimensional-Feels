@@ -173,7 +173,6 @@ fun NavGraphBuilder.homeRoute(
         val diaries by viewModel.diaries
         val firebaseStorage = viewModel.firebaseStorage
         var isSignOutDialogOpen by remember { mutableStateOf(false) }
-        var isDeleteAllDialogOpen by remember { mutableStateOf(false) }
         val scope = rememberCoroutineScope()
 
         LaunchedEffect(key1 = diaries) {
@@ -185,7 +184,6 @@ fun NavGraphBuilder.homeRoute(
         HomeScreen(firebaseStorage = firebaseStorage,
             diaries = diaries,
             drawerState = drawerState,
-            onDeleteAllClicked = { isDeleteAllDialogOpen = true },
             onSignOutClicked = { isSignOutDialogOpen = true },
             onSettingsClicked = navigateSettings,
             onMenuClicked = { scope.launch { drawerState.open() } },

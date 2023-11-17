@@ -41,7 +41,6 @@ import com.ps.dimensional_feels.navigation.Screen
 @Composable
 fun NavigationDrawer(
     drawerState: DrawerState,
-    onDeleteAllClicked: () -> Unit,
     onSignOutClicked: () -> Unit,
     onSettingsClicked: () -> Unit = {},
     onHomeClicked: () -> Unit = {},

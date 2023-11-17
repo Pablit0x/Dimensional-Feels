@@ -45,7 +45,6 @@ fun SettingsScreen(
 
     NavigationDrawer(
         drawerState = drawerState,
-        onDeleteAllClicked = onClearDiaryClicked,
         onSignOutClicked = onSignOutClicked,
         onHomeClicked = onHomeClicked,
         currentScreen = Screen.Settings

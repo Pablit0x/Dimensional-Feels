@@ -36,7 +36,6 @@ fun HomeScreen(
     firebaseStorage: FirebaseStorage,
     diaries: Diaries,
     drawerState: DrawerState,
-    onDeleteAllClicked: () -> Unit,
     onSignOutClicked: () -> Unit,
     onSettingsClicked: () -> Unit,
     onMenuClicked: () -> Unit,
@@ -53,7 +52,6 @@ fun HomeScreen(
 
     NavigationDrawer(
         drawerState = drawerState,
-        onDeleteAllClicked = onDeleteAllClicked,
         onSignOutClicked = onSignOutClicked,
         onSettingsClicked = onSettingsClicked,
         currentScreen = Screen.Home

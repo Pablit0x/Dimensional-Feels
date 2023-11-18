@@ -177,4 +177,8 @@ class MongoRepositoryImpl @Inject constructor(
             RequestState.Error(UserNotAuthenticatedException())
         }
     }
+
+    override suspend fun transferAllDiariesToGoogleAccount(anonymousId: String): RequestState<Boolean> {
+        TODO("Not yet implemented")
+    }
 }

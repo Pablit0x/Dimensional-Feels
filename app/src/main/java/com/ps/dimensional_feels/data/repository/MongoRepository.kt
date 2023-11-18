@@ -19,4 +19,6 @@ interface MongoRepository {
     suspend fun deleteDiary(diaryId: ObjectId): RequestState<Boolean>
     suspend fun deleteAllDiaries(): RequestState<Boolean>
 
+    suspend fun transferAllDiariesToGoogleAccount(anonymousId : String) : RequestState<Boolean>
+
 }

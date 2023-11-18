@@ -340,6 +340,7 @@ fun NavGraphBuilder.settingsRoute(
         var isDeleteAccountDialogOpen by remember { mutableStateOf(false) }
         val isDailyReminderEnabled = viewModel.isDailyReminderEnabled
         val dailyReminderTime = viewModel.dailyReminderTime
+        val isUserAnonymous = viewModel.isUserAnonymous
 
 
 
@@ -355,6 +356,7 @@ fun NavGraphBuilder.settingsRoute(
             onUpdateReminderTimePrefs = viewModel::updateReminderTimePrefs,
             isDailyReminderEnabled = isDailyReminderEnabled,
             dailyReminderTime = dailyReminderTime,
+            isAnonymous = isUserAnonymous ?: true
         )
 
 

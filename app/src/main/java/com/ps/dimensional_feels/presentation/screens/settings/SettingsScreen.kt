@@ -39,6 +39,7 @@ fun SettingsScreen(
     onUpdateReminderTimePrefs: (LocalTime) -> Unit,
     isDailyReminderEnabled: Boolean,
     dailyReminderTime: LocalTime,
+    isAnonymous: Boolean
 ) {
 
     val scope = rememberCoroutineScope()
@@ -76,6 +77,7 @@ fun SettingsScreen(
                     onUpdateReminderTimePrefs = onUpdateReminderTimePrefs,
                     isDailyReminderEnabled = isDailyReminderEnabled,
                     dailyReminderTime = dailyReminderTime,
+                    isAnonymous = isAnonymous
                 )
             }
         }

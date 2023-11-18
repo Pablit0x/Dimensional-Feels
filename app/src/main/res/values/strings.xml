@@ -10,6 +10,7 @@
     <string name="please_sign_in_to_continue">Please sign in to start documenting your adventures."</string>
     <string name="home_top_bar_title">Dimensional Feels</string>
     <string name="google_sign_out">Sign Out</string>
+    <string name="switch_to_google">Switch to Google</string>
     <string name="set_reminder_time">Set Reminder Time</string>
     <string name="change_character">Change Character</string>
     <string name="change">Change</string>

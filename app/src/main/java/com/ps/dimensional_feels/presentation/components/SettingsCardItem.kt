@@ -1,5 +1,6 @@
 package com.ps.dimensional_feels.presentation.components
 
+import android.media.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -17,6 +18,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -24,7 +26,7 @@ import androidx.compose.ui.unit.dp
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SettingsCardItem(
-    optionText: String, optionIcon: ImageVector, modifier: Modifier = Modifier, onClick: () -> Unit
+    optionText: String, optionIcon: Any, modifier: Modifier = Modifier, onClick: () -> Unit
 ) {
 
     OutlinedCard(modifier = modifier, onClick = onClick) {
@@ -39,7 +41,11 @@ fun SettingsCardItem(
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.spacedBy(12.dp)
             ) {
-                Icon(imageVector = optionIcon, contentDescription = null)
+                if (optionIcon is Painter) {
+                    Icon(painter = optionIcon, contentDescription = null)
+                } else if (optionIcon is ImageVector) {
+                    Icon(imageVector = optionIcon, contentDescription = null)
+                }
                 Text(
                     text = optionText,
                     style = MaterialTheme.typography.bodyLarge,

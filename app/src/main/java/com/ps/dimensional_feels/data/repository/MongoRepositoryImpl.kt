@@ -179,6 +179,16 @@ class MongoRepositoryImpl @Inject constructor(
     }
 
     override suspend fun transferAllDiariesToGoogleAccount(anonymousId: String): RequestState<Boolean> {
-        TODO("Not yet implemented")
+        return if(user != null && realm != null){
+            realm.write {
+                val anonymousUserDiaries = this.query<Diary>("owner_id = $0", anonymousId)
+                anonymousUserDiaries.find().forEach {
+                    it.owner_id = user.id
+                }
+                RequestState.Success(true)
+            }
+        } else {
+            RequestState.Error(UserNotAuthenticatedException())
+        }
     }
 }

@@ -47,6 +47,10 @@ class SettingsViewModel @Inject constructor(
     )
         private set
 
+
+    var isUserAnonymous by mutableStateOf(firebaseAuth.currentUser?.isAnonymous)
+        private set
+
     var dailyReminderTime: LocalTime by mutableStateOf(
         LocalTime.of(
             preferencesManager.getInt(Constants.DAILY_REMINDER_HOUR_KEY, 20),

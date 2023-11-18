@@ -45,7 +45,7 @@ class AuthenticationViewModel @Inject constructor(
             try {
                 val result = withContext(Dispatchers.IO) {
                     app.login(
-                        credentials = Credentials.anonymous(reuseExisting = true)
+                        credentials = Credentials.anonymous()
                     ).loggedIn
                 }
                 withContext(Dispatchers.Main) {

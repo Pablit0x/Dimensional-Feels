@@ -18,8 +18,12 @@ import com.ps.dimensional_feels.util.PreferencesManager
 import com.ps.dimensional_feels.util.RequestState
 import com.ps.dimensional_feels.util.exceptions.NoInternetConnectionException
 import dagger.hilt.android.lifecycle.HiltViewModel
+import io.realm.kotlin.mongodb.App
+import io.realm.kotlin.mongodb.Credentials
+import io.realm.kotlin.mongodb.GoogleAuthType
 import io.realm.kotlin.mongodb.User
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -29,7 +33,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class SettingsViewModel @Inject constructor(
-    private val firebaseAuth: FirebaseAuth,
+    val firebaseAuth: FirebaseAuth,
+    private val app: App,
     private val mongoRepository: MongoRepository,
     private val imageToDeleteDao: ImageToDeleteDao,
     private val connectivityObserver: NetworkConnectivityObserver,
@@ -37,6 +42,9 @@ class SettingsViewModel @Inject constructor(
     private val preferencesManager: PreferencesManager,
     private val alarmScheduler: AlarmScheduler
 ) : ViewModel() {
+
+    var isGoogleLoading =  mutableStateOf(false)
+        private set
 
     private var network by mutableStateOf(ConnectivityObserver.Status.Unavailable)
 
@@ -135,6 +143,10 @@ class SettingsViewModel @Inject constructor(
         }
     }
 
+    fun setGoogleLoading(isLoading: Boolean){
+        isGoogleLoading.value = isLoading
+    }
+
     fun scheduleAlarm(calendar: Calendar) {
         alarmScheduler.schedule(calendar)
     }
@@ -154,5 +166,32 @@ class SettingsViewModel @Inject constructor(
         dailyReminderTime = alarmTime
     }
 
+
+    fun signInWithMongoAtlas(
+        tokenId: String, onSuccess: () -> Unit, onError: (Exception) -> Unit
+    ) {
+        viewModelScope.launch {
+            try {
+                val result = withContext(Dispatchers.IO) {
+                    app.login(
+                        credentials = Credentials.google(
+                            token = tokenId, type = GoogleAuthType.ID_TOKEN
+                        )
+                    ).loggedIn
+                }
+                withContext(Dispatchers.Main) {
+                    if (result) {
+                        onSuccess()
+                    }
+                }
+            } catch (e: Exception) {
+                withContext(Dispatchers.Main) {
+                    onError(e)
+                }
+            } finally {
+                setGoogleLoading(false)
+            }
+        }
+    }
 
 }

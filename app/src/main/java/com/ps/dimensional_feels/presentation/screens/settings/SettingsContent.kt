@@ -5,9 +5,12 @@ import android.os.Build
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Close
 import androidx.compose.material.icons.outlined.DeleteOutline
@@ -27,6 +30,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
@@ -35,9 +39,11 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat
+import com.google.firebase.auth.FirebaseAuth
 import com.ps.dimensional_feels.R
 import com.ps.dimensional_feels.presentation.components.DailyReminderAlarmCard
 import com.ps.dimensional_feels.presentation.components.SettingsCardItem
+import com.ps.dimensional_feels.presentation.components.SignInButton
 import com.ps.dimensional_feels.presentation.components.TimePickerDialog
 import com.ps.dimensional_feels.util.Constants
 import java.time.LocalTime
@@ -48,6 +54,7 @@ import java.util.Calendar
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SettingsContent(
+    onSwitchToGoogleClicked: () -> Unit,
     onSignOutClicked: () -> Unit,
     onClearDiaryClicked: () -> Unit,
     onDeleteAccountClicked: () -> Unit,
@@ -58,7 +65,8 @@ fun SettingsContent(
     modifier: Modifier = Modifier,
     isDailyReminderEnabled: Boolean,
     dailyReminderTime: LocalTime,
-    isAnonymous : Boolean
+    isAnonymous: Boolean,
+    isGoogleLoading: Boolean
 ) {
     var showTimePickerDialog by remember { mutableStateOf(false) }
     val context = LocalContext.current
@@ -141,16 +149,6 @@ fun SettingsContent(
             color = MaterialTheme.colorScheme.onSurfaceVariant
         )
 
-        AnimatedVisibility(visible = isAnonymous) {
-            Spacer(modifier = Modifier.height(8.dp))
-
-            SettingsCardItem(
-                optionText = stringResource(id = R.string.switch_to_google),
-                optionIcon = painterResource(id = R.drawable.google_logo),
-                onClick = onSignOutClicked
-            )
-
-        }
 
         Spacer(modifier = Modifier.height(8.dp))
 
@@ -175,7 +173,19 @@ fun SettingsContent(
             optionIcon = Icons.Outlined.Close,
             onClick = onDeleteAccountClicked
         )
+
+        AnimatedVisibility(visible = isAnonymous) {
+            Box(contentAlignment = Alignment.BottomCenter, modifier = Modifier.fillMaxSize().padding(top = 16.dp, bottom = 16.dp)){
+                SignInButton(
+                    primaryText = stringResource(id = R.string.switch_to_google),
+                    iconRes = R.drawable.google_logo,
+                    isLoading = isGoogleLoading,
+                    onClick = onSwitchToGoogleClicked
+                )
+            }
+        }
     }
+
 
     if (showTimePickerDialog) {
         val timePickerState = rememberTimePickerState(
@@ -225,16 +235,22 @@ fun SettingScreenPreview() {
     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
     SettingsScreen(
         drawerState = drawerState,
-        onClearDiaryClicked = { },
-        onSignOutClicked = {  },
-        onDeleteAccountClicked = {  },
-        onHomeClicked = {  },
+        onSwitchToGoogleClicked = {},
+        onClearDiaryClicked = {},
+        onSignOutClicked = {},
+        onDeleteAccountClicked = {},
+        onHomeClicked = {},
         onAlarmCanceled = { },
         onAlarmScheduled = {},
-        onUpdateReminderStatusPrefs ={} ,
+        onUpdateReminderStatusPrefs = {},
         onUpdateReminderTimePrefs = {},
         isDailyReminderEnabled = true,
         dailyReminderTime = LocalTime.of(20, 0),
-        isAnonymous = true
+        isAnonymous = true,
+        firebaseAuth = FirebaseAuth.getInstance(),
+        onSuccessfulFirebaseSignIn = {},
+        onFailedFirebaseSignIn = {},
+        onDialogDismissed = {},
+        isGoogleLoading = false
     )
 }

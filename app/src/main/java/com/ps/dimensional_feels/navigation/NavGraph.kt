@@ -338,14 +338,21 @@ fun NavGraphBuilder.settingsRoute(
         var isSignOutDialogOpen by remember { mutableStateOf(false) }
         var isClearDiaryDialogOpen by remember { mutableStateOf(false) }
         var isDeleteAccountDialogOpen by remember { mutableStateOf(false) }
+        val isGoogleLoading by viewModel.isGoogleLoading
         val isDailyReminderEnabled = viewModel.isDailyReminderEnabled
         val dailyReminderTime = viewModel.dailyReminderTime
         val isUserAnonymous = viewModel.isUserAnonymous
+        val firebaseAuth = viewModel.firebaseAuth
 
 
 
         SettingsScreen(
             drawerState = drawerState,
+            firebaseAuth = firebaseAuth,
+            onSuccessfulFirebaseSignIn = {},
+            onFailedFirebaseSignIn = {},
+            onDialogDismissed = {},
+            onSwitchToGoogleClicked = {},
             onClearDiaryClicked = { isClearDiaryDialogOpen = true },
             onSignOutClicked = { isSignOutDialogOpen = true },
             onDeleteAccountClicked = { isDeleteAccountDialogOpen = true },
@@ -356,7 +363,8 @@ fun NavGraphBuilder.settingsRoute(
             onUpdateReminderTimePrefs = viewModel::updateReminderTimePrefs,
             isDailyReminderEnabled = isDailyReminderEnabled,
             dailyReminderTime = dailyReminderTime,
-            isAnonymous = isUserAnonymous ?: true
+            isAnonymous = isUserAnonymous ?: true,
+            isGoogleLoading = isGoogleLoading
         )
 
 

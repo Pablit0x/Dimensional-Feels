@@ -44,7 +44,6 @@ import com.ps.dimensional_feels.util.saveImage
 import com.stevdzasan.messagebar.rememberMessageBarState
 import com.stevdzasan.onetap.rememberOneTapSignInState
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.tasks.await
 
 @Composable
 fun NavGraph(
@@ -111,7 +110,6 @@ fun NavGraphBuilder.authenticationRoute(navigateHome: () -> Unit, onDataLoaded: 
         val firebaseAuth = viewModel.firebaseAuth
         val oneTapSignInState = rememberOneTapSignInState()
         val messageBarState = rememberMessageBarState()
-        val scope = rememberCoroutineScope()
 
         LaunchedEffect(key1 = Unit) {
             onDataLoaded()
@@ -343,16 +341,32 @@ fun NavGraphBuilder.settingsRoute(
         val dailyReminderTime = viewModel.dailyReminderTime
         val isUserAnonymous = viewModel.isUserAnonymous
         val firebaseAuth = viewModel.firebaseAuth
+        val oneTapSignInState = rememberOneTapSignInState()
+        val messageBarState = rememberMessageBarState()
 
 
 
         SettingsScreen(
             drawerState = drawerState,
             firebaseAuth = firebaseAuth,
-            onSuccessfulFirebaseSignIn = {},
-            onFailedFirebaseSignIn = {},
-            onDialogDismissed = {},
-            onSwitchToGoogleClicked = {},
+            onSuccessfulFirebaseSignIn = { tokenId ->
+                viewModel.switchFromAnonymousToGoogleAccount(tokenId, onSuccess = {
+                    messageBarState.addSuccess(message = context.getString(R.string.success))
+                }, onError = { errorMsg ->
+                    messageBarState.addError(errorMsg)
+                })
+            },
+            onFailedFirebaseSignIn = { exception ->
+                messageBarState.addError(exception)
+            },
+            onDialogDismissed = { errorMsg ->
+                messageBarState.addError(Exception(errorMsg))
+                viewModel.setGoogleLoading(isLoading = false)
+            },
+            onSwitchToGoogleClicked = {
+                oneTapSignInState.open()
+                viewModel.setGoogleLoading(isLoading = true)
+            },
             onClearDiaryClicked = { isClearDiaryDialogOpen = true },
             onSignOutClicked = { isSignOutDialogOpen = true },
             onDeleteAccountClicked = { isDeleteAccountDialogOpen = true },
@@ -364,7 +378,9 @@ fun NavGraphBuilder.settingsRoute(
             isDailyReminderEnabled = isDailyReminderEnabled,
             dailyReminderTime = dailyReminderTime,
             isAnonymous = isUserAnonymous ?: true,
-            isGoogleLoading = isGoogleLoading
+            isGoogleLoading = isGoogleLoading,
+            oneTapSignInState = oneTapSignInState,
+            messageBarState = messageBarState
         )
 
 

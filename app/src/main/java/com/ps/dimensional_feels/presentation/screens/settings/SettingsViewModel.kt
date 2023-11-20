@@ -23,7 +23,6 @@ import io.realm.kotlin.mongodb.Credentials
 import io.realm.kotlin.mongodb.GoogleAuthType
 import io.realm.kotlin.mongodb.User
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -43,7 +42,7 @@ class SettingsViewModel @Inject constructor(
     private val alarmScheduler: AlarmScheduler
 ) : ViewModel() {
 
-    var isGoogleLoading =  mutableStateOf(false)
+    var isGoogleLoading = mutableStateOf(false)
         private set
 
     private var network by mutableStateOf(ConnectivityObserver.Status.Unavailable)
@@ -167,20 +166,25 @@ class SettingsViewModel @Inject constructor(
     }
 
 
-    fun signInWithMongoAtlas(
+    fun switchFromAnonymousToGoogleAccount(
         tokenId: String, onSuccess: () -> Unit, onError: (Exception) -> Unit
     ) {
+        val anonymousId = user!!.id
+        logOut(navigateToAuth = {})
         viewModelScope.launch {
             try {
-                val result = withContext(Dispatchers.IO) {
+                val authResult = withContext(Dispatchers.IO) {
                     app.login(
                         credentials = Credentials.google(
                             token = tokenId, type = GoogleAuthType.ID_TOKEN
                         )
                     ).loggedIn
                 }
+
+                val transferResult = mongoRepository.transferAllDiariesToGoogleAccount(anonymousId)
+
                 withContext(Dispatchers.Main) {
-                    if (result) {
+                    if (authResult && transferResult is RequestState.Success) {
                         onSuccess()
                     }
                 }
@@ -193,5 +197,4 @@ class SettingsViewModel @Inject constructor(
             }
         }
     }
-
 }

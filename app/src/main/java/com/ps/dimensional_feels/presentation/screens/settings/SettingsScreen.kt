@@ -27,13 +27,12 @@ import com.google.firebase.auth.GoogleAuthProvider
 import com.ps.dimensional_feels.R
 import com.ps.dimensional_feels.navigation.Screen
 import com.ps.dimensional_feels.presentation.components.NavigationDrawer
-import com.ps.dimensional_feels.presentation.screens.auth.AuthenticationContent
 import com.ps.dimensional_feels.presentation.theme.PortalPurple
 import com.ps.dimensional_feels.util.Constants
 import com.stevdzasan.messagebar.ContentWithMessageBar
-import com.stevdzasan.messagebar.rememberMessageBarState
+import com.stevdzasan.messagebar.MessageBarState
+import com.stevdzasan.onetap.OneTapSignInState
 import com.stevdzasan.onetap.OneTapSignInWithGoogle
-import com.stevdzasan.onetap.rememberOneTapSignInState
 import kotlinx.coroutines.launch
 import java.time.LocalTime
 import java.util.Calendar
@@ -58,12 +57,12 @@ fun SettingsScreen(
     isDailyReminderEnabled: Boolean,
     dailyReminderTime: LocalTime,
     isAnonymous: Boolean,
-    isGoogleLoading: Boolean
+    isGoogleLoading: Boolean,
+    oneTapSignInState: OneTapSignInState,
+    messageBarState: MessageBarState
 ) {
 
     val scope = rememberCoroutineScope()
-    val oneTapSignIn = rememberOneTapSignInState()
-    val messageBarState = rememberMessageBarState()
 
     NavigationDrawer(
         drawerState = drawerState,
@@ -119,7 +118,8 @@ fun SettingsScreen(
                 .navigationBarsPadding()
         )
 
-        OneTapSignInWithGoogle(state = oneTapSignIn,
+        OneTapSignInWithGoogle(
+            state = oneTapSignInState,
             clientId = Constants.CLIENT_ID,
             onTokenIdReceived = { tokenId ->
                 val credential = GoogleAuthProvider.getCredential(tokenId, null)

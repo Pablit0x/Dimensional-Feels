@@ -125,4 +125,7 @@ dependencies {
 
     // SharedPrefs
     implementation("androidx.datastore:datastore-preferences:1.0.0")
+
+    //Balloon tooltips
+    implementation("com.github.skydoves:balloon:1.6.3")
 }

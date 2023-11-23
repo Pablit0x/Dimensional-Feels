@@ -1,6 +1,5 @@
 package com.ps.dimensional_feels.presentation.components
 
-import android.media.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row

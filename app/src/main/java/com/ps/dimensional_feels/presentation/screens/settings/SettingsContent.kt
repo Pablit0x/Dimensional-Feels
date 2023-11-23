@@ -170,7 +170,12 @@ fun SettingsContent(
         )
 
         AnimatedVisibility(visible = isAnonymous) {
-            Box(contentAlignment = Alignment.BottomCenter, modifier = Modifier.fillMaxSize().padding(top = 16.dp, bottom = 16.dp)){
+            Box(
+                contentAlignment = Alignment.BottomCenter,
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(top = 16.dp, bottom = 16.dp)
+            ) {
                 SignInButton(
                     primaryText = stringResource(id = R.string.switch_to_google),
                     iconRes = R.drawable.google_logo,

@@ -32,7 +32,7 @@ class AuthenticationViewModel @Inject constructor(
         googleLoadingState.value = isLoading
     }
 
-    fun setAnonymousLoading(isLoading: Boolean){
+    fun setAnonymousLoading(isLoading: Boolean) {
         anonymousLoadingState.value = isLoading
     }
 

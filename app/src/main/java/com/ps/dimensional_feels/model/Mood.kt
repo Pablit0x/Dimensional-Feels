@@ -1,12 +1,12 @@
 package com.ps.dimensional_feels.model
 
 import androidx.compose.ui.graphics.Color
-import com.ps.dimensional_feels.presentation.theme.LovingColor
 import com.ps.dimensional_feels.presentation.theme.AngryColor
 import com.ps.dimensional_feels.presentation.theme.ConfusedColor
 import com.ps.dimensional_feels.presentation.theme.DepressedColor
 import com.ps.dimensional_feels.presentation.theme.DrunkColor
 import com.ps.dimensional_feels.presentation.theme.HappyColor
+import com.ps.dimensional_feels.presentation.theme.LovingColor
 
 sealed class Mood(
     val onContainerColor: Color, val containerColor: Color, val icon: Int, val name: String,

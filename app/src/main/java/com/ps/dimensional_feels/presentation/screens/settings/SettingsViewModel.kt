@@ -142,7 +142,7 @@ class SettingsViewModel @Inject constructor(
         }
     }
 
-    fun setGoogleLoading(isLoading: Boolean){
+    fun setGoogleLoading(isLoading: Boolean) {
         isGoogleLoading.value = isLoading
     }
 

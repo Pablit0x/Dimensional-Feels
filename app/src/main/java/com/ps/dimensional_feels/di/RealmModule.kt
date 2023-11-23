@@ -13,7 +13,6 @@ import io.realm.kotlin.ext.query
 import io.realm.kotlin.mongodb.App
 import io.realm.kotlin.mongodb.User
 import io.realm.kotlin.mongodb.sync.SyncConfiguration
-import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)

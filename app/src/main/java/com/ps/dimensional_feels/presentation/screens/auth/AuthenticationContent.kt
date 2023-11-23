@@ -93,7 +93,7 @@ fun AuthenticationContent(
                     iconRes = Icons.Outlined.Person3,
                     onClick = onAnonymousSignIn,
                     isLoading = isAnonymousLoading
-                    )
+                )
 
                 Spacer(modifier = Modifier.height(12.dp))
                 SignInButton(

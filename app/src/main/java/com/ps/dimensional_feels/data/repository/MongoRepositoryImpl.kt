@@ -1,6 +1,5 @@
 package com.ps.dimensional_feels.data.repository
 
-import android.util.Log
 import com.ps.dimensional_feels.model.Diary
 import com.ps.dimensional_feels.util.RequestState
 import com.ps.dimensional_feels.util.exceptions.QueriedDiaryDoesNotExist
@@ -179,7 +178,7 @@ class MongoRepositoryImpl @Inject constructor(
     }
 
     override suspend fun transferAllDiariesToGoogleAccount(anonymousId: String): RequestState<Boolean> {
-        return if(user != null && realm != null){
+        return if (user != null && realm != null) {
             realm.write {
                 val anonymousUserDiaries = this.query<Diary>("owner_id = $0", anonymousId)
                 anonymousUserDiaries.find().forEach {

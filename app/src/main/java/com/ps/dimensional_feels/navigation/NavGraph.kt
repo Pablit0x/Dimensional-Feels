@@ -352,6 +352,7 @@ fun NavGraphBuilder.settingsRoute(
             onSuccessfulFirebaseSignIn = { tokenId ->
                 viewModel.switchFromAnonymousToGoogleAccount(tokenId, onSuccess = {
                     messageBarState.addSuccess(message = context.getString(R.string.success))
+                    navigateHome()
                 }, onError = { errorMsg ->
                     messageBarState.addError(errorMsg)
                 })

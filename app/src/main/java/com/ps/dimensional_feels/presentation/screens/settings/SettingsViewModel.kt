@@ -90,6 +90,14 @@ class SettingsViewModel @Inject constructor(
         }
     }
 
+    fun logOut() {
+        firebaseAuth.signOut()
+        viewModelScope.launch {
+            user?.logOut()
+        }
+    }
+
+
     fun deleteAccount(onSuccess: () -> Unit, onError: (Throwable) -> Unit) {
         viewModelScope.launch(Dispatchers.IO) {
             deleteAllDiaries(onSuccess = {
@@ -169,31 +177,34 @@ class SettingsViewModel @Inject constructor(
     fun switchFromAnonymousToGoogleAccount(
         tokenId: String, onSuccess: () -> Unit, onError: (Exception) -> Unit
     ) {
-        val anonymousId = user!!.id
-        logOut(navigateToAuth = {})
-        viewModelScope.launch {
-            try {
-                val authResult = withContext(Dispatchers.IO) {
-                    app.login(
-                        credentials = Credentials.google(
-                            token = tokenId, type = GoogleAuthType.ID_TOKEN
-                        )
-                    ).loggedIn
-                }
-
-                val transferResult = mongoRepository.transferAllDiariesToGoogleAccount(anonymousId)
-
-                withContext(Dispatchers.Main) {
-                    if (authResult && transferResult is RequestState.Success) {
-                        onSuccess()
+        user?.let { anonymousUser ->
+            logOut()
+            viewModelScope.launch {
+                try {
+                    val authResult = withContext(Dispatchers.IO) {
+                        app.login(
+                            credentials = Credentials.google(
+                                token = tokenId, type = GoogleAuthType.ID_TOKEN
+                            )
+                        ).loggedIn
                     }
+
+
+
+                    val transferResult = mongoRepository.transferAllDiariesToGoogleAccount(anonymousUser.id)
+
+                    withContext(Dispatchers.Main) {
+                        if (authResult && transferResult is RequestState.Success) {
+                            onSuccess()
+                        }
+                    }
+                } catch (e: Exception) {
+                    withContext(Dispatchers.Main) {
+                        onError(e)
+                    }
+                } finally {
+                    setGoogleLoading(false)
                 }
-            } catch (e: Exception) {
-                withContext(Dispatchers.Main) {
-                    onError(e)
-                }
-            } finally {
-                setGoogleLoading(false)
             }
         }
     }

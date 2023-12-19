@@ -27,14 +27,23 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.google.firebase.storage.FirebaseStorage
 import com.ps.dimensional_feels.R
 import com.ps.dimensional_feels.model.Diary
+import com.ps.dimensional_feels.presentation.components.AnonymousUserDiaryWarning
 import com.ps.dimensional_feels.presentation.components.DateHeader
 import com.ps.dimensional_feels.presentation.components.DiaryHolder
 import com.ps.dimensional_feels.presentation.components.EmptyPage
+import com.skydoves.balloon.ArrowOrientation
+import com.skydoves.balloon.BalloonSizeSpec
+import com.skydoves.balloon.compose.rememberBalloonBuilder
+import com.skydoves.balloon.compose.setBackgroundColor
+import com.skydoves.balloon.compose.setTextColor
 import kotlinx.coroutines.delay
 import java.time.LocalDate
 
@@ -54,6 +63,23 @@ fun HomeContent(
     var searchQuery by rememberSaveable { mutableStateOf<String?>(null) }
     var debounced by rememberSaveable {
         mutableStateOf(false)
+    }
+    val context = LocalContext.current
+    val lifecycle = LocalLifecycleOwner.current
+
+    val builder = rememberBalloonBuilder {
+        setText("Now you can edit your profile!")
+        setArrowSize(10)
+        setWidthRatio(1.0f)
+        setHeight(BalloonSizeSpec.WRAP)
+        setArrowOrientation(ArrowOrientation.BOTTOM)
+        setArrowPosition(0.5f)
+        setPadding(12)
+        setMarginHorizontal(12)
+        setTextSize(15f)
+        setCornerRadius(8f)
+        setTextColor(Color.White)
+        setBackgroundColor(Color.White)
     }
 
     LaunchedEffect(searchQuery) {

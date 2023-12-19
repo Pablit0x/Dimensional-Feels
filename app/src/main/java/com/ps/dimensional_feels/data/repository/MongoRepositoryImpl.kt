@@ -1,12 +1,15 @@
 package com.ps.dimensional_feels.data.repository
 
+import android.util.Log
 import com.ps.dimensional_feels.model.Diary
+import com.ps.dimensional_feels.util.Constants
 import com.ps.dimensional_feels.util.RequestState
 import com.ps.dimensional_feels.util.exceptions.QueriedDiaryDoesNotExist
 import com.ps.dimensional_feels.util.exceptions.UserNotAuthenticatedException
 import com.ps.dimensional_feels.util.toInstant
 import io.realm.kotlin.Realm
 import io.realm.kotlin.ext.query
+import io.realm.kotlin.mongodb.App
 import io.realm.kotlin.mongodb.User
 import io.realm.kotlin.query.Sort
 import io.realm.kotlin.types.RealmInstant
@@ -21,8 +24,7 @@ import java.time.ZonedDateTime
 import javax.inject.Inject
 
 class MongoRepositoryImpl @Inject constructor(
-    private val user: User?,
-    private val realm: Realm?
+    private val user: User?, private val realm: Realm?
 ) : MongoRepository {
     override fun getAllDiaries(): Flow<Diaries> {
         return if (user != null && realm != null) {
@@ -178,11 +180,14 @@ class MongoRepositoryImpl @Inject constructor(
     }
 
     override suspend fun transferAllDiariesToGoogleAccount(anonymousId: String): RequestState<Boolean> {
-        return if (user != null && realm != null) {
+        val currentUser = App.create(Constants.APP_ID).currentUser
+        return if (currentUser != null && realm != null) {
             realm.write {
-                val anonymousUserDiaries = this.query<Diary>("owner_id = $0", anonymousId)
-                anonymousUserDiaries.find().forEach {
-                    it.owner_id = user.id
+                val anonymousUserDiaries =
+                    this.query<Diary>("owner_id = $0", anonymousId).find().toList()
+                anonymousUserDiaries.forEach {
+                    Log.d("lolipop", "owner_id = ${it.owner_id}, user.id = ${currentUser.id}")
+                    it.owner_id = currentUser.id
                 }
                 RequestState.Success(true)
             }

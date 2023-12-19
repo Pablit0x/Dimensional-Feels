@@ -194,7 +194,7 @@ class WriteViewModel @Inject constructor(
 
         // Coroutine to ensure onComplete is called after 3 seconds
         viewModelScope.launch {
-            delay(4000)
+            delay(3000)
             if (!isCompleteCalled) {
                 isCompleteCalled = true
                 onComplete()

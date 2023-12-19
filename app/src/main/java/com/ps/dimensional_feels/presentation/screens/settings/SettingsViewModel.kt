@@ -32,7 +32,6 @@ import javax.inject.Inject
 
 @HiltViewModel
 class SettingsViewModel @Inject constructor(
-    val firebaseAuth: FirebaseAuth,
     private val app: App,
     private val mongoRepository: MongoRepository,
     private val imageToDeleteDao: ImageToDeleteDao,
@@ -55,7 +54,7 @@ class SettingsViewModel @Inject constructor(
         private set
 
 
-    var isUserAnonymous by mutableStateOf(firebaseAuth.currentUser?.isAnonymous)
+    var isUserAnonymous by mutableStateOf(FirebaseAuth.getInstance().currentUser?.isAnonymous)
         private set
 
     var dailyReminderTime: LocalTime by mutableStateOf(
@@ -79,7 +78,7 @@ class SettingsViewModel @Inject constructor(
     }
 
     fun logOut(navigateToAuth: () -> Unit) {
-        firebaseAuth.signOut()
+        FirebaseAuth.getInstance().signOut()
         viewModelScope.launch {
             user?.let {
                 it.logOut()
@@ -91,7 +90,7 @@ class SettingsViewModel @Inject constructor(
     }
 
     fun logOut() {
-        firebaseAuth.signOut()
+        FirebaseAuth.getInstance().signOut()
         viewModelScope.launch {
             user?.logOut()
         }
@@ -101,7 +100,7 @@ class SettingsViewModel @Inject constructor(
     fun deleteAccount(onSuccess: () -> Unit, onError: (Throwable) -> Unit) {
         viewModelScope.launch(Dispatchers.IO) {
             deleteAllDiaries(onSuccess = {
-                firebaseAuth.currentUser?.delete()?.addOnCompleteListener { result ->
+                FirebaseAuth.getInstance().currentUser?.delete()?.addOnCompleteListener { result ->
                     if (result.isSuccessful) {
                         updateReminderStatusPrefs(isReminderEnabled = false)
                         cancelAlarm()
@@ -118,7 +117,7 @@ class SettingsViewModel @Inject constructor(
         onSuccess: () -> Unit, onError: (Throwable) -> Unit
     ) {
         if (network == ConnectivityObserver.Status.Available) {
-            val firebaseUserId = firebaseAuth.currentUser?.uid
+            val firebaseUserId = FirebaseAuth.getInstance().currentUser?.uid
             val imagesDirectory = "images/${firebaseUserId}"
             val storage = FirebaseStorage.getInstance().reference
             storage.child(imagesDirectory).listAll().addOnSuccessListener {

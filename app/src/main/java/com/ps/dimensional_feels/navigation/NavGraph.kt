@@ -23,6 +23,8 @@ import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.storage.FirebaseStorage
 import com.ps.dimensional_feels.R
 import com.ps.dimensional_feels.model.Mood
 import com.ps.dimensional_feels.model.getMoodByPosition
@@ -107,7 +109,7 @@ fun NavGraphBuilder.authenticationRoute(navigateHome: () -> Unit, onDataLoaded: 
         val googleLoadingState by viewModel.googleLoadingState
         val anonymousLoadingState by viewModel.anonymousLoadingState
         val authenticated by viewModel.authenticated
-        val firebaseAuth = viewModel.firebaseAuth
+        val firebaseAuth = FirebaseAuth.getInstance()
         val oneTapSignInState = rememberOneTapSignInState()
         val messageBarState = rememberMessageBarState()
 
@@ -169,7 +171,7 @@ fun NavGraphBuilder.homeRoute(
     composable(route = Screen.Home.route) {
         val viewModel = hiltViewModel<HomeViewModel>()
         val diaries by viewModel.diaries
-        val firebaseStorage = viewModel.firebaseStorage
+        val firebaseStorage = FirebaseStorage.getInstance()
         var isSignOutDialogOpen by remember { mutableStateOf(false) }
         val scope = rememberCoroutineScope()
 
@@ -340,7 +342,7 @@ fun NavGraphBuilder.settingsRoute(
         val isDailyReminderEnabled = viewModel.isDailyReminderEnabled
         val dailyReminderTime = viewModel.dailyReminderTime
         val isUserAnonymous = viewModel.isUserAnonymous
-        val firebaseAuth = viewModel.firebaseAuth
+        val firebaseAuth = FirebaseAuth.getInstance()
         val oneTapSignInState = rememberOneTapSignInState()
         val messageBarState = rememberMessageBarState()
 

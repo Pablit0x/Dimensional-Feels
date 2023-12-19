@@ -186,7 +186,6 @@ class MongoRepositoryImpl @Inject constructor(
                 val anonymousUserDiaries =
                     this.query<Diary>("owner_id = $0", anonymousId).find().toList()
                 anonymousUserDiaries.forEach {
-                    Log.d("lolipop", "owner_id = ${it.owner_id}, user.id = ${currentUser.id}")
                     it.owner_id = currentUser.id
                 }
                 RequestState.Success(true)

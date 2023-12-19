@@ -35,13 +35,13 @@ class MainActivity : ComponentActivity() {
     private var keepSplashOpened = true
 
     @Inject
-    lateinit var firebaseStorage: FirebaseStorage
-
-    @Inject
     lateinit var imageToUploadDao: ImageToUploadDao
 
     @Inject
     lateinit var imageToDeleteDao: ImageToDeleteDao
+
+    @Inject
+    lateinit var app: App
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -53,14 +53,14 @@ class MainActivity : ComponentActivity() {
             DimensionalFeelsTheme {
                 val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
                 val navController = rememberNavController()
-                NavGraph(startDestinationRoute = getStartDestination(),
+                NavGraph(startDestinationRoute = getStartDestination(app = app),
                     navController = navController,
                     drawerState = drawerState,
                     onDataLoaded = { keepSplashOpened = false })
             }
         }
         cleanupCheck(
-            firebaseStorage = firebaseStorage,
+            firebaseStorage = FirebaseStorage.getInstance(),
             scope = lifecycleScope,
             imageToUploadDao = imageToUploadDao,
             imageToDeleteDao = imageToDeleteDao
@@ -99,8 +99,8 @@ private fun cleanupCheck(
     }
 }
 
-private fun getStartDestination(): String {
-    val user = App.create(APP_ID).currentUser
+private fun getStartDestination(app : App): String {
+    val user = app.currentUser
     return if (user != null && user.loggedIn) Screen.Home.route else Screen.Authentication.route
 }
 

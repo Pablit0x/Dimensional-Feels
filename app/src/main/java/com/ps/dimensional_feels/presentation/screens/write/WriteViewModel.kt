@@ -39,8 +39,6 @@ import javax.inject.Inject
 
 @HiltViewModel
 class WriteViewModel @Inject constructor(
-    private val firebaseAuth: FirebaseAuth,
-    private val firebaseStorage: FirebaseStorage,
     private val mongoRepository: MongoRepository,
     private val imageToDeleteDao: ImageToDeleteDao,
     private val imageToUploadDao: ImageToUploadDao,
@@ -84,7 +82,7 @@ class WriteViewModel @Inject constructor(
                         setDescription(description = diary.data.description)
 
                         fetchImagesFromFirebase(
-                            firebaseStorage = firebaseStorage,
+                            firebaseStorage = FirebaseStorage.getInstance(),
                             remoteImagePaths = diary.data.images,
                             onImageDownload = { downloadedImage ->
                                 galleryState.addImage(
@@ -190,7 +188,7 @@ class WriteViewModel @Inject constructor(
     }
 
     private fun uploadImagesToFirebase(onComplete: () -> Unit) {
-        val storage = firebaseStorage.reference
+        val storage = FirebaseStorage.getInstance().reference
         var uploadCount by mutableIntStateOf(0)
         var isCompleteCalled by mutableStateOf(false)
 
@@ -229,7 +227,7 @@ class WriteViewModel @Inject constructor(
 
     fun addImage(image: Uri, imageType: String) {
         val remoteImagePath =
-            "images/${firebaseAuth.currentUser?.uid}/${image.lastPathSegment}-${System.currentTimeMillis()}.$imageType"
+            "images/${FirebaseAuth.getInstance().currentUser?.uid}/${image.lastPathSegment}-${System.currentTimeMillis()}.$imageType"
         galleryState.addImage(
             GalleryImage(image = image, remoteImagePath = remoteImagePath)
         )
@@ -274,7 +272,7 @@ class WriteViewModel @Inject constructor(
     }
 
     private fun deleteImagesFromFirebase(images: List<String>? = null) {
-        val storageRef = firebaseStorage.reference
+        val storageRef = FirebaseStorage.getInstance().reference
         if (images != null) {
             images.forEach { remotePath ->
                 storageRef.child(remotePath).delete().addOnFailureListener { e ->
@@ -297,6 +295,6 @@ class WriteViewModel @Inject constructor(
     private fun extractImagePath(fullImageUrl: String): String {
         val chunks = fullImageUrl.split("%2F")
         val imageName = chunks[2].split("?").first()
-        return "images/${firebaseAuth.currentUser?.uid}/$imageName"
+        return "images/${FirebaseAuth.getInstance().currentUser?.uid}/$imageName"
     }
 }

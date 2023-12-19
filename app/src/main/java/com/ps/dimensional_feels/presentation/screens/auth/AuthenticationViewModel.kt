@@ -3,7 +3,6 @@ package com.ps.dimensional_feels.presentation.screens.auth
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.google.firebase.auth.FirebaseAuth
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.realm.kotlin.mongodb.App
 import io.realm.kotlin.mongodb.Credentials
@@ -16,9 +15,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class AuthenticationViewModel @Inject constructor(
-    private val app: App,
-    val firebaseAuth: FirebaseAuth
-) : ViewModel() {
+    private val app: App) : ViewModel() {
     var googleLoadingState = mutableStateOf(false)
         private set
 
